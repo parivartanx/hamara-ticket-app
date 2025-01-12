@@ -302,7 +302,7 @@ class _PaymentState extends State<Payment> {
                                 height: height / 12,
                                 child: Padding(
                                   padding:
-                                  EdgeInsets.symmetric(horizontal: 27.sp),
+                                  EdgeInsets.symmetric(horizontal: 20.sp),
                                   child: Center(
                                     child: Text(
                                       "APPLY",

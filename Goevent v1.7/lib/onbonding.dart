@@ -38,7 +38,7 @@ class _OnbondingState extends State<Onbonding> {
       height: 8.0,
       width: isActive ? 8.0 : 8.0,
       decoration: BoxDecoration(
-        color: isActive ? Colors.white :  Colors.white.withOpacity(0.2),
+        color: isActive ? Colors.white :  Colors.white.withAlpha((0.2 * 255).toInt()),
         borderRadius: const BorderRadius.all(Radius.circular(12)),
       ),
     );

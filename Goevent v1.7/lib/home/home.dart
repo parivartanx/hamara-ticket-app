@@ -1827,7 +1827,7 @@ class _TwoPanelsState extends State<TwoPanels> with TickerProviderStateMixin {
             width: width,
             child: Padding(
               padding:
-                  const EdgeInsets.only(left: 8, right: 8, bottom: 5, top: 5),
+                  const EdgeInsets.only(left: 8, bottom: 5, top: 5),
               child: Row(
                 children: [
                   Container(
