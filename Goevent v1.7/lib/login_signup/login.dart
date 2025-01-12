@@ -67,7 +67,7 @@ class _LoginState extends State<Login> {
               ),
               SizedBox(height: height / 100),
               Text(
-                "GoEvent",
+                "Hamara Ticket",
                 style: TextStyle(
                   fontSize: 32.sp,
                   fontWeight: FontWeight.w700,
