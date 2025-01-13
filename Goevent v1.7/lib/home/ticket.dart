@@ -1,51 +1,40 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:goevent2/providers/color_provider.dart';
 import 'package:goevent2/utils/media.dart';
 import 'package:goevent2/utils/string.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../payment/payment.dart';
 import '../utils/botton.dart';
-import '../utils/colornotifire.dart';
 
-class Ticket extends StatefulWidget {
+class Ticket extends ConsumerStatefulWidget {
   const Ticket({Key? key}) : super(key: key);
 
   @override
   _TicketState createState() => _TicketState();
 }
 
-class _TicketState extends State<Ticket> {
-  late ColorNotifire notifire;
+class _TicketState extends ConsumerState<Ticket> {
   bool selected = false;
   int _counter = 00;
   bool _select = false;
   bool isChecked = false;
 
-  getdarkmodepreviousstate() async {
-    final prefs = await SharedPreferences.getInstance();
-    bool? previusstate = prefs.getBool("setIsDark");
-    if (previusstate == null) {
-      notifire.setIsDark = false;
-    } else {
-      notifire.setIsDark = previusstate;
-    }
-  }
 
   @override
   void initState() {
     super.initState();
-    getdarkmodepreviousstate();
+    ref.read(colorProvider.notifier).getdarkmodepreviousstate();
   }
 
   @override
   Widget build(BuildContext context) {
-    notifire = Provider.of<ColorNotifire>(context, listen: true);
+    final notifire = ref.watch(colorProvider);
     return ScreenUtilInit(
       builder:  (BuildContext context, child) =>  Scaffold(
-        backgroundColor: notifire.getprimerycolor,
+        backgroundColor: notifire.primaryColor,
         floatingActionButton: Padding(
           padding: const EdgeInsets.fromLTRB(20, 0, 20, 10),
           child: SizedBox(
@@ -55,7 +44,7 @@ class _TicketState extends State<Ticket> {
               onPressed: () {
                 showModalBottomSheet<dynamic>(
                   elevation: 0,
-                  backgroundColor: notifire.getprimerycolor,
+                  backgroundColor: notifire.primaryColor,
                   shape: const RoundedRectangleBorder(
                     borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(30.0),
@@ -80,7 +69,7 @@ class _TicketState extends State<Ticket> {
                             height: height / 1.15,
                             child: Container(
                               decoration: BoxDecoration(
-                                color: notifire.getprimerycolor,
+                                color: notifire.primaryColor,
                                 borderRadius: const BorderRadius.only(
                                   topRight: Radius.circular(30),
                                   topLeft: Radius.circular(30),
@@ -118,7 +107,7 @@ class _TicketState extends State<Ticket> {
                                           fontSize: 15.sp,
                                           fontWeight: FontWeight.w600,
                                           fontFamily: 'Gilroy Bold',
-                                          color: notifire.getdarkscolor,
+                                          color: notifire.darksColor,
                                         ),
                                       ),
                                     ],
@@ -144,7 +133,7 @@ class _TicketState extends State<Ticket> {
                                           fontSize: 22.sp,
                                           fontWeight: FontWeight.w600,
                                           fontFamily: 'Gilroy Bold',
-                                          color: notifire.getdarkscolor,
+                                          color: notifire.darksColor,
                                         ),
                                       ),
                                     ],
@@ -251,7 +240,7 @@ class _TicketState extends State<Ticket> {
                                           fillColor:
                                               MaterialStateProperty.resolveWith(
                                                   (states) =>
-                                                      notifire.getbuttonscolor),
+                                                      notifire.buttonsColor),
                                           value: isChecked,
                                           onChanged: (bool? value) {
                                             setState(() {
@@ -264,7 +253,7 @@ class _TicketState extends State<Ticket> {
                                           style: TextStyle(
                                             fontSize: 12.sp,
                                             fontFamily: 'Gilroy Normal',
-                                            color: notifire.gettextcolor,
+                                            color: notifire.textColor,
                                           ),
                                         ),
                                       ],
@@ -288,7 +277,7 @@ class _TicketState extends State<Ticket> {
                                           borderRadius: const BorderRadius.all(
                                             Radius.circular(10),
                                           ),
-                                          color: notifire.getbuttonscolor,
+                                          color: notifire.buttonsColor,
                                         ),
                                         height: height / 15,
                                         width: width / 1.5,
@@ -334,7 +323,7 @@ class _TicketState extends State<Ticket> {
                 );
               },
               child: Custombutton.button(
-                notifire.getbuttonscolor,
+                notifire.buttonsColor,
                 "CONTINUE",
                 SizedBox(
                   width: width / 3.5,
@@ -363,7 +352,7 @@ class _TicketState extends State<Ticket> {
                       Navigator.pop(context);
                     },
                     child:
-                        Icon(Icons.arrow_back, color: notifire.getdarkscolor),
+                        Icon(Icons.arrow_back, color: notifire.darksColor),
                   ),
                   SizedBox(
                     width: width / 80,
@@ -374,13 +363,13 @@ class _TicketState extends State<Ticket> {
                       fontSize: 18.sp,
                       fontWeight: FontWeight.w900,
                       fontFamily: 'Gilroy Medium',
-                      color: notifire.getdarkscolor,
+                      color: notifire.darksColor,
                     ),
                   ),
                   const Spacer(),
                   Icon(
                     Icons.more_vert,
-                    color: notifire.getdarkscolor,
+                    color: notifire.darksColor,
                   ),
                   SizedBox(
                     width: width / 20,
@@ -400,7 +389,7 @@ class _TicketState extends State<Ticket> {
                         fontSize: 15.sp,
                         fontWeight: FontWeight.w600,
                         fontFamily: 'Gilroy Bold',
-                        color: notifire.getdarkscolor,
+                        color: notifire.darksColor,
                       ),
                     ),
                   ),
@@ -420,9 +409,9 @@ class _TicketState extends State<Ticket> {
                           });
                         },
                         child: tic(
-                          _select ? Colors.white : notifire.getbuttonscolor,
+                          _select ? Colors.white : notifire.buttonsColor,
                           "VIP",
-                          _select ? notifire.getbuttonscolor : Colors.white,
+                          _select ? notifire.buttonsColor : Colors.white,
                         )),
                     const Spacer(),
                     GestureDetector(
@@ -432,7 +421,7 @@ class _TicketState extends State<Ticket> {
                           });
                         },
                         child: tic(
-                          _select ? notifire.getbuttonscolor : Colors.white,
+                          _select ? notifire.buttonsColor : Colors.white,
                           "ECONOMY",
                           _select ? Colors.white : const Color(0xff5669ff),
                         )),
@@ -451,7 +440,7 @@ class _TicketState extends State<Ticket> {
                       style: TextStyle(
                         fontSize: 15.sp,
                         fontFamily: 'Gilroy Bold',
-                        color: notifire.getdarkscolor,
+                        color: notifire.darksColor,
                       ),
                     ),
                   ),
@@ -469,7 +458,7 @@ class _TicketState extends State<Ticket> {
                       borderRadius: const BorderRadius.all(
                         Radius.circular(10),
                       ),
-                      border: Border.all(color: Color(0xffdcdbdb), width: 1)),
+                      border: Border.all(color: const Color(0xffdcdbdb), width: 1)),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -485,7 +474,7 @@ class _TicketState extends State<Ticket> {
                             width: width / 7,
                             height: height,
                             decoration: BoxDecoration(
-                              color: notifire.getpinkcolor,
+                              color: notifire.pinkColor,
                               borderRadius: const BorderRadius.all(
                                 Radius.circular(10),
                               ),
@@ -507,7 +496,7 @@ class _TicketState extends State<Ticket> {
                         style: TextStyle(
                             fontSize: 15.sp,
                             fontFamily: 'Gilroy Normal',
-                            color: notifire.getdarkscolor,
+                            color: notifire.darksColor,
                             fontWeight: FontWeight.w600,),
                       ),
                       GestureDetector(
@@ -522,7 +511,7 @@ class _TicketState extends State<Ticket> {
                             width: width / 7,
                             height: height,
                             decoration: BoxDecoration(
-                              color: notifire.getpinkcolor,
+                              color: notifire.pinkColor,
                               borderRadius: const BorderRadius.all(
                                 Radius.circular(10),
                               ),
@@ -551,7 +540,7 @@ class _TicketState extends State<Ticket> {
                 style: TextStyle(
                   fontSize: 20.sp,
                   fontFamily: 'Gilroy Bold',
-                  color: notifire.getdarkscolor,
+                  color: notifire.darksColor,
                 ),
               ),
             ],
@@ -568,7 +557,7 @@ class _TicketState extends State<Ticket> {
         borderRadius: const BorderRadius.all(
           Radius.circular(10),
         ),
-        border: Border.all(width: 1, color: Color(0xffdcdbdb)),
+        border: Border.all(width: 1, color:const Color(0xffdcdbdb)),
       ),
       height: height / 12,
       width: width / 2.5,

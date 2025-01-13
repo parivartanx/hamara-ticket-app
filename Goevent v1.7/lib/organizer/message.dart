@@ -1,46 +1,35 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:goevent2/organizer/chat.dart';
+import 'package:goevent2/providers/color_provider.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-import '../utils/colornotifire.dart';
 import '../utils/media.dart';
 import '../utils/string.dart';
 
-class Message extends StatefulWidget {
+class Message extends ConsumerStatefulWidget {
   const Message({Key? key}) : super(key: key);
 
   @override
   _MessageState createState() => _MessageState();
 }
 
-class _MessageState extends State<Message> {
-  late ColorNotifire notifire;
-
-  getdarkmodepreviousstate() async {
-    final prefs = await SharedPreferences.getInstance();
-    bool? previusstate = prefs.getBool("setIsDark");
-    if (previusstate == null) {
-      notifire.setIsDark = false;
-    } else {
-      notifire.setIsDark = previusstate;
-    }
-  }
+class _MessageState extends ConsumerState<Message> {
+  
 
   @override
   void initState() {
     super.initState();
-    getdarkmodepreviousstate();
+    ref.read(colorProvider.notifier).getdarkmodepreviousstate();
   }
 
   @override
   Widget build(BuildContext context) {
-    notifire = Provider.of<ColorNotifire>(context, listen: true);
+    final notifire = ref.watch(colorProvider);
     return ScreenUtilInit(
       builder: (BuildContext context, child) => Scaffold(
-        backgroundColor: notifire.getprimerycolor,
+        backgroundColor: notifire.primaryColor,
         body: SingleChildScrollView(
           child: Column(
             children: [
@@ -57,7 +46,7 @@ class _MessageState extends State<Message> {
                       Navigator.pop(context);
                     },
                     child:
-                        Icon(Icons.arrow_back, color: notifire.getdarkscolor),
+                        Icon(Icons.arrow_back, color: notifire.darksColor),
                   ),
                   SizedBox(
                     width: width / 80,
@@ -68,13 +57,13 @@ class _MessageState extends State<Message> {
                       fontSize: 18.sp,
                       fontWeight: FontWeight.w900,
                       fontFamily: 'Gilroy Medium',
-                      color: notifire.getdarkscolor,
+                      color: notifire.darksColor,
                     ),
                   ),
                   const Spacer(),
                   Icon(
                     Icons.more_vert,
-                    color: notifire.getdarkscolor,
+                    color: notifire.darksColor,
                   ),
                   SizedBox(
                     width: width / 20,
@@ -86,7 +75,7 @@ class _MessageState extends State<Message> {
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: serchfild(),
+                child: serchfild(notifire),
               ),
               SizedBox(
                 height: height / 25,
@@ -130,7 +119,7 @@ class _MessageState extends State<Message> {
                                     fontSize: 16.sp,
                                     fontWeight: FontWeight.w900,
                                     fontFamily: 'Gilroy Medium',
-                                    color: notifire.getdarkscolor,
+                                    color: notifire.darksColor,
                                   ),
                                 ),
                                 SizedBox(
@@ -230,7 +219,7 @@ class _MessageState extends State<Message> {
                                     fontSize: 16.sp,
                                     fontWeight: FontWeight.w900,
                                     fontFamily: 'Gilroy Medium',
-                                    color: notifire.getdarkscolor,
+                                    color: notifire.darksColor,
                                   ),
                                 ),
                                 SizedBox(
@@ -302,6 +291,7 @@ class _MessageState extends State<Message> {
                 SizedBox(
                   width: width / 3.2,
                 ),
+                notifire
               ),
               chats(
                 "image/p4.png",
@@ -309,7 +299,7 @@ class _MessageState extends State<Message> {
                 "Looking forward to it!",
                 SizedBox(
                   width: width / 3.2,
-                ),
+                ),notifire
               ),
               chats(
                 "image/p1.png",
@@ -317,7 +307,7 @@ class _MessageState extends State<Message> {
                 "You can take this up?",
                 SizedBox(
                   width: width / 4.3,
-                ),
+                ),notifire
               ),
               chats(
                 "image/p2.png",
@@ -325,7 +315,7 @@ class _MessageState extends State<Message> {
                 "Nothing man, cheers!",
                 SizedBox(
                   width: width / 3.5,
-                ),
+                ),notifire
               ),
               chats(
                 "image/p3.png",
@@ -333,7 +323,7 @@ class _MessageState extends State<Message> {
                 "Okay, Bye!",
                 SizedBox(
                   width: width / 2.7,
-                ),
+                ),notifire
               ),
               chats(
                 "image/p4.png",
@@ -341,7 +331,7 @@ class _MessageState extends State<Message> {
                 "Okay, Bye!",
                 SizedBox(
                   width: width / 2.5,
-                ),
+                ),notifire
               ),
             ],
           ),
@@ -350,12 +340,12 @@ class _MessageState extends State<Message> {
     );
   }
 
-  Widget serchfild() {
+  Widget serchfild(ColorState notifire) {
     return Container(
       color: Colors.transparent,
       height: 40.h,
       child: TextField(
-        style: TextStyle(color: notifire.getdarkscolor),
+        style: TextStyle(color: notifire.darksColor),
         decoration: InputDecoration(
           labelText: CustomStrings.find,
           labelStyle: const TextStyle(color: Colors.grey),
@@ -366,7 +356,7 @@ class _MessageState extends State<Message> {
               padding: const EdgeInsets.all(10),
               child: Icon(
                 Icons.search,
-                color: notifire.getbuttonscolor,
+                color: notifire.buttonsColor,
               )),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(20),
@@ -376,7 +366,7 @@ class _MessageState extends State<Message> {
             borderRadius: BorderRadius.circular(20.sp),
           ),
           focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: notifire.getbuttonscolor, width: 1),
+            borderSide: BorderSide(color: notifire.buttonsColor, width: 1),
             borderRadius: BorderRadius.circular(20.sp),
           ),
         ),
@@ -384,7 +374,7 @@ class _MessageState extends State<Message> {
     );
   }
 
-  Widget chats(img, name1, name2, siz) {
+  Widget chats(img, name1, name2, siz,ColorState notifire) {
     return Column(
       children: [
         GestureDetector(
@@ -419,7 +409,7 @@ class _MessageState extends State<Message> {
                               fontSize: 16.sp,
                               fontWeight: FontWeight.w900,
                               fontFamily: 'Gilroy Medium',
-                              color: notifire.getdarkscolor,
+                              color: notifire.darksColor,
                             ),
                           ),
                           siz,

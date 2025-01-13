@@ -1,39 +1,29 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:goevent2/login_signup/resetpass.dart';
 import 'package:goevent2/login_signup/signup.dart';
+import 'package:goevent2/providers/color_provider.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../home/home.dart';
 import '../utils/botton.dart';
-import '../utils/colornotifire.dart';
 import '../utils/ctextfield.dart';
 import '../utils/itextfield.dart';
 import '../utils/media.dart';
 
-class Login extends StatefulWidget {
+class Login extends ConsumerStatefulWidget {
+  static const routeName = 'Login';
+  static const routePath = '/login';
   const Login({Key? key}) : super(key: key);
 
   @override
   _LoginState createState() => _LoginState();
 }
 
-class _LoginState extends State<Login> {
-  late ColorNotifire notifire;
+class _LoginState extends ConsumerState<Login> {
   bool status = false;
-
-  getdarkmodepreviousstate() async {
-    final prefs = await SharedPreferences.getInstance();
-    bool? previusstate = prefs.getBool("setIsDark");
-    if (previusstate == null) {
-      notifire.setIsDark = false;
-    } else {
-      notifire.setIsDark = previusstate;
-    }
-  }
 
   bool _obscureText = true;
 
@@ -46,15 +36,15 @@ class _LoginState extends State<Login> {
   @override
   void initState() {
     super.initState();
-    getdarkmodepreviousstate();
+    ref.read(colorProvider.notifier).getdarkmodepreviousstate();
   }
 
   @override
   Widget build(BuildContext context) {
-    notifire = Provider.of<ColorNotifire>(context, listen: true);
+    final notifire = ref.watch(colorProvider);
     return ScreenUtilInit(
       builder:  (BuildContext context, child) =>  Scaffold(
-        backgroundColor: notifire.getprimerycolor,
+        backgroundColor: notifire.primaryColor,
         body: SingleChildScrollView(
           child: Column(
             children: [
@@ -72,7 +62,7 @@ class _LoginState extends State<Login> {
                   fontSize: 32.sp,
                   fontWeight: FontWeight.w700,
                   fontFamily: 'Gilroy Medium',
-                  color: notifire.gettextcolor,
+                  color: notifire.textColor,
                 ),
               ),
               SizedBox(height: height / 30),
@@ -86,7 +76,7 @@ class _LoginState extends State<Login> {
                         fontSize: 20.sp,
                         fontWeight: FontWeight.bold,
                         fontFamily: 'Gilroy Medium',
-                        color: notifire.getwhitecolor,
+                        color: notifire.whiteColor,
                       ),
                     ),
                   ),
@@ -98,7 +88,7 @@ class _LoginState extends State<Login> {
                 child: Customtextfild.textField(
                   "User",
                   Colors.grey,
-                  notifire.getwhitecolor,
+                  notifire.whiteColor,
                   "image/Message.png",
                 ),
               ),
@@ -109,7 +99,7 @@ class _LoginState extends State<Login> {
                   _obscureText,
                   "Password",
                   Colors.grey,
-                  notifire.getwhitecolor,
+                  notifire.whiteColor,
                   "image/Lock.png",
                   GestureDetector(
                       onTap: () {
@@ -131,7 +121,7 @@ class _LoginState extends State<Login> {
                     Transform.scale(
                       scale: 0.7,
                       child: CupertinoSwitch(
-                        activeColor: notifire.getbuttonscolor,
+                        activeColor: notifire.buttonsColor,
                         value: status,
                         onChanged: (value) {
                           setState(() {
@@ -144,7 +134,7 @@ class _LoginState extends State<Login> {
                     Text(
                       "Remember Me",
                       style: TextStyle(
-                        color: notifire.getwhitecolor,
+                        color: notifire.whiteColor,
                         fontFamily: 'Gilroy Medium',
                       ),
                     ),
@@ -166,7 +156,7 @@ class _LoginState extends State<Login> {
                           child: Text(
                             "Forgot Password?",
                             style: TextStyle(
-                              color: notifire.getwhitecolor,
+                              color: notifire.whiteColor,
                               fontFamily: 'Gilroy Medium',
                             ),
                           ),
@@ -190,7 +180,7 @@ class _LoginState extends State<Login> {
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
                   child: Custombutton.button(
-                    notifire.getbuttonscolor,
+                    notifire.buttonsColor,
                     "SIGN IN",
                     SizedBox(
                       width: width / 3,
@@ -221,11 +211,11 @@ class _LoginState extends State<Login> {
                       ),
                     );
                   },
-                  child: log(notifire.getblackcolor, "Login with Google",
-                      "image/google.png", notifire.getwhitecolor)),
+                  child: log(notifire.blackColor, "Login with Google",
+                      "image/google.png", notifire.whiteColor)),
               SizedBox(height: height / 50),
-              log(notifire.getblackcolor, "Login with Facebook",
-                  "image/facebook.png", notifire.getwhitecolor),
+              log(notifire.blackColor, "Login with Facebook",
+                  "image/facebook.png", notifire.whiteColor),
               SizedBox(height: height / 30),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -233,7 +223,7 @@ class _LoginState extends State<Login> {
                   Text(
                     "Don't have an account?",
                     style: TextStyle(
-                      color: notifire.getwhitecolor,
+                      color: notifire.whiteColor,
                       fontSize: 12.sp,
                       fontFamily: 'Gilroy Medium',
                     ),

@@ -1,6 +1,7 @@
 // ignore_for_file: constant_identifier_names
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:goevent2/booking/upcoming.dart';
@@ -14,35 +15,35 @@ import 'package:goevent2/home/upgrade.dart';
 import 'package:goevent2/login_signup/login.dart';
 import 'package:goevent2/organizer/message.dart';
 import 'package:goevent2/profile/profile.dart';
+import 'package:goevent2/providers/color_provider.dart';
 import 'package:goevent2/utils/string.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../notification/notification.dart';
-import '../utils/colornotifire.dart';
 import '../utils/media.dart';
 
 final ZoomDrawerController z = ZoomDrawerController();
 
-class Home extends StatefulWidget {
+class Home extends ConsumerStatefulWidget {
+  static const routePath = '/';
+  static const routeName = 'home';
   const Home({Key? key}) : super(key: key);
 
   @override
   _HomeState createState() => _HomeState();
 }
 
-class _HomeState extends State<Home> {
-  late ColorNotifire notifire;
+class _HomeState extends ConsumerState<Home> {
   bool selected = false;
 
   getdarkmodepreviousstate() async {
     final prefs = await SharedPreferences.getInstance();
     bool? previusstate = prefs.getBool("setIsDark");
     if (previusstate == null) {
-      notifire.setIsDark = false;
+      ref.read(colorProvider.notifier).setDarkMode(false);
     } else {
-      notifire.setIsDark = previusstate;
+      ref.read(colorProvider.notifier).setDarkMode(previusstate);
     }
   }
 
@@ -54,7 +55,6 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    notifire = Provider.of<ColorNotifire>(context, listen: true);
     return ZoomDrawer(
       controller: z,
       borderRadius: 24,
@@ -105,14 +105,14 @@ class _HomeState extends State<Home> {
       ),
     );*/
 
-class Body extends StatefulWidget {
+class Body extends ConsumerStatefulWidget {
   const Body({Key? key}) : super(key: key);
 
   @override
-  State<Body> createState() => _BodyState();
+  ConsumerState<Body> createState() => _BodyState();
 }
 
-class _BodyState extends State<Body> with SingleTickerProviderStateMixin {
+class _BodyState extends ConsumerState<Body> with SingleTickerProviderStateMixin {
   late AnimationController controller = AnimationController(
     vsync: this,
     duration: const Duration(milliseconds: 100),
@@ -125,29 +125,20 @@ class _BodyState extends State<Body> with SingleTickerProviderStateMixin {
         status == AnimationStatus.forward;
   }
 
-  late ColorNotifire notifire;
 
-  getdarkmodepreviousstate() async {
-    final prefs = await SharedPreferences.getInstance();
-    bool? previusstate = prefs.getBool("setIsDark");
-    if (previusstate == null) {
-      notifire.setIsDark = false;
-    } else {
-      notifire.setIsDark = previusstate;
-    }
-  }
+ 
 
   @override
   void initState() {
     super.initState();
-    getdarkmodepreviousstate();
+    ref.read(colorProvider.notifier).getdarkmodepreviousstate();
   }
 
   @override
   Widget build(BuildContext context) {
-    notifire = Provider.of<ColorNotifire>(context, listen: true);
+    final primaryColor = ref.watch(colorProvider).primaryColor;
     return Scaffold(
-      backgroundColor: notifire.getprimerycolor,
+      backgroundColor: primaryColor,
       body: TwoPanels(
         controller: controller,
       ),
@@ -155,7 +146,7 @@ class _BodyState extends State<Body> with SingleTickerProviderStateMixin {
   }
 }
 
-class TwoPanels extends StatefulWidget {
+class TwoPanels extends ConsumerStatefulWidget {
   final AnimationController controller;
 
   const TwoPanels({Key? key, required this.controller}) : super(key: key);
@@ -164,7 +155,7 @@ class TwoPanels extends StatefulWidget {
   _TwoPanelsState createState() => _TwoPanelsState();
 }
 
-class _TwoPanelsState extends State<TwoPanels> with TickerProviderStateMixin {
+class _TwoPanelsState extends ConsumerState<TwoPanels> with TickerProviderStateMixin {
   static const header_height = 32.0;
   late TabController tabController = TabController(length: 3, vsync: this);
 
@@ -181,7 +172,6 @@ class _TwoPanelsState extends State<TwoPanels> with TickerProviderStateMixin {
     );
   }
 
-  late ColorNotifire notifire;
   bool selected = false;
   bool selected1 = false;
   bool selected2 = false;
@@ -205,28 +195,31 @@ class _TwoPanelsState extends State<TwoPanels> with TickerProviderStateMixin {
   bool isChecked8 = false;
   bool isChecked9 = false;
 
-  getdarkmodepreviousstate() async {
-    final prefs = await SharedPreferences.getInstance();
-    bool? previusstate = prefs.getBool("setIsDark");
-    if (previusstate == null) {
-      notifire.setIsDark = false;
-    } else {
-      notifire.setIsDark = previusstate;
-    }
-  }
+  //  getdarkmodepreviousstate() async {
+  //   final prefs = await SharedPreferences.getInstance();
+  //   bool? previusstate = prefs.getBool("setIsDark");
+  //   if (previusstate == null) {
+  //     ref.read(colorProvider.notifier).setDarkMode(false);
+  //   } else {
+  //    ref.read(colorProvider.notifier).setDarkMode(previusstate);
+  //   }
+  // }
 
   @override
   void initState() {
     super.initState();
-    getdarkmodepreviousstate();
+    ref.read(colorProvider.notifier).getdarkmodepreviousstate();
   }
 
   @override
   Widget build(BuildContext context) {
-    notifire = Provider.of<ColorNotifire>(context, listen: true);
 
+    final primaryColor = ref.watch(colorProvider).primaryColor;
+    final topColor = ref.watch(colorProvider).topColor;
+    final textColor = ref.watch(colorProvider).textColor;
+    final notifire = ref.watch(colorProvider);
     return Scaffold(
-      backgroundColor: notifire.getprimerycolor,
+      backgroundColor: primaryColor,
       body: LayoutBuilder(
         builder: (BuildContext ctx, BoxConstraints constraints) {
           return SingleChildScrollView(
@@ -236,7 +229,7 @@ class _TwoPanelsState extends State<TwoPanels> with TickerProviderStateMixin {
                   children: [
                     Container(
                       decoration: BoxDecoration(
-                        color: notifire.gettopcolor,
+                        color: topColor,
                         borderRadius: const BorderRadius.only(
                           bottomRight: Radius.circular(30),
                           bottomLeft: Radius.circular(30),
@@ -364,12 +357,12 @@ class _TwoPanelsState extends State<TwoPanels> with TickerProviderStateMixin {
                             scrollDirection: Axis.horizontal,
                             child: Row(
                               children: [
-                                games("image/music1.png", CustomStrings.musics),
-                                games("image/paint1.png", CustomStrings.art),
-                                games("image/sport1.png", CustomStrings.sport),
-                                games("image/party1.png", CustomStrings.party),
-                                games("image/paint1.png", CustomStrings.food),
-                                games("image/other1.png", CustomStrings.others),
+                                games("image/music1.png", CustomStrings.musics,notifire),
+                                games("image/paint1.png", CustomStrings.art,notifire),
+                                games("image/sport1.png", CustomStrings.sport,notifire),
+                                games("image/party1.png", CustomStrings.party,notifire),
+                                games("image/paint1.png", CustomStrings.food,notifire),
+                                games("image/other1.png", CustomStrings.others,notifire),
                               ],
                             ),
                           ),
@@ -387,7 +380,7 @@ class _TwoPanelsState extends State<TwoPanels> with TickerProviderStateMixin {
                         CustomStrings.upcoming,
                         style: TextStyle(
                             fontFamily: 'Gilroy Medium',
-                            color: notifire.gettextcolor,
+                            color: textColor,
                             fontSize: 16.sp,
                             fontWeight: FontWeight.w600),
                       ),
@@ -428,7 +421,7 @@ class _TwoPanelsState extends State<TwoPanels> with TickerProviderStateMixin {
                   scrollDirection: Axis.horizontal,
                   child: Row(
                     children: [
-                      SizedBox(width: 10),
+                      const SizedBox(width: 10),
                       events(
                           GestureDetector(
                             child: Container(
@@ -449,7 +442,7 @@ class _TwoPanelsState extends State<TwoPanels> with TickerProviderStateMixin {
                                             color: const Color(0xffF0635A),
                                           ))),
                           ),
-                          "image/g1.png"),
+                          "image/g1.png",notifire),
                       SizedBox(
                         width: width / 100,
                       ),
@@ -477,7 +470,7 @@ class _TwoPanelsState extends State<TwoPanels> with TickerProviderStateMixin {
                                             color: const Color(0xffF0635A),
                                           ))),
                           ),
-                          "image/g2.png"),
+                          "image/g2.png",notifire),
                       SizedBox(
                         width: width / 100,
                       ),
@@ -505,7 +498,7 @@ class _TwoPanelsState extends State<TwoPanels> with TickerProviderStateMixin {
                                             color: const Color(0xffF0635A),
                                           ))),
                           ),
-                          "image/g3.png"),
+                          "image/g3.png",notifire),
                       SizedBox(
                         width: width / 100,
                       ),
@@ -533,7 +526,7 @@ class _TwoPanelsState extends State<TwoPanels> with TickerProviderStateMixin {
                                             color: const Color(0xffF0635A),
                                           ))),
                           ),
-                          "image/g4.png"),
+                          "image/g4.png",notifire),
                       SizedBox(
                         width: width / 100,
                       ),
@@ -546,7 +539,7 @@ class _TwoPanelsState extends State<TwoPanels> with TickerProviderStateMixin {
                             },
                             child: Container(
                                 decoration: BoxDecoration(
-                                  color: Colors.white.withOpacity(0.7),
+                                  color: Colors.white.withAlpha(7),
                                   borderRadius: const BorderRadius.all(
                                       Radius.circular(5)),
                                 ),
@@ -561,7 +554,7 @@ class _TwoPanelsState extends State<TwoPanels> with TickerProviderStateMixin {
                                             color: const Color(0xffF0635A),
                                           ))),
                           ),
-                          "image/g1.png"),
+                          "image/g1.png",notifire),
                       SizedBox(
                         width: width / 100,
                       ),
@@ -574,7 +567,7 @@ class _TwoPanelsState extends State<TwoPanels> with TickerProviderStateMixin {
                             },
                             child: Container(
                                 decoration: BoxDecoration(
-                                  color: Colors.white.withOpacity(0.7),
+                                  color: Colors.white.withAlpha(7),
                                   borderRadius: const BorderRadius.all(
                                       Radius.circular(5)),
                                 ),
@@ -589,8 +582,8 @@ class _TwoPanelsState extends State<TwoPanels> with TickerProviderStateMixin {
                                             color: const Color(0xffF0635A),
                                           ))),
                           ),
-                          "image/g2.png"),
-                      SizedBox(width: 10),
+                          "image/g2.png",notifire),
+                      const SizedBox(width: 10),
                     ],
                   ),
                 ),
@@ -599,7 +592,7 @@ class _TwoPanelsState extends State<TwoPanels> with TickerProviderStateMixin {
                   padding: const EdgeInsets.symmetric(horizontal: 12),
                   child: Container(
                     decoration: BoxDecoration(
-                      color: notifire.getorangecolor,
+                      color: notifire.orangeColor,
                       borderRadius: const BorderRadius.all(Radius.circular(10)),
                     ),
                     height: height / 6,
@@ -622,7 +615,7 @@ class _TwoPanelsState extends State<TwoPanels> with TickerProviderStateMixin {
                                       CustomStrings.invites,
                                       style: TextStyle(
                                           fontFamily: 'Gilroy Medium',
-                                          color: notifire.getdarkscolor,
+                                          color: notifire.darksColor,
                                           fontSize: 14.sp,
                                           fontWeight: FontWeight.w700),
                                     ),
@@ -660,7 +653,7 @@ class _TwoPanelsState extends State<TwoPanels> with TickerProviderStateMixin {
                                                   Container(
                                                     decoration: BoxDecoration(
                                                       color:
-                                                          notifire.getcardcolor,
+                                                          notifire.cardColor,
                                                       borderRadius:
                                                           const BorderRadius
                                                               .only(
@@ -724,7 +717,7 @@ class _TwoPanelsState extends State<TwoPanels> with TickerProviderStateMixin {
                                                                     fontFamily:
                                                                         'Gilroy Medium',
                                                                     color: notifire
-                                                                        .getdarkscolor),
+                                                                        .darksColor),
                                                                 decoration:
                                                                     InputDecoration(
                                                                   labelText:
@@ -796,7 +789,7 @@ class _TwoPanelsState extends State<TwoPanels> with TickerProviderStateMixin {
                                                               "2k Followers",
                                                               "image/p1.png",
                                                               notifire
-                                                                  .gettextcolor,
+                                                                  .textColor,
                                                               Center(
                                                                 child: InkWell(
                                                                   onTap: () {
@@ -815,8 +808,8 @@ class _TwoPanelsState extends State<TwoPanels> with TickerProviderStateMixin {
                                                                             shape:
                                                                                 BoxShape.circle,
                                                                             color: isChecked
-                                                                                ? notifire.getbuttonscolor
-                                                                                : notifire.getpinkcolor,
+                                                                                ? notifire.buttonsColor
+                                                                                : notifire.pinkColor,
                                                                           ),
                                                                           child:
                                                                               Center(
@@ -842,7 +835,7 @@ class _TwoPanelsState extends State<TwoPanels> with TickerProviderStateMixin {
                                                               "56 Follwers",
                                                               "image/p2.png",
                                                               notifire
-                                                                  .gettextcolor,
+                                                                  .textColor,
                                                               Center(
                                                                 child: InkWell(
                                                                   onTap: () {
@@ -861,8 +854,8 @@ class _TwoPanelsState extends State<TwoPanels> with TickerProviderStateMixin {
                                                                             shape:
                                                                                 BoxShape.circle,
                                                                             color: isChecked1
-                                                                                ? notifire.getbuttonscolor
-                                                                                : notifire.getpinkcolor,
+                                                                                ? notifire.buttonsColor
+                                                                                : notifire.pinkColor,
                                                                           ),
                                                                           child:
                                                                               Center(
@@ -888,7 +881,7 @@ class _TwoPanelsState extends State<TwoPanels> with TickerProviderStateMixin {
                                                               "2k Followers",
                                                               "image/p3.png",
                                                               notifire
-                                                                  .gettextcolor,
+                                                                  .textColor,
                                                               Center(
                                                                 child: InkWell(
                                                                   onTap: () {
@@ -907,8 +900,8 @@ class _TwoPanelsState extends State<TwoPanels> with TickerProviderStateMixin {
                                                                             shape:
                                                                                 BoxShape.circle,
                                                                             color: isChecked2
-                                                                                ? notifire.getbuttonscolor
-                                                                                : notifire.getpinkcolor,
+                                                                                ? notifire.buttonsColor
+                                                                                : notifire.pinkColor,
                                                                           ),
                                                                           child:
                                                                               Center(
@@ -934,7 +927,7 @@ class _TwoPanelsState extends State<TwoPanels> with TickerProviderStateMixin {
                                                               "300 Follwers",
                                                               "image/p4.png",
                                                               notifire
-                                                                  .gettextcolor,
+                                                                  .textColor,
                                                               Center(
                                                                 child: InkWell(
                                                                   onTap: () {
@@ -953,8 +946,8 @@ class _TwoPanelsState extends State<TwoPanels> with TickerProviderStateMixin {
                                                                             shape:
                                                                                 BoxShape.circle,
                                                                             color: isChecked3
-                                                                                ? notifire.getbuttonscolor
-                                                                                : notifire.getpinkcolor,
+                                                                                ? notifire.buttonsColor
+                                                                                : notifire.pinkColor,
                                                                           ),
                                                                           child:
                                                                               Center(
@@ -980,7 +973,7 @@ class _TwoPanelsState extends State<TwoPanels> with TickerProviderStateMixin {
                                                               "5k Follwers",
                                                               "image/p1.png",
                                                               notifire
-                                                                  .gettextcolor,
+                                                                  .textColor,
                                                               Center(
                                                                 child: InkWell(
                                                                   onTap: () {
@@ -999,8 +992,8 @@ class _TwoPanelsState extends State<TwoPanels> with TickerProviderStateMixin {
                                                                             shape:
                                                                                 BoxShape.circle,
                                                                             color: isChecked4
-                                                                                ? notifire.getbuttonscolor
-                                                                                : notifire.getpinkcolor,
+                                                                                ? notifire.buttonsColor
+                                                                                : notifire.pinkColor,
                                                                           ),
                                                                           child:
                                                                               Center(
@@ -1026,7 +1019,7 @@ class _TwoPanelsState extends State<TwoPanels> with TickerProviderStateMixin {
                                                               "402 Follwers",
                                                               "image/p2.png",
                                                               notifire
-                                                                  .gettextcolor,
+                                                                  .textColor,
                                                               Center(
                                                                 child: InkWell(
                                                                   onTap: () {
@@ -1045,8 +1038,8 @@ class _TwoPanelsState extends State<TwoPanels> with TickerProviderStateMixin {
                                                                             shape:
                                                                                 BoxShape.circle,
                                                                             color: isChecked5
-                                                                                ? notifire.getbuttonscolor
-                                                                                : notifire.getpinkcolor,
+                                                                                ? notifire.buttonsColor
+                                                                                : notifire.pinkColor,
                                                                           ),
                                                                           child:
                                                                               Center(
@@ -1072,7 +1065,7 @@ class _TwoPanelsState extends State<TwoPanels> with TickerProviderStateMixin {
                                                               "893 Follwers",
                                                               "image/p3.png",
                                                               notifire
-                                                                  .gettextcolor,
+                                                                  .textColor,
                                                               Center(
                                                                 child: InkWell(
                                                                   onTap: () {
@@ -1091,8 +1084,8 @@ class _TwoPanelsState extends State<TwoPanels> with TickerProviderStateMixin {
                                                                             shape:
                                                                                 BoxShape.circle,
                                                                             color: isChecked6
-                                                                                ? notifire.getbuttonscolor
-                                                                                : notifire.getpinkcolor,
+                                                                                ? notifire.buttonsColor
+                                                                                : notifire.pinkColor,
                                                                           ),
                                                                           child:
                                                                               Center(
@@ -1118,7 +1111,7 @@ class _TwoPanelsState extends State<TwoPanels> with TickerProviderStateMixin {
                                                               "225 Follwers",
                                                               "image/p4.png",
                                                               notifire
-                                                                  .gettextcolor,
+                                                                  .textColor,
                                                               Center(
                                                                 child: InkWell(
                                                                   onTap: () {
@@ -1137,8 +1130,8 @@ class _TwoPanelsState extends State<TwoPanels> with TickerProviderStateMixin {
                                                                             shape:
                                                                                 BoxShape.circle,
                                                                             color: isChecked7
-                                                                                ? notifire.getbuttonscolor
-                                                                                : notifire.getpinkcolor,
+                                                                                ? notifire.buttonsColor
+                                                                                : notifire.pinkColor,
                                                                           ),
                                                                           child:
                                                                               Center(
@@ -1164,7 +1157,7 @@ class _TwoPanelsState extends State<TwoPanels> with TickerProviderStateMixin {
                                                               "322 Follwers",
                                                               "image/p1.png",
                                                               notifire
-                                                                  .gettextcolor,
+                                                                  .textColor,
                                                               Center(
                                                                 child: InkWell(
                                                                   onTap: () {
@@ -1183,8 +1176,8 @@ class _TwoPanelsState extends State<TwoPanels> with TickerProviderStateMixin {
                                                                             shape:
                                                                                 BoxShape.circle,
                                                                             color: isChecked8
-                                                                                ? notifire.getbuttonscolor
-                                                                                : notifire.getpinkcolor,
+                                                                                ? notifire.buttonsColor
+                                                                                : notifire.pinkColor,
                                                                           ),
                                                                           child:
                                                                               Center(
@@ -1210,7 +1203,7 @@ class _TwoPanelsState extends State<TwoPanels> with TickerProviderStateMixin {
                                                               "2k Follwers",
                                                               "image/p2.png",
                                                               notifire
-                                                                  .gettextcolor,
+                                                                  .textColor,
                                                               Center(
                                                                 child: InkWell(
                                                                   onTap: () {
@@ -1229,8 +1222,8 @@ class _TwoPanelsState extends State<TwoPanels> with TickerProviderStateMixin {
                                                                             shape:
                                                                                 BoxShape.circle,
                                                                             color: isChecked9
-                                                                                ? notifire.getbuttonscolor
-                                                                                : notifire.getpinkcolor,
+                                                                                ? notifire.buttonsColor
+                                                                                : notifire.pinkColor,
                                                                           ),
                                                                           child:
                                                                               Center(
@@ -1261,7 +1254,7 @@ class _TwoPanelsState extends State<TwoPanels> with TickerProviderStateMixin {
                                       child: Container(
                                         height: height / 30,
                                         width: width / 6,
-                                        color: notifire.getbluecolor,
+                                        color: notifire.blueColor,
                                         child: Center(
                                           child: Text(
                                             CustomStrings.invite,
@@ -1302,7 +1295,7 @@ class _TwoPanelsState extends State<TwoPanels> with TickerProviderStateMixin {
                         "Nearby You",
                         style: TextStyle(
                             fontFamily: 'Gilroy Medium',
-                            color: notifire.gettextcolor,
+                            color: notifire.textColor,
                             fontSize: 16.sp,
                             fontWeight: FontWeight.w600),
                       ),
@@ -1368,7 +1361,7 @@ class _TwoPanelsState extends State<TwoPanels> with TickerProviderStateMixin {
                         ),
                       ),
                     ),
-                    "image/n1.png"),
+                    "image/n1.png",notifire),
                 conference(
                     GestureDetector(
                       onTap: () {
@@ -1394,7 +1387,7 @@ class _TwoPanelsState extends State<TwoPanels> with TickerProviderStateMixin {
                         ),
                       ),
                     ),
-                    "image/n2.png"),
+                    "image/n2.png",notifire),
                 conference(
                     GestureDetector(
                       onTap: () {
@@ -1418,7 +1411,7 @@ class _TwoPanelsState extends State<TwoPanels> with TickerProviderStateMixin {
                                       color: const Color(0xffF0635A),
                                     ))),
                     ),
-                    "image/n3.png"),
+                    "image/n3.png",notifire),
                 conference(
                     GestureDetector(
                       onTap: () {
@@ -1446,7 +1439,7 @@ class _TwoPanelsState extends State<TwoPanels> with TickerProviderStateMixin {
                         ),
                       ),
                     ),
-                    "image/n4.png"),
+                    "image/n4.png",notifire),
 
                 conference(
                     GestureDetector(
@@ -1475,7 +1468,7 @@ class _TwoPanelsState extends State<TwoPanels> with TickerProviderStateMixin {
                         ),
                       ),
                     ),
-                    "image/n5.png"),
+                    "image/n5.png",notifire),
                 SizedBox(
                   height: height / 60,
                 ),
@@ -1487,7 +1480,7 @@ class _TwoPanelsState extends State<TwoPanels> with TickerProviderStateMixin {
                         "Event This Month",
                         style: TextStyle(
                             fontFamily: 'Gilroy Medium',
-                            color: notifire.gettextcolor,
+                            color: notifire.textColor,
                             fontSize: 16.sp,
                             fontWeight: FontWeight.w600),
                       ),
@@ -1517,15 +1510,15 @@ class _TwoPanelsState extends State<TwoPanels> with TickerProviderStateMixin {
                 SizedBox(
                   height: height / 60,
                 ),
-                monthly("image/n1.png", "Halloween Festival"),
+                monthly("image/n1.png", "Halloween Festival",notifire),
 
-                monthly("image/n2.png", "Women's Festival"),
+                monthly("image/n2.png", "Women's Festival",notifire),
 
-                monthly("image/n3.png", "Halloween Festival"),
+                monthly("image/n3.png", "Halloween Festival",notifire),
 
-                monthly("image/n4.png", "Women's Festival"),
+                monthly("image/n4.png", "Women's Festival",notifire),
 
-                monthly("image/n5.png", "Halloween Festival"),
+                monthly("image/n5.png", "Halloween Festival",notifire),
                 SizedBox(
                   height: height / 60,
                 ),
@@ -1537,7 +1530,7 @@ class _TwoPanelsState extends State<TwoPanels> with TickerProviderStateMixin {
     );
   }
 
-  Widget monthly(img, name) {
+  Widget monthly(img, name,ColorState notifire) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -1553,9 +1546,9 @@ class _TwoPanelsState extends State<TwoPanels> with TickerProviderStateMixin {
           child: Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(15),
-              color: notifire.getprimerycolor,
+              color: notifire.primaryColor,
               border: Border.all(
-                color: Color(0xffdcdbdb),
+                color: const Color(0xffdcdbdb),
                 width: 1,
               ),
             ),
@@ -1607,7 +1600,7 @@ class _TwoPanelsState extends State<TwoPanels> with TickerProviderStateMixin {
                                             name,
                                             style: TextStyle(
                                                 fontFamily: 'Gilroy Medium',
-                                                color: notifire.getdarkscolor,
+                                                color: notifire.darksColor,
                                                 fontSize: 14.sp,
                                                 fontWeight: FontWeight.w600),
                                           ),
@@ -1720,7 +1713,7 @@ class _TwoPanelsState extends State<TwoPanels> with TickerProviderStateMixin {
                     ),
                     Container(
                       decoration: BoxDecoration(
-                        color: notifire.getpinkcolor,
+                        color: notifire.pinkColor,
                         borderRadius:
                             const BorderRadius.all(Radius.circular(10)),
                       ),
@@ -1732,7 +1725,7 @@ class _TwoPanelsState extends State<TwoPanels> with TickerProviderStateMixin {
                           Text(
                             "Feb",
                             style: TextStyle(
-                                color: notifire.getdarkscolor,
+                                color: notifire.darksColor,
                                 fontSize: 14.sp,
                                 fontFamily: 'Gilroy Bold',
                                 fontWeight: FontWeight.bold),
@@ -1798,7 +1791,7 @@ class _TwoPanelsState extends State<TwoPanels> with TickerProviderStateMixin {
     );
   }
 
-  Widget conference(se, img) {
+  Widget conference(se, img,ColorState notifire) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12),
       child: GestureDetector(
@@ -1817,9 +1810,9 @@ class _TwoPanelsState extends State<TwoPanels> with TickerProviderStateMixin {
           child: Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(15),
-              color: notifire.getprimerycolor,
+              color: notifire.primaryColor,
               border: Border.all(
-                color: Color(0xffdcdbdb),
+                color: const Color(0xffdcdbdb),
                 width: 1,
               ),
             ),
@@ -1881,7 +1874,7 @@ class _TwoPanelsState extends State<TwoPanels> with TickerProviderStateMixin {
                                 "Women's leadership \n conference",
                                 style: TextStyle(
                                     fontFamily: 'Gilroy Medium',
-                                    color: notifire.getdarkscolor,
+                                    color: notifire.darksColor,
                                     fontSize: 14.sp,
                                     fontWeight: FontWeight.w600),
                               ),
@@ -1922,7 +1915,7 @@ class _TwoPanelsState extends State<TwoPanels> with TickerProviderStateMixin {
     );
   }
 
-  Widget events(se, img) {
+  Widget events(se, img,ColorState notifire) {
     return Stack(
       children: [
         GestureDetector(
@@ -1937,9 +1930,9 @@ class _TwoPanelsState extends State<TwoPanels> with TickerProviderStateMixin {
             child: Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(15),
-                color: notifire.getprimerycolor,
+                color: notifire.primaryColor,
                 border: Border.all(
-                  color: Color(0xffdcdbdb),
+                  color: const Color(0xffdcdbdb),
                   width: 1,
                 ),
               ),
@@ -1947,7 +1940,7 @@ class _TwoPanelsState extends State<TwoPanels> with TickerProviderStateMixin {
               width: width / 1.5,
               child: Card(
                 elevation: 0,
-                color: notifire.getprimerycolor,
+                color: notifire.primaryColor,
                 child: Padding(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
@@ -2001,7 +1994,7 @@ class _TwoPanelsState extends State<TwoPanels> with TickerProviderStateMixin {
                             "International Band Music...",
                             style: TextStyle(
                                 fontFamily: 'Gilroy Medium',
-                                color: notifire.getdarkscolor,
+                                color: notifire.darksColor,
                                 fontSize: 16.sp,
                                 fontWeight: FontWeight.w600),
                           ),
@@ -2085,7 +2078,7 @@ class _TwoPanelsState extends State<TwoPanels> with TickerProviderStateMixin {
                               const Spacer(),
                               Container(
                                 decoration: BoxDecoration(
-                                  color: notifire.getprimerycolor,
+                                  color: notifire.primaryColor,
                                   borderRadius:
                                       const BorderRadius.all(Radius.circular(20)),
                                 ),
@@ -2131,7 +2124,7 @@ class _TwoPanelsState extends State<TwoPanels> with TickerProviderStateMixin {
     );
   }
 
-  Widget games(img, name) {
+  Widget games(img, name ,ColorState notifire) {
     return Column(
       children: [
         GestureDetector(
@@ -2152,7 +2145,7 @@ class _TwoPanelsState extends State<TwoPanels> with TickerProviderStateMixin {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(15),
               ),
-              color: notifire.getprimerycolor,
+              color: notifire.primaryColor,
               child: Column(
                 children: [
                   SizedBox(
@@ -2169,7 +2162,7 @@ class _TwoPanelsState extends State<TwoPanels> with TickerProviderStateMixin {
                     height: height / 40,
                     width: width / 6,
                     decoration: BoxDecoration(
-                      color: notifire.gettopcolor,
+                      color: notifire.topColor,
                       borderRadius: const BorderRadius.all(
                         Radius.circular(20),
                       ),
@@ -2199,37 +2192,39 @@ class _TwoPanelsState extends State<TwoPanels> with TickerProviderStateMixin {
   }
 }
 
-class Side extends StatefulWidget {
+class Side extends ConsumerStatefulWidget {
   const Side({Key? key}) : super(key: key);
 
   @override
   _SideState createState() => _SideState();
 }
 
-class _SideState extends State<Side> {
-  late ColorNotifire notifire;
+class _SideState extends ConsumerState<Side> {
+  // late ColorNotifire notifire;
 
-  getdarkmodepreviousstate() async {
-    final prefs = await SharedPreferences.getInstance();
-    bool? previusstate = prefs.getBool("setIsDark");
-    if (previusstate == null) {
-      notifire.setIsDark = false;
-    } else {
-      notifire.setIsDark = previusstate;
-    }
-  }
+  // getdarkmodepreviousstate() async {
+  //   final prefs = await SharedPreferences.getInstance();
+  //   bool? previusstate = prefs.getBool("setIsDark");
+  //   if (previusstate == null) {
+  //     ref.read(colorProvider.notifier).setDarkMode(false);
+  //   } else {
+  //    ref.read(colorProvider.notifier).setDarkMode(previusstate);
+  //   }
+  // }
 
   @override
   void initState() {
     super.initState();
-    getdarkmodepreviousstate();
+    ref.read(colorProvider.notifier).getdarkmodepreviousstate();
   }
 
   @override
   Widget build(BuildContext context) {
-    notifire = Provider.of<ColorNotifire>(context, listen: true);
+    // notifire = Provider.of<ColorNotifire>(context, listen: true);
+    final buttonColor = ref.watch(colorProvider).buttonColor;
+    final proColor = ref.watch(colorProvider).proColor;
     return Scaffold(
-      backgroundColor: notifire.getbuttoncolor,
+      backgroundColor:buttonColor,
       body: SingleChildScrollView(
         child: ScreenUtilInit(
           builder: (BuildContext context, child) => Column(
@@ -2382,7 +2377,7 @@ class _SideState extends State<Side> {
                       borderRadius: const BorderRadius.all(
                         Radius.circular(10),
                       ),
-                      color: notifire.getprocolor,
+                      color: proColor,
                     ),
                     height: height / 16,
                     width: width / 2.4,

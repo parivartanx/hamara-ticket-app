@@ -1,26 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_countdown_timer/countdown_timer_controller.dart';
 import 'package:flutter_countdown_timer/flutter_countdown_timer.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:goevent2/providers/color_provider.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../utils/botton.dart';
-import '../utils/colornotifire.dart';
 import '../utils/media.dart';
 import '../utils/wtextfield.dart';
 import 'interest.dart';
 
-class Verification extends StatefulWidget {
+class Verification extends ConsumerStatefulWidget {
   const Verification({Key? key}) : super(key: key);
 
   @override
   _VerificationState createState() => _VerificationState();
 }
 
-class _VerificationState extends State<Verification> {
-  late ColorNotifire notifire;
+class _VerificationState extends ConsumerState<Verification> {
   late CountdownTimerController controller;
   int endTime = DateTime.now().millisecondsSinceEpoch + 7200 * 8;
 
@@ -30,28 +28,18 @@ class _VerificationState extends State<Verification> {
     super.dispose();
   }
 
-  getdarkmodepreviousstate() async {
-    final prefs = await SharedPreferences.getInstance();
-    bool? previusstate = prefs.getBool("setIsDark");
-    if (previusstate == null) {
-      notifire.setIsDark = false;
-    } else {
-      notifire.setIsDark = previusstate;
-    }
-  }
-
   @override
   void initState() {
     super.initState();
-    getdarkmodepreviousstate();
+    ref.read(colorProvider.notifier).getdarkmodepreviousstate();
   }
 
   @override
   Widget build(BuildContext context) {
-    notifire = Provider.of<ColorNotifire>(context, listen: true);
+    final notifire = ref.watch(colorProvider);
     return ScreenUtilInit(
       builder:  (BuildContext context, child) =>  Scaffold(
-        backgroundColor: notifire.getprimerycolor,
+        backgroundColor: notifire.primaryColor,
         body: SingleChildScrollView(
           child: Column(
             children: [
@@ -66,10 +54,10 @@ class _VerificationState extends State<Verification> {
                       Navigator.pop(context);
                     },
                     child: Container(
-                      color: notifire.getprimerycolor,
+                      color: notifire.primaryColor,
                       child: Icon(
                         Icons.arrow_back,
-                        color: notifire.getwhitecolor,
+                        color: notifire.whiteColor,
                       ),
                     ),
                   ),
@@ -88,7 +76,7 @@ class _VerificationState extends State<Verification> {
                         fontSize: 20.sp,
                         fontWeight: FontWeight.bold,
                         fontFamily: 'Gilroy Medium',
-                        color: notifire.getwhitecolor,
+                        color: notifire.whiteColor,
                       ),
                     ),
                   ),
@@ -109,7 +97,7 @@ class _VerificationState extends State<Verification> {
                           style: TextStyle(
                             fontSize: 12.sp,
                             fontFamily: 'Gilroy Medium',
-                            color: notifire.getwhitecolor,
+                            color: notifire.whiteColor,
                           ),
                         ),
                         SizedBox(
@@ -120,7 +108,7 @@ class _VerificationState extends State<Verification> {
                           style: TextStyle(
                             fontSize: 12.sp,
                             fontFamily: 'Gilroy Medium',
-                            color: notifire.getwhitecolor,
+                            color: notifire.whiteColor,
                           ),
                         ),
                       ],
@@ -134,13 +122,13 @@ class _VerificationState extends State<Verification> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  Customtextfild3.textField(notifire.getwhitecolor, "",
+                  Customtextfild3.textField(notifire.whiteColor, "",
                       width / 7, TextInputType.number, 1, TextAlign.center),
-                  Customtextfild3.textField(notifire.getwhitecolor, "",
+                  Customtextfild3.textField(notifire.whiteColor, "",
                       width / 7, TextInputType.number, 1, TextAlign.center),
-                  Customtextfild3.textField(notifire.getwhitecolor, "",
+                  Customtextfild3.textField(notifire.whiteColor, "",
                       width / 7, TextInputType.number, 1, TextAlign.center),
-                  Customtextfild3.textField(notifire.getwhitecolor, "",
+                  Customtextfild3.textField(notifire.whiteColor, "",
                       width / 7, TextInputType.number, 1, TextAlign.center),
                 ],
               ),
@@ -160,7 +148,7 @@ class _VerificationState extends State<Verification> {
                 child: Padding(
                   padding: const EdgeInsets.only(right: 20, left: 20),
                   child: Custombutton.button(
-                    notifire.getbuttonscolor,
+                    notifire.buttonsColor,
                     "CONTINUE",
                     SizedBox(
                       width: width / 3.5,
@@ -179,7 +167,7 @@ class _VerificationState extends State<Verification> {
                 children: [
                   Text("Re-send code in  ",
                       style: TextStyle(
-                        color: notifire.getwhitecolor,
+                        color: notifire.whiteColor,
                         fontSize: 12.sp,
                         fontFamily: 'Gilroy Medium',
                       )),

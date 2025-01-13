@@ -1,20 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:goevent2/organizer/about.dart';
 import 'package:goevent2/organizer/events.dart';
 import 'package:goevent2/organizer/review.dart';
-import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:goevent2/providers/color_provider.dart';
 
-import '../utils/colornotifire.dart';
 
-class Follow extends StatefulWidget {
+class Follow extends ConsumerStatefulWidget {
   const Follow({Key? key}) : super(key: key);
 
   @override
   _FollowState createState() => _FollowState();
 }
 
-class _FollowState extends State<Follow>with SingleTickerProviderStateMixin {
+class _FollowState extends ConsumerState<Follow>with SingleTickerProviderStateMixin {
 
   TabController? controller;
   List<Widget> tabs = const [
@@ -25,37 +24,26 @@ class _FollowState extends State<Follow>with SingleTickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    getdarkmodepreviousstate();
+    ref.read(colorProvider.notifier).getdarkmodepreviousstate();
     controller = TabController(length: 3, vsync: this);
   }
 
-  late ColorNotifire notifire;
-
-  getdarkmodepreviousstate() async {
-    final prefs = await SharedPreferences.getInstance();
-    bool? previusstate = prefs.getBool("setIsDark");
-    if (previusstate == null) {
-      notifire.setIsDark = false;
-    } else {
-      notifire.setIsDark = previusstate;
-    }
-  }
 
 
   @override
   Widget build(BuildContext context) {
-    notifire = Provider.of<ColorNotifire>(context, listen: true);
+    final notifire = ref.watch(colorProvider);
       return Scaffold(
-        backgroundColor: notifire.getprimerycolor,
+        backgroundColor: notifire.primaryColor,
         body: Container(
           color: Colors.transparent,
           child: Column(
             children: <Widget>[
               TabBar(
-                indicatorColor: notifire.getbuttonscolor,
+                indicatorColor: notifire.buttonsColor,
                  indicatorSize: TabBarIndicatorSize.label,
                 controller: controller,
-                labelColor: notifire.getbuttonscolor,
+                labelColor: notifire.buttonsColor,
                 unselectedLabelColor: Colors.grey,
                 tabs: const [
                   Tab(text: "About"),

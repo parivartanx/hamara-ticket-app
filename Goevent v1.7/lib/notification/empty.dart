@@ -1,43 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:goevent2/providers/color_provider.dart';
 
-import '../utils/colornotifire.dart';
 import '../utils/media.dart';
 import '../utils/string.dart';
 
-class Empty extends StatefulWidget {
+class Empty extends ConsumerStatefulWidget {
   const Empty({Key? key}) : super(key: key);
 
   @override
   _EmptyState createState() => _EmptyState();
 }
 
-class _EmptyState extends State<Empty> {
-  late ColorNotifire notifire;
-
-  getdarkmodepreviousstate() async {
-    final prefs = await SharedPreferences.getInstance();
-    bool? previusstate = prefs.getBool("setIsDark");
-    if (previusstate == null) {
-      notifire.setIsDark = false;
-    } else {
-      notifire.setIsDark = previusstate;
-    }
-  }
+class _EmptyState extends ConsumerState<Empty> {
 
   @override
   void initState() {
     super.initState();
-    getdarkmodepreviousstate();
+    ref.read(colorProvider.notifier).getdarkmodepreviousstate();
   }
 
   @override
   Widget build(BuildContext context) {
-    notifire = Provider.of<ColorNotifire>(context, listen: true);
+    final notifire = ref.watch(colorProvider);
     return ScreenUtilInit(builder:  (BuildContext context, child) =>  Scaffold(
-      backgroundColor: notifire.getprimerycolor,
+      backgroundColor: notifire.primaryColor,
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -54,7 +42,7 @@ class _EmptyState extends State<Empty> {
                     Navigator.pop(context);
                   },
                   child:
-                  Icon(Icons.arrow_back, color: notifire.getdarkscolor),
+                  Icon(Icons.arrow_back, color: notifire.darksColor),
                 ),
                 SizedBox(
                   width: width / 80,
@@ -65,7 +53,7 @@ class _EmptyState extends State<Empty> {
                     fontSize: 18.sp,
                     fontWeight: FontWeight.w900,
                     fontFamily: 'Gilroy Medium',
-                    color: notifire.getdarkscolor,
+                    color: notifire.darksColor,
                   ),
                 ),
                 const Spacer(),
@@ -83,7 +71,7 @@ class _EmptyState extends State<Empty> {
               fontSize: 18.sp,
               fontWeight: FontWeight.w900,
               fontFamily: 'Gilroy Medium',
-              color: notifire.gettextcolor,
+              color: notifire.textColor,
             ),),
             SizedBox(
               height: height / 50,

@@ -1,47 +1,36 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:goevent2/providers/color_provider.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../utils/botton.dart';
-import '../utils/colornotifire.dart';
 import '../utils/media.dart';
 import '../utils/string.dart';
 import 'finalticket.dart';
 
-class PayMethod extends StatefulWidget {
+class PayMethod extends ConsumerStatefulWidget {
   const PayMethod({Key? key}) : super(key: key);
 
   @override
   _PayMethodState createState() => _PayMethodState();
 }
 
-class _PayMethodState extends State<PayMethod> {
-  late ColorNotifire notifire;
+class _PayMethodState extends ConsumerState<PayMethod> {
 
-  getdarkmodepreviousstate() async {
-    final prefs = await SharedPreferences.getInstance();
-    bool? previusstate = prefs.getBool("setIsDark");
-    if (previusstate == null) {
-      notifire.setIsDark = false;
-    } else {
-      notifire.setIsDark = previusstate;
-    }
-  }
 
   @override
   void initState() {
     super.initState();
-    getdarkmodepreviousstate();
+    ref.read(colorProvider.notifier).getdarkmodepreviousstate(); 
   }
 
   @override
   Widget build(BuildContext context) {
-    notifire = Provider.of<ColorNotifire>(context, listen: true);
+    final notifire = ref.watch(colorProvider);
     return ScreenUtilInit(
       builder:  (BuildContext context, child) =>  Scaffold(
-        backgroundColor: notifire.getprimerycolor,
+        backgroundColor: notifire.primaryColor,
         floatingActionButton: Padding(
           padding: const EdgeInsets.fromLTRB(20,0,20,10),
           child: SizedBox(
@@ -56,7 +45,7 @@ class _PayMethodState extends State<PayMethod> {
                         child: const Final(),),);
               },
               child:  Custombutton.button(
-                notifire.getbuttonscolor,
+                notifire.buttonsColor,
                 "CONFIRM",
                 SizedBox(
                   width: width / 3.5,
@@ -85,7 +74,7 @@ class _PayMethodState extends State<PayMethod> {
                       Navigator.pop(context);
                     },
                     child:
-                    Icon(Icons.arrow_back, color: notifire.getdarkscolor),
+                    Icon(Icons.arrow_back, color: notifire.darksColor),
                   ),
                   SizedBox(
                     width: width / 80,
@@ -96,7 +85,7 @@ class _PayMethodState extends State<PayMethod> {
                       fontSize: 18.sp,
                       fontWeight: FontWeight.w900,
                       fontFamily: 'Gilroy Medium',
-                      color: notifire.getdarkscolor,
+                      color: notifire.darksColor,
                     ),
                   ),
                 ],
@@ -114,7 +103,7 @@ class _PayMethodState extends State<PayMethod> {
                         fontSize: 16.sp,
                         fontWeight: FontWeight.w500,
                         fontFamily: 'Gilroy Bold',
-                        color: notifire.gettextcolor,
+                        color: notifire.textColor,
                       ),
                     ),
                   ],
@@ -140,7 +129,7 @@ class _PayMethodState extends State<PayMethod> {
                         fontSize: 16.sp,
                         fontWeight: FontWeight.w500,
                         fontFamily: 'Gilroy Bold',
-                        color: notifire.gettextcolor,
+                        color: notifire.textColor,
                       ),
                     ),
                   ],
@@ -154,7 +143,7 @@ class _PayMethodState extends State<PayMethod> {
                 child: Container(
                   height: height / 10,
                   decoration:  BoxDecoration(
-                    color: notifire.getpinkcolor,
+                    color: notifire.pinkColor,
                     borderRadius: const BorderRadius.all(Radius.circular(10))
                   ),
                   child: Column(
@@ -183,7 +172,7 @@ class _PayMethodState extends State<PayMethod> {
                             style: TextStyle(
                               fontSize: 14.sp,
                               fontFamily: 'Gilroy Bold',
-                              color: notifire.gettextcolor,
+                              color: notifire.textColor,
                             ),),
                           SizedBox(width: width / 30,),
                           Container(

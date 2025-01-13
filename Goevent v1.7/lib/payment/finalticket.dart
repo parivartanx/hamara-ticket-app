@@ -1,46 +1,36 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:goevent2/booking/booking.dart';
-import 'package:goevent2/utils/string.dart';
+import '/booking/booking.dart';
+import '/providers/color_provider.dart';
+import '/utils/string.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-import '../utils/colornotifire.dart';
 import '../utils/media.dart';
 
-class Final extends StatefulWidget {
+class Final extends ConsumerStatefulWidget {
   const Final({Key? key}) : super(key: key);
 
   @override
   _FinalState createState() => _FinalState();
 }
 
-class _FinalState extends State<Final> {
-  late ColorNotifire notifire;
+class _FinalState extends ConsumerState<Final> {
 
-  getdarkmodepreviousstate() async {
-    final prefs = await SharedPreferences.getInstance();
-    bool? previusstate = prefs.getBool("setIsDark");
-    if (previusstate == null) {
-      notifire.setIsDark = false;
-    } else {
-      notifire.setIsDark = previusstate;
-    }
-  }
+  
 
   @override
   void initState() {
     super.initState();
-    getdarkmodepreviousstate();
+    ref.read(colorProvider.notifier).getdarkmodepreviousstate();  
   }
 
   @override
   Widget build(BuildContext context) {
-    notifire = Provider.of<ColorNotifire>(context, listen: true);
+    final notifire = ref.watch(colorProvider);  
     return ScreenUtilInit(
       builder: (BuildContext context, child) => Scaffold(
-        backgroundColor: notifire.getbuttoncolor,
+        backgroundColor: notifire.buttonColor,
         floatingActionButton: Padding(
           padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
           child: SizedBox(
@@ -63,7 +53,7 @@ class _FinalState extends State<Final> {
                       Radius.circular(10),
                     ),
                     border:
-                        Border.all(color: notifire.getbuttonscolor, width: 2),
+                        Border.all(color: notifire.buttonsColor, width: 2),
                     // color: notifire.getbuttonscolor,
                     color: Colors.white,
                   ),
@@ -139,7 +129,7 @@ class _FinalState extends State<Final> {
                 children: [
                   Image.asset(
                     "image/cards.png",
-                    color: notifire.getcardcolor,
+                    color: notifire.cardColor,
                   ),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -176,7 +166,7 @@ class _FinalState extends State<Final> {
                             fontSize: 30.sp,
                             fontWeight: FontWeight.w500,
                             fontFamily: 'Gilroy Medium',
-                            color: notifire.gettextcolor,
+                            color: notifire.textColor,
                           ),
                         ),
                       ),
@@ -208,7 +198,7 @@ class _FinalState extends State<Final> {
                                 style: TextStyle(
                                   fontSize: 15.sp,
                                   fontFamily: 'Gilroy Bold',
-                                  color: notifire.gettextcolor,
+                                  color: notifire.textColor,
                                 ),
                               ),
                               SizedBox(
@@ -237,7 +227,7 @@ class _FinalState extends State<Final> {
                                         style: TextStyle(
                                           fontSize: 15.sp,
                                           fontFamily: 'Gilroy Bold',
-                                          color: notifire.gettextcolor,
+                                          color: notifire.textColor,
                                         ),
                                       ),
                                     ],
@@ -266,7 +256,7 @@ class _FinalState extends State<Final> {
                                         style: TextStyle(
                                           fontSize: 15.sp,
                                           fontFamily: 'Gilroy Bold',
-                                          color: notifire.gettextcolor,
+                                          color: notifire.textColor,
                                         ),
                                       ),
                                     ],
@@ -293,7 +283,7 @@ class _FinalState extends State<Final> {
                                 style: TextStyle(
                                   fontSize: 15.sp,
                                   fontFamily: 'Gilroy Bold',
-                                  color: notifire.gettextcolor,
+                                  color: notifire.textColor,
                                 ),
                               ),
                               SizedBox(
@@ -317,7 +307,7 @@ class _FinalState extends State<Final> {
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 45.sp),
                         child:
-                            Divider(color: notifire.getpinkcolor, thickness: 1),
+                            Divider(color: notifire.pinkColor, thickness: 1),
                       ),
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 45.sp),

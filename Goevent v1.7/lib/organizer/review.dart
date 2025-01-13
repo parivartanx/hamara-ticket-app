@@ -1,67 +1,56 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:goevent2/providers/color_provider.dart';
 
-import '../utils/colornotifire.dart';
 import '../utils/media.dart';
 import '../utils/string.dart';
 
-class Review extends StatefulWidget {
+class Review extends ConsumerStatefulWidget {
   const Review({Key? key}) : super(key: key);
 
   @override
   _ReviewState createState() => _ReviewState();
 }
 
-class _ReviewState extends State<Review> {
-  late ColorNotifire notifire;
+class _ReviewState extends ConsumerState<Review> {
 
-  getdarkmodepreviousstate() async {
-    final prefs = await SharedPreferences.getInstance();
-    bool? previusstate = prefs.getBool("setIsDark");
-    if (previusstate == null) {
-      notifire.setIsDark = false;
-    } else {
-      notifire.setIsDark = previusstate;
-    }
-  }
 
   @override
   void initState() {
     super.initState();
-    getdarkmodepreviousstate();
+    ref.read(colorProvider.notifier).getdarkmodepreviousstate();
   }
 
   @override
   Widget build(BuildContext context) {
-    notifire = Provider.of<ColorNotifire>(context, listen: true);
+    final notifire = ref.watch(colorProvider);
     return ScreenUtilInit(
       builder: (BuildContext context, child) =>  Scaffold(
-        backgroundColor: notifire.getprimerycolor,
+        backgroundColor: notifire.primaryColor,
         body: SingleChildScrollView(
           child: Column(
             children: [
               SizedBox(
                 height: height / 70,
               ),
-              revies(CustomStrings.rocks, "image/p2.png"),
+              revies(CustomStrings.rocks, "image/p2.png",notifire),
               SizedBox(
                 height: height / 100,
               ),
-              revies(CustomStrings.angelina, "image/p3.png"),
+              revies(CustomStrings.angelina, "image/p3.png",notifire),
               SizedBox(
                 height: height / 100,
               ),
-              revies(CustomStrings.zenifero, "image/p4.png"),
+              revies(CustomStrings.zenifero, "image/p4.png",notifire),
               SizedBox(
                 height: height / 100,
               ),
-              revies(CustomStrings.rocks, "image/p1.png"),
+              revies(CustomStrings.rocks, "image/p1.png",notifire),
               SizedBox(
                 height: height / 100,
               ),
-              revies(CustomStrings.angelina, "image/p2.png"),
+              revies(CustomStrings.angelina, "image/p2.png",notifire),
               SizedBox(
                 height: height / 100,
               ),
@@ -72,7 +61,7 @@ class _ReviewState extends State<Review> {
     );
   }
 
-  Widget revies(name, img) {
+  Widget revies(name, img,ColorState notifire) {
     return Container(
       height: height / 5.5,
       color: Colors.transparent,
@@ -95,7 +84,7 @@ class _ReviewState extends State<Review> {
                 style: TextStyle(
                   fontSize: 15.sp,
                   fontFamily: 'Gilroy Bold',
-                  color: notifire.getdarkscolor,
+                  color: notifire.darksColor,
                 ),
               ),
               const Row(

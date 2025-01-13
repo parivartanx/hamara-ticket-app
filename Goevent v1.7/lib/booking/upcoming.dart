@@ -1,44 +1,34 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:goevent2/booking/comings.dart';
-import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-import '../utils/colornotifire.dart';
+import '../providers/color_provider.dart';
 import '../utils/media.dart';
 
-class Upcoming extends StatefulWidget {
+class Upcoming extends ConsumerStatefulWidget {
   const Upcoming({Key? key}) : super(key: key);
 
   @override
   _UpcomingState createState() => _UpcomingState();
 }
 
-class _UpcomingState extends State<Upcoming> {
-  late ColorNotifire notifire;
+class _UpcomingState extends ConsumerState<Upcoming> {
 
-  getdarkmodepreviousstate() async {
-    final prefs = await SharedPreferences.getInstance();
-    bool? previusstate = prefs.getBool("setIsDark");
-    if (previusstate == null) {
-      notifire.setIsDark = false;
-    } else {
-      notifire.setIsDark = previusstate;
-    }
-  }
+
 
   @override
   void initState() {
     super.initState();
-    getdarkmodepreviousstate();
+    ref.read(colorProvider.notifier).getdarkmodepreviousstate();
   }
 
   @override
   Widget build(BuildContext context) {
-    notifire = Provider.of<ColorNotifire>(context, listen: true);
+    final notifire = ref.watch(colorProvider);
     return ScreenUtilInit(
       builder: (BuildContext context, child) => Scaffold(
-        backgroundColor: notifire.getprimerycolor,
+        backgroundColor: notifire.primaryColor,
         body: SingleChildScrollView(
           child: Column(
             children: [
@@ -55,7 +45,7 @@ class _UpcomingState extends State<Upcoming> {
                       Navigator.pop(context);
                     },
                     child:
-                        Icon(Icons.arrow_back, color: notifire.getdarkscolor),
+                        Icon(Icons.arrow_back, color: notifire.darksColor),
                   ),
                   SizedBox(
                     width: width / 80,
@@ -66,13 +56,13 @@ class _UpcomingState extends State<Upcoming> {
                       fontSize: 18.sp,
                       fontWeight: FontWeight.w900,
                       fontFamily: 'Gilroy Medium',
-                      color: notifire.getdarkscolor,
+                      color: notifire.darksColor,
                     ),
                   ),
                   const Spacer(),
                   Icon(
                     Icons.more_vert,
-                    color: notifire.getdarkscolor,
+                    color: notifire.darksColor,
                   ),
                   SizedBox(
                     width: width / 20,
@@ -101,7 +91,7 @@ class _UpcomingState extends State<Upcoming> {
                           width: MediaQuery.of(context).size.width * 0.90,
                           decoration: BoxDecoration(
                             border: Border.all(
-                              color: Color(0xffdcdbdb),
+                              color: const Color(0xffdcdbdb),
                               width: 1,
                             ),
                             borderRadius: BorderRadius.circular(15),
@@ -109,17 +99,17 @@ class _UpcomingState extends State<Upcoming> {
                           child: TabBar(
                             // indicatorColor: Colors.green,
                             indicatorSize: TabBarIndicatorSize.tab,
-                            labelStyle: TextStyle(
+                            labelStyle: const TextStyle(
                               fontFamily: 'Gilroy Bold',
                               fontSize: 15,
                               color: Colors.white,
                             ),
-                            indicatorPadding: EdgeInsets.symmetric(
+                            indicatorPadding: const EdgeInsets.symmetric(
                                 vertical: 2, horizontal: 2),
                             dividerColor: Colors.transparent,
                             unselectedLabelColor: Colors.grey,
                             indicator: BoxDecoration(
-                              color: notifire.getbuttonscolor,
+                              color: notifire.buttonsColor,
                               borderRadius: BorderRadius.circular(12),
                             ),
                             tabs: [

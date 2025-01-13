@@ -1,44 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:goevent2/providers/color_provider.dart';
 import 'package:goevent2/utils/string.dart';
-import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-import '../utils/colornotifire.dart';
 import '../utils/media.dart';
 
-class Contact extends StatefulWidget {
+class Contact extends ConsumerStatefulWidget {
   const Contact({Key? key}) : super(key: key);
 
   @override
   _ContactState createState() => _ContactState();
 }
 
-class _ContactState extends State<Contact> {
-  late ColorNotifire notifire;
+class _ContactState extends ConsumerState<Contact> {
 
-  getdarkmodepreviousstate() async {
-    final prefs = await SharedPreferences.getInstance();
-    bool? previusstate = prefs.getBool("setIsDark");
-    if (previusstate == null) {
-      notifire.setIsDark = false;
-    } else {
-      notifire.setIsDark = previusstate;
-    }
-  }
 
   @override
   void initState() {
     super.initState();
-    getdarkmodepreviousstate();
+    ref.read(colorProvider.notifier).getdarkmodepreviousstate();
   }
 
   @override
   Widget build(BuildContext context) {
-    notifire = Provider.of<ColorNotifire>(context, listen: true);
+   final notifire = ref.watch(colorProvider);
     return ScreenUtilInit(
       builder:  (BuildContext context, child) =>  Scaffold(
-        backgroundColor: notifire.getprimerycolor,
+        backgroundColor: notifire.primaryColor,
         body: SingleChildScrollView(
           child: Column(
             children: [
@@ -55,7 +44,7 @@ class _ContactState extends State<Contact> {
                       Navigator.pop(context);
                     },
                     child:
-                    Icon(Icons.arrow_back, color: notifire.getdarkscolor),
+                    Icon(Icons.arrow_back, color: notifire.darksColor,),
                   ),
                   SizedBox(
                     width: width / 80,
@@ -66,11 +55,11 @@ class _ContactState extends State<Contact> {
                       fontSize: 18.sp,
                       fontWeight: FontWeight.w900,
                       fontFamily: 'Gilroy Medium',
-                      color: notifire.getdarkscolor,
+                      color: notifire.darksColor,
                     ),
                   ),
                   const Spacer(),
-                  Icon(Icons.more_vert,color: notifire.getdarkscolor,),
+                  Icon(Icons.more_vert,color: notifire.darksColor,),
                   SizedBox(
                     width: width / 20,
                   ),
@@ -80,7 +69,7 @@ class _ContactState extends State<Contact> {
                 height: height / 2.5,
               ),
               Text(CustomStrings.working,  style: TextStyle(
-                color: notifire.getdarkscolor,
+                color: notifire.darksColor,
                 fontSize: 15.sp,
                 fontFamily: 'Gilroy Bold',
               ),),
@@ -88,12 +77,12 @@ class _ContactState extends State<Contact> {
                 height: height / 60,
               ),
               Text(CustomStrings.w1,  style: TextStyle(
-                color: notifire.getdarkscolor,
+                color: notifire.darksColor,
                 fontSize: 12.sp,
                 fontFamily: 'Gilroy Normal',
               ),),
               Text(CustomStrings.w2,  style: TextStyle(
-                color: notifire.getdarkscolor,
+                color: notifire.darksColor,
                 fontSize: 12.sp,
                 fontFamily: 'Gilroy Normal',
               ),),

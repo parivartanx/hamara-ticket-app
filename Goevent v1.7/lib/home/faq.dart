@@ -1,37 +1,25 @@
 import 'package:accordion/accordion.dart';
 import 'package:accordion/controllers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-import '../utils/colornotifire.dart';
+import '../providers/color_provider.dart';
 import '../utils/media.dart';
 
-class Faq extends StatefulWidget {
+class Faq extends ConsumerStatefulWidget {
   const Faq({Key? key}) : super(key: key);
 
   @override
   _FaqState createState() => _FaqState();
 }
 
-class _FaqState extends State<Faq> {
-  late ColorNotifire notifire;
-
-  getdarkmodepreviousstate() async {
-    final prefs = await SharedPreferences.getInstance();
-    bool? previusstate = prefs.getBool("setIsDark");
-    if (previusstate == null) {
-      notifire.setIsDark = false;
-    } else {
-      notifire.setIsDark = previusstate;
-    }
-  }
-
+class _FaqState extends ConsumerState<Faq> {
+  
   @override
   void initState() {
     super.initState();
-    getdarkmodepreviousstate();
+    ref.read(colorProvider.notifier).getdarkmodepreviousstate();
   }
 
   final _loremIpsum =
@@ -41,10 +29,10 @@ class _FaqState extends State<Faq> {
 
   @override
   Widget build(BuildContext context) {
-    notifire = Provider.of<ColorNotifire>(context, listen: true);
+    final notifire = ref.watch(colorProvider);
     return ScreenUtilInit(
       builder:  (BuildContext context, child) =>  Scaffold(
-        backgroundColor: notifire.getprimerycolor,
+        backgroundColor: notifire.primaryColor,
         body: SingleChildScrollView(
           child: Column(
             children: [
@@ -61,7 +49,7 @@ class _FaqState extends State<Faq> {
                       Navigator.pop(context);
                     },
                     child:
-                        Icon(Icons.arrow_back, color: notifire.getdarkscolor),
+                        Icon(Icons.arrow_back, color: notifire.darksColor),
                   ),
                   SizedBox(
                     width: width / 80,
@@ -72,13 +60,13 @@ class _FaqState extends State<Faq> {
                       fontSize: 18.sp,
                       fontWeight: FontWeight.w900,
                       fontFamily: 'Gilroy Medium',
-                      color: notifire.getdarkscolor,
+                      color: notifire.darksColor,
                     ),
                   ),
                   const Spacer(),
                   Icon(
                     Icons.more_vert,
-                    color: notifire.getdarkscolor,
+                    color: notifire.darksColor,
                   ),
                   SizedBox(
                     width: width / 20,
@@ -94,7 +82,7 @@ class _FaqState extends State<Faq> {
                   Text(
                     "Top Questions :",
                     style: TextStyle(
-                        color: notifire.getbuttonscolor,
+                        color: notifire.buttonsColor,
                         fontSize: 17.sp,
                         fontFamily: 'Gilroy ExtraBold'),
                   ),
@@ -114,11 +102,11 @@ class _FaqState extends State<Faq> {
                 children: [
                   AccordionSection(
                     sectionClosingHapticFeedback: SectionHapticFeedback.light,
-                    headerBackgroundColor: notifire.getprimerycolor,
+                    headerBackgroundColor: notifire.primaryColor,
                     header: Text(
                       'How to create a GoEvent account?',
                       style: TextStyle(
-                          color: notifire.getdarkscolor,
+                          color: notifire.darksColor,
                           fontSize: 15,
                           fontWeight: FontWeight.bold),
                     ),
@@ -128,11 +116,11 @@ class _FaqState extends State<Faq> {
                   ),
                   AccordionSection(
                     // flipRightIconIfOpen: true,
-                    headerBackgroundColor: notifire.getprimerycolor,
+                    headerBackgroundColor: notifire.primaryColor,
                     header: Text(
                       'How to add a payment method?',
                       style: TextStyle(
-                          color: notifire.getdarkscolor,
+                          color: notifire.darksColor,
                           fontSize: 15,
                           fontWeight: FontWeight.bold),
                     ),
@@ -142,11 +130,11 @@ class _FaqState extends State<Faq> {
                   ),
                   AccordionSection(
                     // flipRightIconIfOpen: true,
-                    headerBackgroundColor: notifire.getprimerycolor,
+                    headerBackgroundColor: notifire.primaryColor,
                     header: Text(
                       'How to buy stocks?',
                       style: TextStyle(
-                          color: notifire.getdarkscolor,
+                          color: notifire.darksColor,
                           fontSize: 15,
                           fontWeight: FontWeight.bold),
                     ),
@@ -156,11 +144,11 @@ class _FaqState extends State<Faq> {
                   ),
                   AccordionSection(
                     sectionClosingHapticFeedback: SectionHapticFeedback.light,
-                    headerBackgroundColor: notifire.getprimerycolor,
+                    headerBackgroundColor: notifire.primaryColor,
                     header: Text(
                       'How to create a GoEvent account?',
                       style: TextStyle(
-                          color: notifire.getdarkscolor,
+                          color: notifire.darksColor,
                           fontSize: 15,
                           fontWeight: FontWeight.bold),
                     ),
@@ -170,11 +158,11 @@ class _FaqState extends State<Faq> {
                   ),
                   AccordionSection(
                     // flipRightIconIfOpen: true,
-                    headerBackgroundColor: notifire.getprimerycolor,
+                    headerBackgroundColor: notifire.primaryColor,
                     header: Text(
                       'How to add a payment method?',
                       style: TextStyle(
-                          color: notifire.getdarkscolor,
+                          color: notifire.darksColor,
                           fontSize: 15,
                           fontWeight: FontWeight.bold),
                     ),
@@ -184,11 +172,11 @@ class _FaqState extends State<Faq> {
                   ),
                   AccordionSection(
                     // flipRightIconIfOpen: true,
-                    headerBackgroundColor: notifire.getprimerycolor,
+                    headerBackgroundColor: notifire.primaryColor,
                     header: Text(
                       'How to buy stocks?',
                       style: TextStyle(
-                          color: notifire.getdarkscolor,
+                          color: notifire.darksColor,
                           fontSize: 15,
                           fontWeight: FontWeight.bold),
                     ),
@@ -198,11 +186,11 @@ class _FaqState extends State<Faq> {
                   ),
                   AccordionSection(
                     sectionClosingHapticFeedback: SectionHapticFeedback.light,
-                    headerBackgroundColor: notifire.getprimerycolor,
+                    headerBackgroundColor: notifire.primaryColor,
                     header: Text(
                       'How to create a GoEvent account?',
                       style: TextStyle(
-                          color: notifire.getdarkscolor,
+                          color: notifire.darksColor,
                           fontSize: 15,
                           fontWeight: FontWeight.bold),
                     ),
@@ -212,11 +200,11 @@ class _FaqState extends State<Faq> {
                   ),
                   AccordionSection(
                     // flipRightIconIfOpen: true,
-                    headerBackgroundColor: notifire.getprimerycolor,
+                    headerBackgroundColor: notifire.primaryColor,
                     header: Text(
                       'How to add a payment method?',
                       style: TextStyle(
-                          color: notifire.getdarkscolor,
+                          color: notifire.darksColor,
                           fontSize: 15,
                           fontWeight: FontWeight.bold),
                     ),
@@ -226,11 +214,11 @@ class _FaqState extends State<Faq> {
                   ),
                   AccordionSection(
                     // flipRightIconIfOpen: true,
-                    headerBackgroundColor: notifire.getprimerycolor,
+                    headerBackgroundColor: notifire.primaryColor,
                     header: Text(
                       'How to buy stocks?',
                       style: TextStyle(
-                        color: notifire.getdarkscolor,
+                        color: notifire.darksColor,
                         fontSize: 15,
                         fontWeight: FontWeight.bold,
                       ),
@@ -244,11 +232,11 @@ class _FaqState extends State<Faq> {
                   ),
                   AccordionSection(
                     sectionClosingHapticFeedback: SectionHapticFeedback.light,
-                    headerBackgroundColor: notifire.getprimerycolor,
+                    headerBackgroundColor: notifire.primaryColor,
                     header: Text(
                       'How to create a GoEvent account?',
                       style: TextStyle(
-                        color: notifire.getdarkscolor,
+                        color: notifire.darksColor,
                         fontSize: 15,
                         fontWeight: FontWeight.bold,
                       ),
@@ -259,11 +247,11 @@ class _FaqState extends State<Faq> {
                   ),
                   AccordionSection(
                     // flipRightIconIfOpen: true,
-                    headerBackgroundColor: notifire.getprimerycolor,
+                    headerBackgroundColor: notifire.primaryColor,
                     header: Text(
                       'How to add a payment method?',
                       style: TextStyle(
-                        color: notifire.getdarkscolor,
+                        color: notifire.darksColor,
                         fontSize: 15,
                         fontWeight: FontWeight.bold,
                       ),
@@ -274,11 +262,11 @@ class _FaqState extends State<Faq> {
                   ),
                   AccordionSection(
                     // flipRightIconIfOpen: true,
-                    headerBackgroundColor: notifire.getprimerycolor,
+                    headerBackgroundColor: notifire.primaryColor,
                     header: Text(
                       'How to buy stocks?',
                       style: TextStyle(
-                          color: notifire.getdarkscolor,
+                          color: notifire.darksColor,
                           fontSize: 15,
                           fontWeight: FontWeight.bold),
                     ),

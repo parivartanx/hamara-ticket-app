@@ -1,72 +1,73 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
+import 'package:goevent2/extensions/media_query_ext.dart';
+import 'package:goevent2/providers/color_provider.dart';
 import 'package:goevent2/utils/media.dart';
-import 'package:page_transition/page_transition.dart';
-import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'onbonding.dart';
-import 'utils/colornotifire.dart';
 
-class Splashscreen extends StatefulWidget {
+class Splashscreen extends ConsumerStatefulWidget {
+  static const routePath = '/splashscreen';
+  static const routeName = 'splashscreen';
   const Splashscreen({Key? key}) : super(key: key);
 
   @override
   _SplashscreenState createState() => _SplashscreenState();
 }
 
-class _SplashscreenState extends State<Splashscreen> {
+class _SplashscreenState extends ConsumerState<Splashscreen> {
   @override
   void initState() {
     super.initState();
     getdarkmodepreviousstate();
-    Timer(
-      const Duration(seconds: 4),
-      () => Navigator.pushReplacement(
-          context,
-          PageTransition(
-              type: PageTransitionType.fade, child: const Onbonding())),
-    );
+    // Timer(
+    //   const Duration(seconds: 4),
+    //   () => context.pushNamed(
+    //       Onbonding.routeName,),
+    // );
   }
 
-  late ColorNotifire notifire;
 
-  getdarkmodepreviousstate() async {
+
+  void getdarkmodepreviousstate() async {
     final prefs = await SharedPreferences.getInstance();
     bool? previusstate = prefs.getBool("setIsDark");
     if (previusstate == null) {
-      notifire.setIsDark = false;
+      ref.read(colorProvider.notifier).setDarkMode(false);
     } else {
-      notifire.setIsDark = previusstate;
+     ref.read(colorProvider.notifier).setDarkMode(previusstate);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    notifire = Provider.of<ColorNotifire>(context, listen: true);
-    height = MediaQuery.of(context).size.height;
-    width = MediaQuery.of(context).size.width;
+    print("Splashscreen");
+    final notifire = ref.watch(colorProvider);
+ 
     return ScreenUtilInit(
-      designSize: Size(1080, 2160),
+      designSize: const Size(1080, 2160),
       builder: (BuildContext context, child) => Scaffold(
-        backgroundColor: notifire.getprimerycolor,
+        backgroundColor: notifire.primaryColor,
         body: Center(
           child: Container(
-            color: notifire.getprimerycolor,
+            color: notifire.primaryColor,
             child: Column(
               children: [
                 SizedBox(
-                  height: height / 2.5,
+                  height: context.screenHeight / 2.5,
                 ),
                 Container(
                   color: Colors.transparent,
-                  height: height / 7,
-                  child: Image.asset("image/getevent.png"),
+                  height: context.screenHeight / 7,
+                  child: Image.asset("assets/image/getevent.png"),
                 ),
                 SizedBox(
-                  height: height / 30,
+                  height: context.screenHeight / 30,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -76,7 +77,7 @@ class _SplashscreenState extends State<Splashscreen> {
                       style: TextStyle(
                         fontSize: 100.sp,
                         fontFamily: 'Gilroy ExtraBold',
-                        color: notifire.gettextcolor,
+                        color: notifire.textColor,
                       ),
                     ),
                     Text(
@@ -84,7 +85,7 @@ class _SplashscreenState extends State<Splashscreen> {
                       style: TextStyle(
                         fontSize: 100.sp,
                         fontFamily: 'Gilroy ExtraBold',
-                        color: notifire.gettext1color,
+                        color: notifire.text1Color,
                       ),
                     ),
                   ],

@@ -1,49 +1,39 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:goevent2/home/home.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../payment/paymethod.dart';
+import '../providers/color_provider.dart';
 import '../utils/botton.dart';
-import '../utils/colornotifire.dart';
 import '../utils/media.dart';
 import '../utils/string.dart';
 
-class Subscribe extends StatefulWidget {
+class Subscribe extends ConsumerStatefulWidget {
   const Subscribe({Key? key}) : super(key: key);
 
   @override
   _SubscribeState createState() => _SubscribeState();
 }
 
-class _SubscribeState extends State<Subscribe> {
-  late ColorNotifire notifire;
+class _SubscribeState extends ConsumerState<Subscribe> {
   int _groupValue = -1;
 
-  getdarkmodepreviousstate() async {
-    final prefs = await SharedPreferences.getInstance();
-    bool? previusstate = prefs.getBool("setIsDark");
-    if (previusstate == null) {
-      notifire.setIsDark = false;
-    } else {
-      notifire.setIsDark = previusstate;
-    }
-  }
+  
 
   @override
   void initState() {
     super.initState();
-    getdarkmodepreviousstate();
+    ref.read(colorProvider.notifier).getdarkmodepreviousstate();
   }
 
   @override
   Widget build(BuildContext context) {
-    notifire = Provider.of<ColorNotifire>(context, listen: true);
+    final notifire = ref.watch(colorProvider);
     return ScreenUtilInit(
       builder:  (BuildContext context, child) =>  Scaffold(
-        backgroundColor: notifire.getprimerycolor,
+        backgroundColor: notifire.primaryColor,
         floatingActionButton: Padding(
           padding: const EdgeInsets.fromLTRB(20, 0, 20, 10),
           child: SizedBox(
@@ -51,10 +41,10 @@ class _SubscribeState extends State<Subscribe> {
             width: 410.w,
             child: FloatingActionButton(
               onPressed: () {
-                _showMyDialog();
+                _showMyDialog(notifire);
               },
               child: Custombutton.button(
-                notifire.getbuttonscolor,
+                notifire.buttonsColor,
                 "CHECKOUT",
                 SizedBox(
                   width: width / 3,
@@ -83,7 +73,7 @@ class _SubscribeState extends State<Subscribe> {
                       Navigator.pop(context);
                     },
                     child:
-                        Icon(Icons.arrow_back, color: notifire.getdarkscolor),
+                        Icon(Icons.arrow_back, color: notifire.darksColor),
                   ),
                   SizedBox(
                     width: width / 80,
@@ -94,7 +84,7 @@ class _SubscribeState extends State<Subscribe> {
                       fontSize: 18.sp,
                       fontWeight: FontWeight.w900,
                       fontFamily: 'Gilroy Medium',
-                      color: notifire.getdarkscolor,
+                      color: notifire.darksColor,
                     ),
                   ),
                   const Spacer(),
@@ -120,7 +110,7 @@ class _SubscribeState extends State<Subscribe> {
                         fontSize: 16.sp,
                         fontWeight: FontWeight.w500,
                         fontFamily: 'Gilroy Bold',
-                        color: notifire.gettextcolor,
+                        color: notifire.textColor,
                       ),
                     ),
                     const Spacer(),
@@ -130,7 +120,7 @@ class _SubscribeState extends State<Subscribe> {
                         fontSize: 16.sp,
                         fontWeight: FontWeight.w500,
                         fontFamily: 'Gilroy Normal',
-                        color: notifire.getbuttonscolor,
+                        color: notifire.buttonsColor,
                       ),
                     ),
                   ],
@@ -139,15 +129,15 @@ class _SubscribeState extends State<Subscribe> {
               SizedBox(
                 height: height / 40,
               ),
-              method(0, CustomStrings.apple, "image/apple.png"),
+              method(0, CustomStrings.apple, "image/apple.png",notifire),
               SizedBox(
                 height: height / 60,
               ),
-              method(1, CustomStrings.paypal, "image/paypal.png"),
+              method(1, CustomStrings.paypal, "image/paypal.png",notifire),
               SizedBox(
                 height: height / 60,
               ),
-              method(2, CustomStrings.google, "image/google.png"),
+              method(2, CustomStrings.google, "image/google.png",notifire),
               SizedBox(
                 height: height / 60,
               ),
@@ -156,7 +146,7 @@ class _SubscribeState extends State<Subscribe> {
                 child: Row(
                   children: [
                     Radio(
-                      activeColor: notifire.getbuttonscolor,
+                      activeColor: notifire.buttonsColor,
                       value: 3,
                       groupValue: _groupValue,
                       onChanged: (value) {
@@ -171,7 +161,7 @@ class _SubscribeState extends State<Subscribe> {
                         fontSize: 16.sp,
                         fontWeight: FontWeight.w600,
                         fontFamily: 'Gilroy Normal',
-                        color: notifire.getdarkscolor,
+                        color: notifire.darksColor,
                       ),
                     ),
                   ],
@@ -225,7 +215,7 @@ class _SubscribeState extends State<Subscribe> {
                         fontSize: 16.sp,
                         fontWeight: FontWeight.w600,
                         fontFamily: 'Gilroy Normal',
-                        color: notifire.getdarkscolor,
+                        color: notifire.darksColor,
                       ),
                     ),
                   ],
@@ -260,7 +250,7 @@ class _SubscribeState extends State<Subscribe> {
                               width: width / 1.78,
                               child: TextField(
                                 style: TextStyle(
-                                    color: notifire.getdarkscolor,
+                                    color: notifire.darksColor,
                                     fontSize: 15.sp),
                                 decoration: InputDecoration(
                                   border: InputBorder.none,
@@ -289,7 +279,7 @@ class _SubscribeState extends State<Subscribe> {
                                   borderRadius: const BorderRadius.all(
                                     Radius.circular(10),
                                   ),
-                                  color: notifire.getbuttonscolor,
+                                  color: notifire.buttonsColor,
                                 ),
                                 // width: width / 3.94,
                                 height: height / 12,
@@ -324,17 +314,17 @@ class _SubscribeState extends State<Subscribe> {
     );
   }
 
-  _showMyDialog() async {
+  _showMyDialog(ColorState notifire) async {
     return showDialog(
       context: context, useRootNavigator: true,
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
         return AlertDialog(
-          backgroundColor: notifire.getprimerycolor,
+          backgroundColor: notifire.primaryColor,
           content: StatefulBuilder(
             builder: (BuildContext context, StateSetter setState) {
               return Container(
-                color: notifire.getprimerycolor,
+                color: notifire.primaryColor,
                 height: height / 2.3,
                 width: width / 1.1,
                 child: Column(
@@ -358,7 +348,7 @@ class _SubscribeState extends State<Subscribe> {
                       style: TextStyle(
                         fontSize: 18.sp,
                         fontFamily: 'Gilroy Bold',
-                        color: notifire.getdarkscolor,
+                        color: notifire.darksColor,
                       ),
                     ),
                     SizedBox(height: height / 100),
@@ -368,13 +358,13 @@ class _SubscribeState extends State<Subscribe> {
                       style: TextStyle(
                         fontSize: 12.sp,
                         fontFamily: 'Gilroy Normal',
-                        color: notifire.getdarkscolor,
+                        color: notifire.darksColor,
                       ),
                     ),
                     // Text(CustomStrings.w2,style: TextStyle(
                     //   fontSize: 12.sp,
                     //   fontFamily: 'Gilroy Normal',
-                    //   color: notifire.getdarkscolor,
+                    //   color: notifire.darksColor,
                     // ),),
                     SizedBox(height: height / 50),
                     GestureDetector(
@@ -389,7 +379,7 @@ class _SubscribeState extends State<Subscribe> {
                         height: height / 20,
                         width: width / 4,
                         decoration: BoxDecoration(
-                          color: notifire.getbuttonscolor,
+                          color: notifire.buttonsColor,
                           borderRadius: const BorderRadius.all(
                             Radius.circular(20),
                           ),
@@ -421,14 +411,14 @@ class _SubscribeState extends State<Subscribe> {
     );
   }
 
-  Widget method(val, name, img) {
+  Widget method(val, name, img, ColorState notifire) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: GestureDetector(
         onTap: () {
           setState(
             () {
-              _groupValue = val as int;
+              _groupValue = val;
             },
           );
         },
@@ -458,12 +448,12 @@ class _SubscribeState extends State<Subscribe> {
                   fontSize: 16.sp,
                   fontWeight: FontWeight.w400,
                   fontFamily: 'Gilroy Normal',
-                  color: notifire.getdarkscolor,
+                  color: notifire.darksColor,
                 ),
               ),
               const Spacer(),
               Radio(
-                activeColor: notifire.getbuttonscolor,
+                activeColor: notifire.buttonsColor,
                 value: val as int,
                 groupValue: _groupValue,
                 onChanged: (value) {

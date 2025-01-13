@@ -1,44 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:goevent2/providers/color_provider.dart';
 
-import '../utils/colornotifire.dart';
 import '../utils/media.dart';
 import '../utils/string.dart';
 
-class Documents extends StatefulWidget {
+class Documents extends ConsumerStatefulWidget {
   const Documents({Key? key}) : super(key: key);
 
   @override
   _DocumentsState createState() => _DocumentsState();
 }
 
-class _DocumentsState extends State<Documents> {
-  late ColorNotifire notifire;
+class _DocumentsState extends ConsumerState<Documents> {
 
-  getdarkmodepreviousstate() async {
-    final prefs = await SharedPreferences.getInstance();
-    bool? previusstate = prefs.getBool("setIsDark");
-    if (previusstate == null) {
-      notifire.setIsDark = false;
-    } else {
-      notifire.setIsDark = previusstate;
-    }
-  }
-
+  
   @override
   void initState() {
     super.initState();
-    getdarkmodepreviousstate();
+    ref.read(colorProvider.notifier).getdarkmodepreviousstate();
   }
 
   @override
   Widget build(BuildContext context) {
-    notifire = Provider.of<ColorNotifire>(context, listen: true);
+    final notifire = ref.watch(colorProvider);
     return ScreenUtilInit(
       builder:  (BuildContext context, child) =>  Scaffold(
-        backgroundColor: notifire.getprimerycolor,
+        backgroundColor: notifire.primaryColor,
         body: SingleChildScrollView(
           child: Column(
             children: [
@@ -55,7 +44,7 @@ class _DocumentsState extends State<Documents> {
                       Navigator.pop(context);
                     },
                     child:
-                    Icon(Icons.arrow_back, color: notifire.getdarkscolor),
+                    Icon(Icons.arrow_back, color: notifire.darksColor),
                   ),
                   SizedBox(
                     width: width / 80,
@@ -66,11 +55,11 @@ class _DocumentsState extends State<Documents> {
                       fontSize: 18.sp,
                       fontWeight: FontWeight.w900,
                       fontFamily: 'Gilroy Medium',
-                      color: notifire.getdarkscolor,
+                      color: notifire.darksColor,
                     ),
                   ),
                   const Spacer(),
-                  Icon(Icons.more_vert,color: notifire.getdarkscolor,),
+                  Icon(Icons.more_vert,color: notifire.darksColor,),
                   SizedBox(
                     width: width / 20,
                   ),
@@ -80,7 +69,7 @@ class _DocumentsState extends State<Documents> {
                 height: height / 25,
               ),
               Text(CustomStrings.working,  style: TextStyle(
-                color: notifire.getdarkscolor,
+                color: notifire.darksColor,
                 fontSize: 15.sp,
                 fontFamily: 'Gilroy Bold',
               ),),
@@ -88,7 +77,7 @@ class _DocumentsState extends State<Documents> {
                 height: height / 60,
               ),
               Text(CustomStrings.ever,  style: TextStyle(
-                color: notifire.getdarkscolor,
+                color: notifire.darksColor,
                 fontSize: 12.sp,
                 fontFamily: 'Gilroy Normal',
               ),),
@@ -96,7 +85,7 @@ class _DocumentsState extends State<Documents> {
                 height: height / 100,
               ),
               Text(CustomStrings.ever,  style: TextStyle(
-                color: notifire.getdarkscolor,
+                color: notifire.darksColor,
                 fontSize: 12.sp,
                 fontFamily: 'Gilroy Normal',
               ),),
@@ -104,7 +93,7 @@ class _DocumentsState extends State<Documents> {
                 height: height / 100,
               ),
               Text(CustomStrings.ever,  style: TextStyle(
-                color: notifire.getdarkscolor,
+                color: notifire.darksColor,
                 fontSize: 12.sp,
                 fontFamily: 'Gilroy Normal',
               ),),

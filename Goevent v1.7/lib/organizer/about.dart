@@ -1,45 +1,34 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:goevent2/providers/color_provider.dart';
 import 'package:goevent2/utils/media.dart';
-import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-import '../utils/colornotifire.dart';
 import '../utils/string.dart';
 
-class About extends StatefulWidget {
+class About extends ConsumerStatefulWidget {
   const About({Key? key}) : super(key: key);
 
   @override
   _AboutState createState() => _AboutState();
 }
 
-class _AboutState extends State<About> {
-  late ColorNotifire notifire;
+class _AboutState extends ConsumerState<About> {
 
-  getdarkmodepreviousstate() async {
-    final prefs = await SharedPreferences.getInstance();
-    bool? previusstate = prefs.getBool("setIsDark");
-    if (previusstate == null) {
-      notifire.setIsDark = false;
-    } else {
-      notifire.setIsDark = previusstate;
-    }
-  }
 
   @override
   void initState() {
     super.initState();
-    getdarkmodepreviousstate();
+    ref.read(colorProvider.notifier).getdarkmodepreviousstate();
   }
 
   @override
   Widget build(BuildContext context) {
-    notifire = Provider.of<ColorNotifire>(context, listen: true);
+    final notifire = ref.watch(colorProvider);
     return ScreenUtilInit(
       builder:  (BuildContext context, child) =>
           Scaffold(
-         backgroundColor: notifire.getprimerycolor,
+         backgroundColor: notifire.primaryColor,
         body: SingleChildScrollView(
           child: Column(
             children: [
@@ -48,42 +37,42 @@ class _AboutState extends State<About> {
                 CustomStrings.details, style: TextStyle(
                 fontSize: 12.sp,
                 fontFamily: 'Gilroy Normal',
-                color: notifire.getwhitecolor,
+                color: notifire.whiteColor,
               ),
               ),
               Text(
                 CustomStrings.details, style: TextStyle(
                 fontSize: 12.sp,
                 fontFamily: 'Gilroy Normal',
-                color: notifire.getwhitecolor,
+                color: notifire.whiteColor,
               ),
               ),
               Text(
                 CustomStrings.details, style: TextStyle(
                 fontSize: 12.sp,
                 fontFamily: 'Gilroy Normal',
-                color: notifire.getwhitecolor,
+                color: notifire.whiteColor,
               ),
               ),
               Text(
                 CustomStrings.details, style: TextStyle(
                 fontSize: 12.sp,
                 fontFamily: 'Gilroy Normal',
-                color: notifire.getwhitecolor,
+                color: notifire.whiteColor,
               ),
               ),
               Text(
                 CustomStrings.details, style: TextStyle(
                 fontSize: 12.sp,
                 fontFamily: 'Gilroy Normal',
-                color: notifire.getwhitecolor,
+                color: notifire.whiteColor,
               ),
               ),
               Text(
                 CustomStrings.details, style: TextStyle(
                 fontSize: 12.sp,
                 fontFamily: 'Gilroy Normal',
-                color: notifire.getwhitecolor,
+                color: notifire.whiteColor,
               ),
               ),
             ],

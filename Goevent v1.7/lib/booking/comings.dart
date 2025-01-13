@@ -1,47 +1,34 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:goevent2/booking/booking.dart';
+import 'package:goevent2/providers/color_provider.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-import '../utils/colornotifire.dart';
 import '../utils/media.dart';
 
-class Comings extends StatefulWidget {
+class Comings extends ConsumerStatefulWidget {
   const Comings({Key? key}) : super(key: key);
 
   @override
   _ComingsState createState() => _ComingsState();
 }
 
-class _ComingsState extends State<Comings> {
+class _ComingsState extends ConsumerState<Comings> {
   bool selected = false;
   bool selected1 = false;
   bool selected2 = false;
   bool selected3 = false;
 
-  late ColorNotifire notifire;
-
-  getdarkmodepreviousstate() async {
-    final prefs = await SharedPreferences.getInstance();
-    bool? previusstate = prefs.getBool("setIsDark");
-    if (previusstate == null) {
-      notifire.setIsDark = false;
-    } else {
-      notifire.setIsDark = previusstate;
-    }
-  }
-
   @override
   void initState() {
     super.initState();
-    getdarkmodepreviousstate();
+    ref.read(colorProvider.notifier).getdarkmodepreviousstate();
   }
 
   @override
   Widget build(BuildContext context) {
-    notifire = Provider.of<ColorNotifire>(context, listen: true);
+    final notifire = ref.watch(colorProvider);
     return ScreenUtilInit(
       builder:  (BuildContext context, child) =>  Scaffold(
         backgroundColor: Colors.transparent,
@@ -60,7 +47,7 @@ class _ComingsState extends State<Comings> {
                     },
                     child: Container(
                       decoration: BoxDecoration(
-                        color: notifire.getprimerycolor,
+                        color: notifire.primaryColor,
                         borderRadius:
                             const BorderRadius.all(Radius.circular(5)),
                       ),
@@ -77,7 +64,7 @@ class _ComingsState extends State<Comings> {
                       ),
                     ),
                   ),
-                  "image/p11.png"),
+                  "image/p11.png",notifire),
               SizedBox(
                 height: height / 60,
               ),
@@ -90,7 +77,7 @@ class _ComingsState extends State<Comings> {
                     },
                     child: Container(
                       decoration: BoxDecoration(
-                        color: notifire.getprimerycolor,
+                        color: notifire.primaryColor,
                         borderRadius:
                             const BorderRadius.all(Radius.circular(5)),
                       ),
@@ -107,7 +94,7 @@ class _ComingsState extends State<Comings> {
                       ),
                     ),
                   ),
-                  "image/p10.png"),
+                  "image/p10.png",notifire),
               SizedBox(
                 height: height / 60,
               ),
@@ -120,7 +107,7 @@ class _ComingsState extends State<Comings> {
                     },
                     child: Container(
                       decoration: BoxDecoration(
-                        color: notifire.getprimerycolor,
+                        color: notifire.primaryColor,
                         borderRadius:
                             const BorderRadius.all(Radius.circular(5)),
                       ),
@@ -137,7 +124,7 @@ class _ComingsState extends State<Comings> {
                       ),
                     ),
                   ),
-                  "image/p11.png"),
+                  "image/p11.png",notifire),
               SizedBox(
                 height: height / 60,
               ),
@@ -150,7 +137,7 @@ class _ComingsState extends State<Comings> {
                     },
                     child: Container(
                       decoration: BoxDecoration(
-                        color: notifire.getprimerycolor,
+                        color: notifire.primaryColor,
                         borderRadius:
                             const BorderRadius.all(Radius.circular(5)),
                       ),
@@ -167,7 +154,7 @@ class _ComingsState extends State<Comings> {
                       ),
                     ),
                   ),
-                  "image/p10.png"),
+                  "image/p10.png",notifire),
               SizedBox(
                 height: height / 60,
               ),
@@ -178,7 +165,7 @@ class _ComingsState extends State<Comings> {
     );
   }
 
-  Widget events(se, img) {
+  Widget events(se, img,ColorState notifire) {
     return Stack(
       children: [
         GestureDetector(
@@ -191,17 +178,17 @@ class _ComingsState extends State<Comings> {
           },
           child: Container(
             decoration: BoxDecoration(
-                color: notifire.getprimerycolor,
+                color: notifire.primaryColor,
                 borderRadius: BorderRadius.circular(15),
                 border: Border.all(
                   width: 1,
-                  color: Color(0xffdcdbdb),
+                  color: const Color(0xffdcdbdb),
                 )
             ),
             width: width,
             child: Card(
               elevation: 0,
-              color: notifire.getprimerycolor,
+              color: notifire.primaryColor,
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                 child: Stack(
@@ -242,7 +229,7 @@ class _ComingsState extends State<Comings> {
                         Text(
                           "Women's Leadership Conference",
                           style: TextStyle(
-                              color: notifire.getdarkscolor,
+                              color: notifire.darksColor,
                               fontSize: 16.sp,fontFamily: 'Gilroy Medium',
                               fontWeight: FontWeight.w600),
                         ),

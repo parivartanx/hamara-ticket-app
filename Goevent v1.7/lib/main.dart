@@ -1,21 +1,38 @@
 import 'package:flutter/material.dart';
-import 'package:goevent2/splashscreen.dart';
-import 'package:provider/provider.dart';
-import 'utils/colornotifire.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'config/app_route.dart';
+import 'splashscreen.dart';
+import 'utils/app_color.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider(
-          create: (_) => ColorNotifire(),
-        ),
-      ],
-      child: const MaterialApp(
-        debugShowCheckedModeBanner: false,
-        
-        home: Splashscreen(),
+   const ProviderScope(
+     child: App(),
+   )
+    );
+}
+
+
+class App extends StatelessWidget {
+  const App({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp.router(
+      title: 'Hamara Ticket',
+      theme: ThemeData(
+        primarySwatch: AppColors.primarySwatch,
       ),
-    ),
-  );
+      routerConfig: appRouter,
+    );
+    // return MaterialApp(
+    //   title: 'Hamara Ticket',
+    //   theme: ThemeData(
+    //     primarySwatch: AppColors.primarySwatch,
+    //   ),
+    //   home: const Splashscreen(),
+    // );  
+    
+  }
 }

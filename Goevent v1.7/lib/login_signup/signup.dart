@@ -1,37 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:goevent2/login_signup/verification.dart';
+import 'package:goevent2/providers/color_provider.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../home/home.dart';
 import '../utils/botton.dart';
-import '../utils/colornotifire.dart';
 import '../utils/ctextfield.dart';
 import '../utils/itextfield.dart';
 import '../utils/media.dart';
 import 'login.dart';
 
-class Signup extends StatefulWidget {
+class Signup extends ConsumerStatefulWidget {
   const Signup({Key? key}) : super(key: key);
 
   @override
   _SignupState createState() => _SignupState();
 }
 
-class _SignupState extends State<Signup> {
-  late ColorNotifire notifire;
+class _SignupState extends ConsumerState<Signup> {
 
-  getdarkmodepreviousstate() async {
-    final prefs = await SharedPreferences.getInstance();
-    bool? previusstate = prefs.getBool("setIsDark");
-    if (previusstate == null) {
-      notifire.setIsDark = false;
-    } else {
-      notifire.setIsDark = previusstate;
-    }
-  }
+ 
 
   bool _obscureText = true;
   bool obscureText_ = true;
@@ -51,15 +41,15 @@ class _SignupState extends State<Signup> {
   @override
   void initState() {
     super.initState();
-    getdarkmodepreviousstate();
+    ref.read(colorProvider.notifier).getdarkmodepreviousstate();
   }
 
   @override
   Widget build(BuildContext context) {
-    notifire = Provider.of<ColorNotifire>(context, listen: true);
+    final notifire = ref.watch(colorProvider);
     return ScreenUtilInit(
       builder:  (BuildContext context, child) =>  Scaffold(
-        backgroundColor: notifire.getprimerycolor,
+        backgroundColor: notifire.primaryColor,
         body: SingleChildScrollView(
           child: Column(
             children: [
@@ -74,9 +64,9 @@ class _SignupState extends State<Signup> {
                       Navigator.pop(context);
                     },
                     child: Container(
-                        color: notifire.getprimerycolor,
+                        color: notifire.primaryColor,
                         child: Icon(Icons.arrow_back,
-                            color: notifire.getwhitecolor)),
+                            color: notifire.whiteColor)),
                   ),
                 ],
               ),
@@ -95,7 +85,7 @@ class _SignupState extends State<Signup> {
                   fontSize: 32.sp,
                   fontWeight: FontWeight.w700,
                   fontFamily: 'Gilroy Medium',
-                  color: notifire.gettextcolor,
+                  color: notifire.textColor,
                 ),
               ),
               SizedBox(height: height / 30),
@@ -109,7 +99,7 @@ class _SignupState extends State<Signup> {
                         fontSize: 20.sp,
                         fontWeight: FontWeight.bold,
                         fontFamily: 'Gilroy Medium',
-                        color: notifire.getwhitecolor,
+                        color: notifire.whiteColor,
                       ),
                     ),
                   ),
@@ -121,7 +111,7 @@ class _SignupState extends State<Signup> {
                 child: Customtextfild.textField(
                   "Name",
                   Colors.grey,
-                  notifire.getwhitecolor,
+                  notifire.whiteColor,
                   "image/Profile.png",
                 ),
               ),
@@ -131,7 +121,7 @@ class _SignupState extends State<Signup> {
                 child: Customtextfild.textField(
                   "User",
                   Colors.grey,
-                  notifire.getwhitecolor,
+                  notifire.whiteColor,
                   "image/Message.png",
                 ),
               ),
@@ -142,7 +132,7 @@ class _SignupState extends State<Signup> {
                   _obscureText,
                   "Password",
                   Colors.grey,
-                  notifire.getwhitecolor,
+                  notifire.whiteColor,
                   "image/Lock.png",
                   GestureDetector(
                     onTap: () {
@@ -164,7 +154,7 @@ class _SignupState extends State<Signup> {
                   obscureText_,
                   "Password",
                   Colors.grey,
-                  notifire.getwhitecolor,
+                  notifire.whiteColor,
                   "image/Lock.png",
                   GestureDetector(
                     onTap: () {
@@ -193,7 +183,7 @@ class _SignupState extends State<Signup> {
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(20, 5, 20, 0),
                   child: Custombutton.button(
-                    notifire.getbuttonscolor,
+                    notifire.buttonsColor,
                     "SIGN UP",
                     SizedBox(
                       width: width / 3,
@@ -214,11 +204,11 @@ class _SignupState extends State<Signup> {
                 ),
               ),
               SizedBox(height: height / 60),
-              log(notifire.getblackcolor, "Login with Google",
-                  "image/google.png", notifire.getwhitecolor),
+              log(notifire.blackColor, "Login with Google",
+                  "image/google.png", notifire.whiteColor),
               SizedBox(height: height / 50),
-              log(notifire.getblackcolor, "Login with Facebook",
-                  "image/facebook.png", notifire.getwhitecolor),
+              log(notifire.blackColor, "Login with Facebook",
+                  "image/facebook.png", notifire.whiteColor),
               SizedBox(height: height / 40),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -226,7 +216,7 @@ class _SignupState extends State<Signup> {
                   Text(
                     "Already have an account?",
                     style: TextStyle(
-                      color: notifire.getwhitecolor,
+                      color: notifire.whiteColor,
                       fontSize: 12.sp,
                       fontFamily: 'Gilroy Medium',
                     ),

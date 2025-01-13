@@ -1,49 +1,39 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:goevent2/payment/finalticket.dart';
 import 'package:goevent2/payment/paymethod.dart';
+import 'package:goevent2/providers/color_provider.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../utils/botton.dart';
-import '../utils/colornotifire.dart';
 import '../utils/media.dart';
 import '../utils/string.dart';
 
-class Payment extends StatefulWidget {
+class Payment extends ConsumerStatefulWidget {
   const Payment({Key? key}) : super(key: key);
 
   @override
   _PaymentState createState() => _PaymentState();
 }
 
-class _PaymentState extends State<Payment> {
-  late ColorNotifire notifire;
+class _PaymentState extends ConsumerState<Payment> {
   int _groupValue = -1;
 
-  getdarkmodepreviousstate() async {
-    final prefs = await SharedPreferences.getInstance();
-    bool? previusstate = prefs.getBool("setIsDark");
-    if (previusstate == null) {
-      notifire.setIsDark = false;
-    } else {
-      notifire.setIsDark = previusstate;
-    }
-  }
+
 
   @override
   void initState() {
     super.initState();
-    getdarkmodepreviousstate();
+    ref.read(colorProvider.notifier).getdarkmodepreviousstate();
   }
 
   @override
   Widget build(BuildContext context) {
-    notifire = Provider.of<ColorNotifire>(context, listen: true);
+    final notifire = ref.watch(colorProvider);
     return ScreenUtilInit(
       builder:  (BuildContext context, child) =>  Scaffold(
-        backgroundColor: notifire.getprimerycolor,
+        backgroundColor: notifire.primaryColor,
         resizeToAvoidBottomInset: false,
         floatingActionButton: Padding(
           padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
@@ -61,7 +51,7 @@ class _PaymentState extends State<Payment> {
                 );
               },
               child: Custombutton.button(
-                notifire.getbuttonscolor,
+                notifire.buttonsColor,
                 "CHECKOUT",
                 SizedBox(
                   width: width / 3.5,
@@ -90,7 +80,7 @@ class _PaymentState extends State<Payment> {
                       Navigator.pop(context);
                     },
                     child:
-                        Icon(Icons.arrow_back, color: notifire.getdarkscolor),
+                        Icon(Icons.arrow_back, color: notifire.darksColor),
                   ),
                   SizedBox(
                     width: width / 80,
@@ -101,7 +91,7 @@ class _PaymentState extends State<Payment> {
                       fontSize: 18.sp,
                       fontWeight: FontWeight.w900,
                       fontFamily: 'Gilroy Medium',
-                      color: notifire.getdarkscolor,
+                      color: notifire.darksColor,
                     ),
                   ),
                   const Spacer(),
@@ -127,7 +117,7 @@ class _PaymentState extends State<Payment> {
                         fontSize: 16.sp,
                         fontWeight: FontWeight.w500,
                         fontFamily: 'Gilroy Bold',
-                        color: notifire.gettextcolor,
+                        color: notifire.textColor,
                       ),
                     ),
                     const Spacer(),
@@ -137,7 +127,7 @@ class _PaymentState extends State<Payment> {
                         fontSize: 16.sp,
                         fontWeight: FontWeight.w500,
                         fontFamily: 'Gilroy Normal',
-                        color: notifire.getbuttonscolor,
+                        color: notifire.buttonsColor,
                       ),
                     ),
                   ],
@@ -146,15 +136,15 @@ class _PaymentState extends State<Payment> {
               SizedBox(
                 height: height / 40,
               ),
-              method(0, CustomStrings.apple, "image/apple.png"),
+              method(0, CustomStrings.apple, "image/apple.png",notifire),
               SizedBox(
                 height: height / 60,
               ),
-              method(1, CustomStrings.paypal, "image/paypal.png"),
+              method(1, CustomStrings.paypal, "image/paypal.png",notifire),
               SizedBox(
                 height: height / 60,
               ),
-              method(2, CustomStrings.google, "image/google.png"),
+              method(2, CustomStrings.google, "image/google.png",notifire),
               SizedBox(
                 height: height / 60,
               ),
@@ -163,7 +153,7 @@ class _PaymentState extends State<Payment> {
                 child: Row(
                   children: [
                     Radio(
-                      activeColor: notifire.getbuttonscolor,
+                      activeColor: notifire.buttonsColor,
                       value: 3,
                       groupValue: _groupValue,
                       onChanged: (value) {
@@ -178,7 +168,7 @@ class _PaymentState extends State<Payment> {
                         fontSize: 16.sp,
                         fontWeight: FontWeight.w600,
                         fontFamily: 'Gilroy Normal',
-                        color: notifire.getdarkscolor,
+                        color: notifire.darksColor,
                       ),
                     ),
                   ],
@@ -193,7 +183,7 @@ class _PaymentState extends State<Payment> {
                       borderRadius: const BorderRadius.all(
                         Radius.circular(10),
                       ),
-                      border: Border.all(color: Color(0xffdcdbdb), width: 1)),
+                      border: Border.all(color: const Color(0xffdcdbdb), width: 1)),
                   child: Row(
                     children: [
                       SizedBox(
@@ -232,7 +222,7 @@ class _PaymentState extends State<Payment> {
                         fontSize: 16.sp,
                         fontWeight: FontWeight.w600,
                         fontFamily: 'Gilroy Normal',
-                        color: notifire.getdarkscolor,
+                        color: notifire.darksColor,
                       ),
                     ),
                   ],
@@ -251,7 +241,7 @@ class _PaymentState extends State<Payment> {
                       Radius.circular(10),
                     ),
                     border: Border.all(
-                      color: Color(0xffdcdbdb),
+                      color: const Color(0xffdcdbdb),
                       width: 1,
                     ),
                   ),
@@ -267,7 +257,7 @@ class _PaymentState extends State<Payment> {
                               width: width / 1.8,
                               child: TextField(
                                 style: TextStyle(
-                                    color: notifire.getdarkscolor,
+                                    color: notifire.darksColor,
                                     fontSize: 15.sp),
                                 decoration: InputDecoration(
                                   border: InputBorder.none,
@@ -296,7 +286,7 @@ class _PaymentState extends State<Payment> {
                                   borderRadius: const BorderRadius.all(
                                     Radius.circular(10),
                                   ),
-                                  color: notifire.getbuttonscolor,
+                                  color: notifire.buttonsColor,
                                 ),
                                 // width: width / 3.94,
                                 height: height / 12,
@@ -331,14 +321,14 @@ class _PaymentState extends State<Payment> {
     );
   }
 
-  Widget method(val, name, img) {
+  Widget method(val, name, img,ColorState colorState) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: GestureDetector(
         onTap: () {
           setState(
             () {
-              _groupValue = val as int;
+              _groupValue = val;
             },
           );
         },
@@ -349,7 +339,7 @@ class _PaymentState extends State<Payment> {
               borderRadius: const BorderRadius.all(
                 Radius.circular(10),
               ),
-              border: Border.all(color: Color(0xffdcdbdb), width: 1)),
+              border: Border.all(color: const Color(0xffdcdbdb), width: 1)),
           child: Row(
             children: [
               SizedBox(
@@ -368,12 +358,12 @@ class _PaymentState extends State<Payment> {
                   fontSize: 16.sp,
                   fontWeight: FontWeight.w400,
                   fontFamily: 'Gilroy Normal',
-                  color: notifire.getdarkscolor,
+                  color: colorState.textColor,
                 ),
               ),
               const Spacer(),
               Radio(
-                activeColor: notifire.getbuttonscolor,
+                activeColor: colorState.buttonsColor,
                 value: val as int,
                 groupValue: _groupValue,
                 onChanged: (value) {

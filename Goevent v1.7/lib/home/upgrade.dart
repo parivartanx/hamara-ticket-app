@@ -1,50 +1,39 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:goevent2/home/subscribe.dart';
+import '/home/subscribe.dart';
+import '/providers/color_provider.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../utils/botton.dart';
-import '../utils/colornotifire.dart';
 import '../utils/media.dart';
 
-class Membership extends StatefulWidget {
+class Membership extends ConsumerStatefulWidget {
   const Membership({Key? key}) : super(key: key);
 
   @override
   _MembershipState createState() => _MembershipState();
 }
 
-class _MembershipState extends State<Membership> {
-  late ColorNotifire notifire;
+class _MembershipState extends ConsumerState<Membership> {
 
   bool isChecked = false;
   bool isChecked1 = false;
   bool isChecked2 = false;
 
-  getdarkmodepreviousstate() async {
-    final prefs = await SharedPreferences.getInstance();
-    bool? previusstate = prefs.getBool("setIsDark");
-    if (previusstate == null) {
-      notifire.setIsDark = false;
-    } else {
-      notifire.setIsDark = previusstate;
-    }
-  }
 
   @override
   void initState() {
     super.initState();
-    getdarkmodepreviousstate();
+    ref.read(colorProvider.notifier).getdarkmodepreviousstate();
   }
 
   @override
   Widget build(BuildContext context) {
-    notifire = Provider.of<ColorNotifire>(context, listen: true);
+    final notifire = ref.watch(colorProvider);
     return ScreenUtilInit(
       builder:  (BuildContext context, child) =>  Scaffold(
-        backgroundColor: notifire.getprimerycolor,
+        backgroundColor: notifire.primaryColor,
         body: SingleChildScrollView(
           child: Column(
             children: [
@@ -61,7 +50,7 @@ class _MembershipState extends State<Membership> {
                       Navigator.pop(context);
                     },
                     child:
-                        Icon(Icons.arrow_back, color: notifire.getdarkscolor),
+                        Icon(Icons.arrow_back, color: notifire.darksColor),
                   ),
                   SizedBox(
                     width: width / 80,
@@ -72,7 +61,7 @@ class _MembershipState extends State<Membership> {
                       fontSize: 18.sp,
                       fontWeight: FontWeight.w900,
                       fontFamily: 'Gilroy Medium',
-                      color: notifire.getdarkscolor,
+                      color: notifire.darksColor,
                     ),
                   ),
                   SizedBox(
@@ -91,7 +80,7 @@ class _MembershipState extends State<Membership> {
                       height: height / 6,
                       width: width,
                       decoration: BoxDecoration(
-                        color: notifire.getbuttonscolor,
+                        color: notifire.buttonsColor,
                         borderRadius: const BorderRadius.all(
                           Radius.circular(20),
                         ),
@@ -146,17 +135,17 @@ class _MembershipState extends State<Membership> {
                             "\$9,99",
                             "",
                             isChecked
-                                ? notifire.getbuttonscolor
-                                : notifire.getpinkcolor,
+                                ? notifire.buttonsColor
+                                : notifire.pinkColor,
                             isChecked ? Colors.white : Colors.black,
                             isChecked ? Colors.white : Colors.black,
                             isChecked ? Colors.white : Colors.black,
                             isChecked
-                                ? notifire.getpinkcolor
-                                : notifire.getbuttonscolor,
+                                ? notifire.pinkColor
+                                : notifire.buttonsColor,
                             isChecked
-                                ? notifire.getbuttonscolor
-                                : notifire.getprimerycolor)),
+                                ? notifire.buttonsColor
+                                : notifire.primaryColor,notifire)),
                     SizedBox(
                       height: height / 60,
                     ),
@@ -172,17 +161,17 @@ class _MembershipState extends State<Membership> {
                             "\$19,99",
                             "Most Popular",
                             isChecked1
-                                ? notifire.getbuttonscolor
-                                : notifire.getpinkcolor,
+                                ? notifire.buttonsColor
+                                : notifire.pinkColor,
                             isChecked1 ? Colors.white : Colors.black,
                             isChecked1 ? Colors.white : Colors.black,
                             isChecked1 ? Colors.white : Colors.black,
                             isChecked1
-                                ? notifire.getpinkcolor
-                                : notifire.getbuttonscolor,
+                                ? notifire.pinkColor
+                                : notifire.buttonsColor,
                             isChecked1
-                                ? notifire.getbuttonscolor
-                                : notifire.getprimerycolor)),
+                                ? notifire.buttonsColor
+                                : notifire.primaryColor,notifire)),
                     SizedBox(
                       height: height / 60,
                     ),
@@ -198,23 +187,23 @@ class _MembershipState extends State<Membership> {
                             "\$49,99",
                             "Save 12%",
                             isChecked2
-                                ? notifire.getbuttonscolor
-                                : notifire.getpinkcolor,
+                                ? notifire.buttonsColor
+                                : notifire.pinkColor,
                             isChecked2 ? Colors.white : Colors.black,
                             isChecked2 ? Colors.white : Colors.black,
                             isChecked2 ? Colors.white : Colors.black,
                             isChecked2
-                                ? notifire.getpinkcolor
-                                : notifire.getbuttonscolor,
+                                ? notifire.pinkColor
+                                : notifire.buttonsColor,
                             isChecked2
-                                ? notifire.getbuttonscolor
-                                : notifire.getprimerycolor)),
+                                ? notifire.buttonsColor
+                                : notifire.primaryColor,notifire)),
                     SizedBox(
                       height: height / 60,
                     ),
                     Text("No Commitment . Cancel anytime***",
                         style: TextStyle(
-                            color: notifire.getdarkscolor,
+                            color: notifire.darksColor,
                             fontFamily: 'Gilroy Bold',
                             fontSize: 15.sp)),
                     SizedBox(
@@ -229,7 +218,7 @@ class _MembershipState extends State<Membership> {
                                 child: const Subscribe()));
                       },
                       child: Custombutton.button(
-                        notifire.getbuttonscolor,
+                        notifire.buttonsColor,
                         "Subscribe Now",
                         SizedBox(
                           width: width / 5,
@@ -244,7 +233,7 @@ class _MembershipState extends State<Membership> {
                     ),
                     Text("By continue, you have agreed to our",
                         style: TextStyle(
-                            color: notifire.getdarkscolor,
+                            color: notifire.darksColor,
                             fontFamily: 'Gilroy Bold',
                             fontSize: 12.sp)),
                     Row(
@@ -252,12 +241,12 @@ class _MembershipState extends State<Membership> {
                       children: [
                         Text("and ",
                             style: TextStyle(
-                                color: notifire.getdarkscolor,
+                                color: notifire.darksColor,
                                 fontFamily: 'Gilroy Bold',
                                 fontSize: 12.sp)),
                         Text("Terms of Service Privacy Policy",
                             style: TextStyle(
-                                color: notifire.getbuttonscolor,
+                                color: notifire.buttonsColor,
                                 fontFamily: 'Gilroy Bold',
                                 fontSize: 12.sp)),
                       ],
@@ -283,7 +272,7 @@ class _MembershipState extends State<Membership> {
   }
 
   Widget choice(
-      name1, name2, name3, name4, clr1, clr2, clr3, clr4, clr5, clr6) {
+      name1, name2, name3, name4, clr1, clr2, clr3, clr4, clr5, clr6,ColorState notifire) {
     return Card(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20.0),
@@ -307,7 +296,7 @@ class _MembershipState extends State<Membership> {
                 decoration: BoxDecoration(
                   border: Border.all(color: Colors.grey),
                   shape: BoxShape.circle,
-                  color: notifire.getpinkcolor,
+                  color: notifire.pinkColor,
                 ),
                 child: Center(
                   child: Padding(

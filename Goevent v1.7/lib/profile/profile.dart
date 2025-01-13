@@ -1,46 +1,48 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:goevent2/profile/editprofile.dart';
+import 'package:goevent2/providers/color_provider.dart';
 import 'package:goevent2/utils/string.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
-import '../utils/colornotifire.dart';
 import '../utils/media.dart';
 
-class Profile extends StatefulWidget {
+class Profile extends ConsumerStatefulWidget {
   const Profile({Key? key}) : super(key: key);
 
   @override
   _ProfileState createState() => _ProfileState();
 }
 
-class _ProfileState extends State<Profile> {
-  late ColorNotifire notifire;
+class _ProfileState extends ConsumerState<Profile> {
+  // late ColorNotifire notifire;
 
-  getdarkmodepreviousstate() async {
-    final prefs = await SharedPreferences.getInstance();
-    bool? previusstate = prefs.getBool("setIsDark");
-    if (previusstate == null) {
-      notifire.setIsDark = false;
-    } else {
-      notifire.setIsDark = previusstate;
-    }
-  }
+  // getdarkmodepreviousstate() async {
+  //   final prefs = await SharedPreferences.getInstance();
+  //   bool? previusstate = prefs.getBool("setIsDark");
+  //   if (previusstate == null) {
+  //     notifire.setIsDark = false;
+  //   } else {
+  //     notifire.setIsDark = previusstate;
+  //   }
+  // }
 
   @override
   void initState() {
     super.initState();
-    getdarkmodepreviousstate();
+    ref.read(colorProvider.notifier).getdarkmodepreviousstate();
   }
 
   @override
   Widget build(BuildContext context) {
-    notifire = Provider.of<ColorNotifire>(context, listen: true);
+    final primaryColor = ref.watch(colorProvider).primaryColor;
+    final darksColor = ref.watch(colorProvider).darksColor;
+    final buttonsColor = ref.watch(colorProvider).buttonsColor;
+    final textColor = ref.watch(colorProvider).textColor; 
+    final pinkColor = ref.watch(colorProvider).pinkColor;
     return ScreenUtilInit(
       builder:  (BuildContext context, child) =>  Scaffold(
-        backgroundColor: notifire.getprimerycolor,
+        backgroundColor: primaryColor,
         body: SingleChildScrollView(
           child: Column(
             children: [
@@ -57,7 +59,7 @@ class _ProfileState extends State<Profile> {
                       Navigator.pop(context);
                     },
                     child:
-                        Icon(Icons.arrow_back, color: notifire.getdarkscolor),
+                        Icon(Icons.arrow_back, color: darksColor),
                   ),
                   SizedBox(
                     width: width / 80,
@@ -68,7 +70,7 @@ class _ProfileState extends State<Profile> {
                       fontSize: 18.sp,
                       fontWeight: FontWeight.w900,
                       fontFamily: 'Gilroy Medium',
-                      color: notifire.getdarkscolor,
+                      color: darksColor,
                     ),
                   ),
                 ],
@@ -89,7 +91,7 @@ class _ProfileState extends State<Profile> {
                   fontSize: 18.sp,
                   fontWeight: FontWeight.w900,
                   fontFamily: 'Gilroy Medium',
-                  color: notifire.getdarkscolor,
+                  color: darksColor,
                 ),
               ),
               SizedBox(
@@ -106,7 +108,7 @@ class _ProfileState extends State<Profile> {
                           fontSize: 15.sp,
                           fontWeight: FontWeight.w900,
                           fontFamily: 'Gilroy Medium',
-                          color: notifire.getdarkscolor,
+                          color: darksColor,
                         ),
                       ),
                       SizedBox(
@@ -141,7 +143,7 @@ class _ProfileState extends State<Profile> {
                           fontSize: 15.sp,
                           fontWeight: FontWeight.w900,
                           fontFamily: 'Gilroy Medium',
-                          color: notifire.getdarkscolor,
+                          color: darksColor,
                         ),
                       ),
                       SizedBox(
@@ -178,7 +180,7 @@ class _ProfileState extends State<Profile> {
                         Radius.circular(10),
                       ),
                       border: Border.all(
-                          color: notifire.getbuttonscolor, width: 1.5)),
+                          color: buttonsColor, width: 1.5)),
                   child: Row(
                     children: [
                       SizedBox(
@@ -196,7 +198,7 @@ class _ProfileState extends State<Profile> {
                         style: TextStyle(
                           fontSize: 14.sp,
                           fontFamily: 'Gilroy Medium',
-                          color: notifire.getbuttonscolor,
+                          color: buttonsColor,
                         ),
                       )
                     ],
@@ -216,7 +218,7 @@ class _ProfileState extends State<Profile> {
                         fontSize: 18.sp,
                         fontWeight: FontWeight.w700,
                         fontFamily: 'Gilroy Medium',
-                        color: notifire.gettextcolor,
+                        color: textColor,
                       ),
                     ),
                   ],
@@ -236,7 +238,7 @@ class _ProfileState extends State<Profile> {
                           fontSize: 15.sp,
                           fontWeight: FontWeight.w500,
                           fontFamily: 'Gilroy Medium',
-                          color: notifire.gettextcolor,
+                          color: textColor,
                         ),
                       ),
                     ),
@@ -256,7 +258,7 @@ class _ProfileState extends State<Profile> {
                         fontSize: 18.sp,
                         fontWeight: FontWeight.w700,
                         fontFamily: 'Gilroy Medium',
-                        color: notifire.gettextcolor,
+                        color: textColor,
                       ),
                     ),
                     const Spacer(),
@@ -264,7 +266,7 @@ class _ProfileState extends State<Profile> {
                       height: height / 30,
                       width: width / 5,
                       decoration: BoxDecoration(
-                        color: notifire.getpinkcolor,
+                        color: pinkColor,
                         borderRadius: const BorderRadius.all(
                           Radius.circular(10),
                         ),
@@ -282,7 +284,7 @@ class _ProfileState extends State<Profile> {
                               fontSize: 9.sp,
                               fontWeight: FontWeight.w700,
                               fontFamily: 'Gilroy Medium',
-                              color: notifire.getbuttonscolor,
+                              color: buttonsColor,
                             ),
                           )
                         ],
@@ -299,7 +301,7 @@ class _ProfileState extends State<Profile> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    game(notifire.getbuttonscolor,"Games Online"),
+                    game(buttonsColor,"Games Online"),
                     game(const Color(0xffEE544A),"Concert"),
                     game(const Color(0xffFF8D5D),"Music"),
                     game(const Color(0xff7D67EE),"Art"),

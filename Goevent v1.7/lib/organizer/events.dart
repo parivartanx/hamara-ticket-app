@@ -1,66 +1,54 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:goevent2/providers/color_provider.dart';
 
-import '../utils/colornotifire.dart';
 import '../utils/media.dart';
 
-class Event extends StatefulWidget {
+class Event extends ConsumerStatefulWidget {
   const Event({Key? key}) : super(key: key);
 
   @override
   _EventState createState() => _EventState();
 }
 
-class _EventState extends State<Event> {
-  late ColorNotifire notifire;
-
-  getdarkmodepreviousstate() async {
-    final prefs = await SharedPreferences.getInstance();
-    bool? previusstate = prefs.getBool("setIsDark");
-    if (previusstate == null) {
-      notifire.setIsDark = false;
-    } else {
-      notifire.setIsDark = previusstate;
-    }
-  }
+class _EventState extends ConsumerState<Event> {
 
   @override
   void initState() {
     super.initState();
-    getdarkmodepreviousstate();
+    ref.read(colorProvider.notifier).getdarkmodepreviousstate();
   }
 
   @override
   Widget build(BuildContext context) {
-    notifire = Provider.of<ColorNotifire>(context, listen: true);
+    final notifire = ref.watch(colorProvider);
     return ScreenUtilInit(
       builder: (BuildContext context, child) =>  Scaffold(
-        backgroundColor: notifire.getprimerycolor,
+        backgroundColor: notifire.primaryColor,
         body: SingleChildScrollView(
           child: Column(
             children: [
               SizedBox(
                 height: height / 100,
               ),
-              cards("image/n2.png"),
+              cards("image/n2.png",notifire),
               SizedBox(
                 height: height / 100,
               ),
-              cards("image/g1.png"),
+              cards("image/g1.png",notifire),
               SizedBox(
                 height: height / 100,
               ),
-              cards("image/n1.png"),
+              cards("image/n1.png",notifire),
               SizedBox(
                 height: height / 100,
               ),
-              cards("image/g1.png"),
+              cards("image/g1.png",notifire),
               SizedBox(
                 height: height / 100,
               ),
-              cards("image/n1.png"),
+              cards("image/n1.png",notifire),
               SizedBox(
                 height: height / 100,
               ),
@@ -71,18 +59,18 @@ class _EventState extends State<Event> {
     );
   }
 
-  Widget cards(img) {
+  Widget cards(img,ColorState notifire) {
     return Card(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15.0),
       ),
-      color: notifire.getcardcolor,
+      color: notifire.cardColor,
       child: Container(
         decoration: BoxDecoration(
           borderRadius: const BorderRadius.all(
             Radius.circular(15),
           ),
-          color: notifire.getcardcolor,
+          color: notifire.cardColor,
         ),
         height: height / 7.5,
         width: width,
@@ -141,7 +129,7 @@ class _EventState extends State<Event> {
                             "Women's leadership \n conference",
                             style: TextStyle(
                                 fontFamily: 'Gilroy Medium',
-                                color: notifire.getdarkscolor,
+                                color: notifire.darksColor,
                                 fontSize: 14.sp,
                                 fontWeight: FontWeight.w600),
                           ),

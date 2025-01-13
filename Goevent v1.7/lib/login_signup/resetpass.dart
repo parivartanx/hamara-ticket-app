@@ -1,45 +1,34 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:goevent2/providers/color_provider.dart';
 
 import '../utils/botton.dart';
-import '../utils/colornotifire.dart';
 import '../utils/ctextfield.dart';
 import '../utils/media.dart';
 
-class Resetpassword extends StatefulWidget {
+class Resetpassword extends ConsumerStatefulWidget {
   const Resetpassword({Key? key}) : super(key: key);
 
   @override
   _ResetpasswordState createState() => _ResetpasswordState();
 }
 
-class _ResetpasswordState extends State<Resetpassword> {
-  late ColorNotifire notifire;
+class _ResetpasswordState extends ConsumerState<Resetpassword> {
 
-  getdarkmodepreviousstate() async {
-    final prefs = await SharedPreferences.getInstance();
-    bool? previusstate = prefs.getBool("setIsDark");
-    if (previusstate == null) {
-      notifire.setIsDark = false;
-    } else {
-      notifire.setIsDark = previusstate;
-    }
-  }
 
   @override
   void initState() {
     super.initState();
-    getdarkmodepreviousstate();
+    ref.read(colorProvider.notifier).getdarkmodepreviousstate();
   }
 
   @override
   Widget build(BuildContext context) {
-    notifire = Provider.of<ColorNotifire>(context, listen: true);
+    final notifire = ref.watch(colorProvider);
     return ScreenUtilInit(
       builder: (BuildContext context, child) =>  Scaffold(
-        backgroundColor: notifire.getprimerycolor,
+        backgroundColor: notifire.primaryColor,
         body: SingleChildScrollView(
           child: Column(
             children: [
@@ -54,9 +43,9 @@ class _ResetpasswordState extends State<Resetpassword> {
                       Navigator.pop(context);
                     },
                     child: Container(
-                        color: notifire.getprimerycolor,
+                        color: notifire.primaryColor,
                         child: Icon(Icons.arrow_back,
-                            color: notifire.getwhitecolor)),
+                            color: notifire.whiteColor)),
                   ),
                 ],
               ),
@@ -73,7 +62,7 @@ class _ResetpasswordState extends State<Resetpassword> {
                         fontSize: 20.sp,
                         fontWeight: FontWeight.bold,
                         fontFamily: 'Gilroy Medium',
-                        color: notifire.getwhitecolor,
+                        color: notifire.whiteColor,
                       ),
                     ),
                   ),
@@ -94,7 +83,7 @@ class _ResetpasswordState extends State<Resetpassword> {
                           style: TextStyle(
                             fontSize: 12.sp,
                             fontFamily: 'Gilroy Medium',
-                            color: notifire.getwhitecolor,
+                            color: notifire.whiteColor,
                           ),
                         ),
                         SizedBox(height: height / 400,),
@@ -103,7 +92,7 @@ class _ResetpasswordState extends State<Resetpassword> {
                           style: TextStyle(
                             fontSize: 12.sp,
                             fontFamily: 'Gilroy Medium',
-                            color: notifire.getwhitecolor,
+                            color: notifire.whiteColor,
                           ),
                         ),
                       ],
@@ -114,7 +103,7 @@ class _ResetpasswordState extends State<Resetpassword> {
               SizedBox(height: height / 30,),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Customtextfild.textField("Password",Colors.grey,notifire.getwhitecolor,
+                child: Customtextfild.textField("Password",Colors.grey,notifire.whiteColor,
                     "image/Lock.png",),
               ),
               SizedBox(height: height / 20,),
@@ -125,7 +114,7 @@ class _ResetpasswordState extends State<Resetpassword> {
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(20,0,20,0),
                   child: Custombutton.button(
-                    notifire.getbuttonscolor,
+                    notifire.buttonsColor,
                     "SEND",
                     SizedBox(
                       width: width / 3,

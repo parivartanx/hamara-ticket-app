@@ -1,46 +1,36 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:goevent2/providers/color_provider.dart';
 import 'package:goevent2/utils/string.dart';
-import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../utils/botton.dart';
-import '../utils/colornotifire.dart';
 import '../utils/media.dart';
 import '../utils/wtextfield.dart';
 
-class Edit extends StatefulWidget {
+class Edit extends ConsumerStatefulWidget {
   const Edit({Key? key}) : super(key: key);
 
   @override
   _EditState createState() => _EditState();
 }
 
-class _EditState extends State<Edit> {
-  late ColorNotifire notifire;
+class _EditState extends ConsumerState<Edit> {
 
-  getdarkmodepreviousstate() async {
-    final prefs = await SharedPreferences.getInstance();
-    bool? previusstate = prefs.getBool("setIsDark");
-    if (previusstate == null) {
-      notifire.setIsDark = false;
-    } else {
-      notifire.setIsDark = previusstate;
-    }
-  }
+  
 
   @override
   void initState() {
     super.initState();
-    getdarkmodepreviousstate();
+    ref.read(colorProvider.notifier).getdarkmodepreviousstate();
   }
 
   @override
   Widget build(BuildContext context) {
-    notifire = Provider.of<ColorNotifire>(context, listen: true);
+    final notifire = ref.watch(colorProvider);
     return ScreenUtilInit(
       builder:  (BuildContext context, child) =>  Scaffold(
-        backgroundColor: notifire.getprimerycolor,
+        backgroundColor: notifire.primaryColor,
         floatingActionButton: Padding(
           padding: const EdgeInsets.fromLTRB(30,10,30,20),
           child: SizedBox(
@@ -51,7 +41,7 @@ class _EditState extends State<Edit> {
                 Navigator.pop(context);
               },
               child: Custombutton.button(
-                notifire.getbuttonscolor,
+                notifire.buttonsColor,
                 "SAVE",
                 SizedBox(
                   width: width / 3.0,
@@ -79,7 +69,7 @@ class _EditState extends State<Edit> {
                       Navigator.pop(context);
                     },
                     child:
-                    Icon(Icons.arrow_back, color: notifire.getdarkscolor),
+                    Icon(Icons.arrow_back, color: notifire.darksColor),
                   ),
                   SizedBox(
                     width: width / 80,
@@ -90,11 +80,11 @@ class _EditState extends State<Edit> {
                       fontSize: 18.sp,
                       fontWeight: FontWeight.w900,
                       fontFamily: 'Gilroy Medium',
-                      color: notifire.getdarkscolor,
+                      color: notifire.darksColor,
                     ),
                   ),
                   const Spacer(),
-                  Icon(Icons.more_vert,color: notifire.getdarkscolor,),
+                  Icon(Icons.more_vert,color: notifire.darksColor,),
                    SizedBox(width: width / 30 ,),
                 ],
               ),
@@ -117,7 +107,7 @@ class _EditState extends State<Edit> {
                         child: Container(
                           height: height / 24,
                           decoration: BoxDecoration(
-                            color: notifire.getbuttonscolor,
+                            color: notifire.buttonsColor,
                             shape: BoxShape.circle
                           ),
                           child: Padding(
@@ -142,7 +132,7 @@ class _EditState extends State<Edit> {
                     SizedBox(
                       height: height / 60,
                     ),
-                    Customtextfild3.textField(notifire.getwhitecolor, "Name", width ,TextInputType.name,50,TextAlign.start),
+                    Customtextfild3.textField(notifire.whiteColor, "Name", width ,TextInputType.name,50,TextAlign.start),
                     SizedBox(
                       height: height / 40,
                     ),
@@ -150,7 +140,7 @@ class _EditState extends State<Edit> {
                     SizedBox(
                       height: height / 60,
                     ),
-                    Customtextfild3.textField(notifire.getwhitecolor,CustomStrings.birth, width ,TextInputType.name,50,TextAlign.start),
+                    Customtextfild3.textField(notifire.whiteColor,CustomStrings.birth, width ,TextInputType.name,50,TextAlign.start),
                     SizedBox(
                       height: height / 40,
                     ),
@@ -158,7 +148,7 @@ class _EditState extends State<Edit> {
                     SizedBox(
                       height: height / 60,
                     ),
-                    Customtextfild3.textField(notifire.getwhitecolor, CustomStrings.location2, width ,TextInputType.name,50,TextAlign.start),
+                    Customtextfild3.textField(notifire.whiteColor, CustomStrings.location2, width ,TextInputType.name,50,TextAlign.start),
                     SizedBox(
                       height: height / 40,
                     ),
@@ -166,7 +156,7 @@ class _EditState extends State<Edit> {
                     SizedBox(
                       height: height / 60,
                     ),
-                    Customtextfild3.textField(notifire.getwhitecolor,CustomStrings.fname, width ,TextInputType.name,50,TextAlign.start),
+                    Customtextfild3.textField(notifire.whiteColor,CustomStrings.fname, width ,TextInputType.name,50,TextAlign.start),
                   ],
                 ),
               ),

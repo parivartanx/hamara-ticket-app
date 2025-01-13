@@ -1,48 +1,35 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:goevent2/home/ticket.dart';
 import 'package:goevent2/organizer/oprofile.dart';
+import 'package:goevent2/providers/color_provider.dart';
 import 'package:goevent2/utils/media.dart';
 import 'package:goevent2/utils/string.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../utils/botton.dart';
-import '../utils/colornotifire.dart';
 
-class Events extends StatefulWidget {
+class Events extends ConsumerStatefulWidget {
   const Events({Key? key}) : super(key: key);
 
   @override
   _EventsState createState() => _EventsState();
 }
 
-class _EventsState extends State<Events> {
-  late ColorNotifire notifire;
-
-  getdarkmodepreviousstate() async {
-    final prefs = await SharedPreferences.getInstance();
-    bool? previusstate = prefs.getBool("setIsDark");
-    if (previusstate == null) {
-      notifire.setIsDark = false;
-    } else {
-      notifire.setIsDark = previusstate;
-    }
-  }
-
+class _EventsState extends ConsumerState<Events> {
   @override
   void initState() {
     super.initState();
-    getdarkmodepreviousstate();
+    ref.read(colorProvider.notifier).getdarkmodepreviousstate();
   }
 
   @override
   Widget build(BuildContext context) {
-    notifire = Provider.of<ColorNotifire>(context, listen: true);
+    final notifire = ref.watch(colorProvider);
     return ScreenUtilInit(
       builder: (BuildContext context, child) => Scaffold(
-        backgroundColor: notifire.getprimerycolor,
+        backgroundColor: notifire.primaryColor,
         floatingActionButton: Padding(
           padding: const EdgeInsets.fromLTRB(20, 0, 20, 10),
           child: SizedBox(
@@ -59,7 +46,7 @@ class _EventsState extends State<Events> {
                 );
               },
               child: Custombutton.button(
-                notifire.getbuttonscolor,
+                notifire.buttonsColor,
                 CustomStrings.buy,
                 SizedBox(width: width / 4.5),
                 SizedBox(width: width / 20),
@@ -129,7 +116,7 @@ class _EventsState extends State<Events> {
                       SizedBox(height: height / 8.5),
                       Container(
                         decoration: BoxDecoration(
-                          color: notifire.getprimerycolor,
+                          color: notifire.primaryColor,
                           borderRadius: const BorderRadius.all(
                             Radius.circular(25),
                           ),
@@ -137,7 +124,7 @@ class _EventsState extends State<Events> {
                         width: width / 1.4,
                         height: height / 14,
                         child: Card(
-                          color: notifire.getprimerycolor,
+                          color: notifire.primaryColor,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(25.0),
                           ),
@@ -233,16 +220,16 @@ class _EventsState extends State<Events> {
                     fontSize: 35.sp,
                     fontWeight: FontWeight.w500,
                     fontFamily: 'Gilroy Medium',
-                    color: notifire.getdarkscolor,
+                    color: notifire.darksColor,
                   ),
                 ),
               ),
               SizedBox(height: height / 40),
               concert("image/date.png", "14 December, 2021",
-                  "Tuesday, 4:00PM - 9:00PM"),
+                  "Tuesday, 4:00PM - 9:00PM",notifire),
               SizedBox(height: height / 40),
               concert("image/direction.png", "Gala Convention Center",
-                  "36 Guild Street London, UK"),
+                  "36 Guild Street London, UK",notifire),
               SizedBox(height: height / 40),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -264,7 +251,7 @@ class _EventsState extends State<Events> {
                           height: height / 15,
                           width: width / 7,
                           decoration: BoxDecoration(
-                            color: notifire.getcardcolor,
+                            color: notifire.cardColor,
                             borderRadius: const BorderRadius.all(
                               Radius.circular(10),
                             ),
@@ -284,7 +271,7 @@ class _EventsState extends State<Events> {
                                 fontSize: 15.sp,
                                 fontWeight: FontWeight.w500,
                                 fontFamily: 'Gilroy Medium',
-                                color: notifire.getdarkscolor,
+                                color: notifire.darksColor,
                               ),
                             ),
                             SizedBox(height: height / 300),
@@ -313,7 +300,7 @@ class _EventsState extends State<Events> {
                           child: Container(
                             height: height / 30,
                             width: width / 6,
-                            color: notifire.getcardcolor,
+                            color: notifire.cardColor,
                             child: Center(
                               child: Text(
                                 "Follow",
@@ -342,7 +329,7 @@ class _EventsState extends State<Events> {
                         fontSize: 17.sp,
                         fontWeight: FontWeight.w700,
                         fontFamily: 'Gilroy Medium',
-                        color: notifire.gettextcolor,
+                        color: notifire.textColor,
                       ),
                     ),
                   ],
@@ -379,7 +366,7 @@ class _EventsState extends State<Events> {
     );
   }
 
-  Widget concert(img, name1, name2) {
+  Widget concert(img, name1, name2, ColorState notifire) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Row(
@@ -388,7 +375,7 @@ class _EventsState extends State<Events> {
             height: height / 15,
             width: width / 7,
             decoration: BoxDecoration(
-              color: notifire.getcardcolor,
+              color: notifire.cardColor,
               borderRadius: const BorderRadius.all(
                 Radius.circular(10),
               ),
@@ -408,7 +395,7 @@ class _EventsState extends State<Events> {
                   fontSize: 15.sp,
                   fontWeight: FontWeight.w500,
                   fontFamily: 'Gilroy Medium',
-                  color: notifire.getdarkscolor,
+                  color: notifire.darksColor,
                 ),
               ),
               SizedBox(height: height / 300),

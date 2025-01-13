@@ -1,25 +1,23 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:goevent2/login_signup/resetpass.dart';
 import 'package:goevent2/payment/payment.dart';
+import 'package:goevent2/providers/color_provider.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-import '../utils/colornotifire.dart';
 import '../utils/media.dart';
 import 'document.dart';
 
-class Setting extends StatefulWidget {
+class Setting extends ConsumerStatefulWidget {
   const Setting({Key? key}) : super(key: key);
 
   @override
   _SettingState createState() => _SettingState();
 }
 
-class _SettingState extends State<Setting> {
-  late ColorNotifire notifire;
+class _SettingState extends ConsumerState<Setting> {
   bool status = false;
   bool status1 = false;
   bool status2 = false;
@@ -42,28 +40,19 @@ class _SettingState extends State<Setting> {
   bool selectedindex15 = false;
   bool selectedindex16 = false;
 
-  getdarkmodepreviousstate() async {
-    final prefs = await SharedPreferences.getInstance();
-    bool? previusstate = prefs.getBool("setIsDark");
-    if (previusstate == null) {
-      notifire.setIsDark = false;
-    } else {
-      notifire.setIsDark = previusstate;
-    }
-  }
-
+ 
   @override
   void initState() {
     super.initState();
-    getdarkmodepreviousstate();
+    ref.read(colorProvider.notifier).getdarkmodepreviousstate();
   }
 
   @override
   Widget build(BuildContext context) {
-    notifire = Provider.of<ColorNotifire>(context, listen: true);
+    final notifire = ref.watch(colorProvider);
     return ScreenUtilInit(
       builder:  (BuildContext context, child) =>  Scaffold(
-        backgroundColor: notifire.getprimerycolor,
+        backgroundColor: notifire.primaryColor,
         body: SingleChildScrollView(
           child: Column(
             children: [
@@ -80,7 +69,7 @@ class _SettingState extends State<Setting> {
                       Navigator.pop(context);
                     },
                     child:
-                        Icon(Icons.arrow_back, color: notifire.getdarkscolor),
+                        Icon(Icons.arrow_back, color: notifire.darksColor),
                   ),
                   SizedBox(
                     width: width / 50,
@@ -91,7 +80,7 @@ class _SettingState extends State<Setting> {
                       fontSize: 18.sp,
                       fontWeight: FontWeight.w900,
                       fontFamily: 'Gilroy Medium',
-                      color: notifire.getdarkscolor,
+                      color: notifire.darksColor,
                     ),
                   ),
                   SizedBox(
@@ -108,11 +97,11 @@ class _SettingState extends State<Setting> {
                   height: height / 10,
                   width: width,
                   decoration: BoxDecoration(
-                      color: notifire.getprimerycolor,
+                      color: notifire.primaryColor,
                       borderRadius: const BorderRadius.all(
                         Radius.circular(15),
                       ),
-                      border: Border.all(color: notifire.getbuttonscolor)),
+                      border: Border.all(color: notifire.buttonsColor)),
                   child: Row(
                     children: [
                       SizedBox(
@@ -135,7 +124,7 @@ class _SettingState extends State<Setting> {
                             style: TextStyle(
                               fontSize: 15.sp,
                               fontFamily: 'Gilroy Bold',
-                              color: notifire.getdarkscolor,
+                              color: notifire.darksColor,
                             ),
                           ),
                           Text(
@@ -143,7 +132,7 @@ class _SettingState extends State<Setting> {
                             style: TextStyle(
                               fontSize: 11.sp,
                               fontFamily: 'Gilroy Normal',
-                              color: notifire.getbuttonscolor,
+                              color: notifire.buttonsColor,
                             ),
                           ),
                         ],
@@ -170,10 +159,10 @@ class _SettingState extends State<Setting> {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(15.0),
                   ),
-                  color: notifire.getprimerycolor,
+                  color: notifire.primaryColor,
                   child: Container(
                     decoration: BoxDecoration(
-                        color: notifire.getprimerycolor,
+                        color: notifire.primaryColor,
                         borderRadius:
                             const BorderRadius.all(Radius.circular(15))),
                     height: height / 4.5,
@@ -184,7 +173,7 @@ class _SettingState extends State<Setting> {
                           height: height / 20,
                           width: width,
                           decoration: BoxDecoration(
-                            color: notifire.getbuttonscolor,
+                            color: notifire.buttonsColor,
                             borderRadius: const BorderRadius.only(
                               topRight: Radius.circular(15),
                               topLeft: Radius.circular(15),
@@ -216,7 +205,7 @@ class _SettingState extends State<Setting> {
                               ),
                             );
                           },
-                          child: lines("image/Lock.png", "Change Password"),
+                          child: lines("image/Lock.png", "Change Password",notifire),
                         ),
                         GestureDetector(
                             onTap: () {
@@ -229,7 +218,7 @@ class _SettingState extends State<Setting> {
                               );
                             },
                             child: lines(
-                                "image/document.png", "Document Management")),
+                                "image/document.png", "Document Management",notifire)),
                         GestureDetector(
                             onTap: () {
                               Navigator.push(
@@ -238,7 +227,7 @@ class _SettingState extends State<Setting> {
                                       type: PageTransitionType.fade,
                                       child: const Payment(),),);
                             },
-                            child: lines("image/payment.png", "Payment")),
+                            child: lines("image/payment.png", "Payment",notifire)),
                       ],
                     ),
                   ),
@@ -257,7 +246,7 @@ class _SettingState extends State<Setting> {
                     style: TextStyle(
                       fontSize: 17.sp,
                       fontFamily: 'Gilroy Bold',
-                      color: notifire.getbuttonscolor,
+                      color: notifire.buttonsColor,
                     ),
                   ),
                 ],
@@ -271,10 +260,10 @@ class _SettingState extends State<Setting> {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(15.0),
                   ),
-                  color: notifire.getprimerycolor,
+                  color: notifire.primaryColor,
                   child: Container(
                     decoration: BoxDecoration(
-                        color: notifire.getprimerycolor,
+                        color: notifire.primaryColor,
                         borderRadius:
                             const BorderRadius.all(Radius.circular(15))),
                     height: height / 3,
@@ -287,7 +276,7 @@ class _SettingState extends State<Setting> {
                           Transform.scale(
                             scale: 0.7,
                             child: CupertinoSwitch(
-                              activeColor: notifire.getbuttonscolor,
+                              activeTrackColor: notifire.buttonsColor,
                               value: status,
                               onChanged: (value) {
                                 setState(
@@ -298,6 +287,7 @@ class _SettingState extends State<Setting> {
                               },
                             ),
                           ),
+                          notifire,
                         ),
                         line(
                           "image/mess.png",
@@ -305,7 +295,7 @@ class _SettingState extends State<Setting> {
                           Transform.scale(
                             scale: 0.7,
                             child: CupertinoSwitch(
-                              activeColor: notifire.getbuttonscolor,
+                              activeTrackColor: notifire.buttonsColor,
                               value: status1,
                               onChanged: (value) {
                                 setState(() {
@@ -314,6 +304,7 @@ class _SettingState extends State<Setting> {
                               },
                             ),
                           ),
+                          notifire
                         ),
                         line(
                           "image/phone.png",
@@ -321,7 +312,7 @@ class _SettingState extends State<Setting> {
                           Transform.scale(
                             scale: 0.7,
                             child: CupertinoSwitch(
-                              activeColor: notifire.getbuttonscolor,
+                              activeTrackColor: notifire.buttonsColor,
                               value: status2,
                               onChanged: (value) {
                                 setState(() {
@@ -330,13 +321,14 @@ class _SettingState extends State<Setting> {
                               },
                             ),
                           ),
+                          notifire
                         ),
                         SizedBox(
                           height: height / 100,
                         ),
                         GestureDetector(
                           onTap: () {
-                            _showMyDialog();
+                            _showMyDialog(notifire);
                           },
                           child: Container(
                             color: Colors.transparent,
@@ -347,7 +339,7 @@ class _SettingState extends State<Setting> {
                                 ),
                                 Image.asset(
                                   "image/currency.png",
-                                  color: notifire.getdarkscolor,
+                                  color: notifire.darksColor,
                                   height: height / 35,
                                 ),
                                 SizedBox(
@@ -359,7 +351,7 @@ class _SettingState extends State<Setting> {
                                     fontSize: 14.sp,
                                     fontWeight: FontWeight.w500,
                                     fontFamily: 'Gilroy Normal',
-                                    color: notifire.getdarkscolor,
+                                    color: notifire.darksColor,
                                   ),
                                 ),
                                 const Spacer(),
@@ -369,12 +361,12 @@ class _SettingState extends State<Setting> {
                                     fontSize: 14.sp,
                                     fontWeight: FontWeight.w500,
                                     fontFamily: 'Gilroy Normal',
-                                    color: notifire.getdarkscolor,
+                                    color: notifire.darksColor,
                                   ),
                                 ),
                                 Icon(
                                   Icons.arrow_forward_ios,
-                                  color: notifire.getdarkscolor,
+                                  color: notifire.darksColor,
                                   size: 14.sp,
                                 ),
                                 SizedBox(
@@ -389,7 +381,7 @@ class _SettingState extends State<Setting> {
                         ),
                         GestureDetector(
                           onTap: () {
-                            _showMyDialog2();
+                            _showMyDialog2(notifire);
                           },
                           child: Container(
                             color: Colors.transparent,
@@ -400,7 +392,7 @@ class _SettingState extends State<Setting> {
                                 ),
                                 Image.asset(
                                   "image/language.png",
-                                  color: notifire.getdarkscolor,
+                                  color: notifire.darksColor,
                                   height: height / 35,
                                 ),
                                 SizedBox(
@@ -412,7 +404,7 @@ class _SettingState extends State<Setting> {
                                     fontSize: 14.sp,
                                     fontWeight: FontWeight.w500,
                                     fontFamily: 'Gilroy Normal',
-                                    color: notifire.getdarkscolor,
+                                    color: notifire.darksColor,
                                   ),
                                 ),
                                 const Spacer(),
@@ -422,12 +414,12 @@ class _SettingState extends State<Setting> {
                                     fontSize: 14.sp,
                                     fontWeight: FontWeight.w500,
                                     fontFamily: 'Gilroy Normal',
-                                    color: notifire.getdarkscolor,
+                                    color: notifire.darksColor,
                                   ),
                                 ),
                                 Icon(
                                   Icons.arrow_forward_ios,
-                                  color: notifire.getdarkscolor,
+                                  color: notifire.darksColor,
                                   size: 14.sp,
                                 ),
                                 SizedBox(
@@ -446,19 +438,19 @@ class _SettingState extends State<Setting> {
                           Transform.scale(
                             scale: 0.7,
                             child: CupertinoSwitch(
-                              activeColor: notifire.getbuttonscolor,
-                              value: notifire.getIsDark,
+                              activeTrackColor: notifire.buttonsColor,
+                              value: notifire.isDark,
                               onChanged: (val) async {
-                                final prefs =
-                                    await SharedPreferences.getInstance();
-                                setState(() {
-                                  notifire.setIsDark = val;
-                                  prefs.setBool("setIsDark", val);
-                                });
+                                // final prefs =
+                                //     await SharedPreferences.getInstance();
+                                // setState(() {
+                                //   notifire.setIsDark = val;
+                                //   prefs.setBool("setIsDark", val);
+                                // });
                               },
                             ),
                             // CupertinoSwitch(
-                            //   activeColor: notifire.getbuttonscolor,
+                            //   activeColor: notifire.buttonsColor,
                             //   value: status3,
                             //   onChanged: (value) {
                             //     setState(() {
@@ -467,6 +459,7 @@ class _SettingState extends State<Setting> {
                             //   },
                             // ),
                           ),
+                          notifire
                         ),
                       ],
                     ),
@@ -480,13 +473,13 @@ class _SettingState extends State<Setting> {
     );
   }
 
-  _showMyDialog2() async {
+  _showMyDialog2(ColorState notifire) async {
     return showDialog(
       context: context, useRootNavigator: true,
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
         return AlertDialog(
-          backgroundColor: notifire.getprimerycolor,
+          backgroundColor: notifire.primaryColor,
           content: StatefulBuilder(
             builder: (BuildContext context, StateSetter setState) {
               return Container(
@@ -504,11 +497,11 @@ class _SettingState extends State<Setting> {
                       child: locatename(
                           "English",
                           selectedindex7
-                              ? notifire.getbuttonscolor
+                              ? notifire.buttonsColor
                               : Colors.transparent,
-                          selectedindex7 ? notifire.getdarkscolor : Colors.grey,
+                          selectedindex7 ? notifire.darksColor : Colors.grey,
                           selectedindex7
-                              ? notifire.getdarkscolor
+                              ? notifire.darksColor
                               : Colors.grey),
                     ),
                     SizedBox(height: height / 100),
@@ -521,11 +514,11 @@ class _SettingState extends State<Setting> {
                       child: locatename(
                           "Manchester",
                           selectedindex8
-                              ? notifire.getbuttonscolor
+                              ? notifire.buttonsColor
                               : Colors.transparent,
-                          selectedindex8 ? notifire.getdarkscolor : Colors.grey,
+                          selectedindex8 ? notifire.darksColor : Colors.grey,
                           selectedindex8
-                              ? notifire.getdarkscolor
+                              ? notifire.darksColor
                               : Colors.grey),
                     ),
                     SizedBox(height: height / 100),
@@ -538,11 +531,11 @@ class _SettingState extends State<Setting> {
                       child: locatename(
                           "Edinburgh",
                           selectedindex9
-                              ? notifire.getbuttonscolor
+                              ? notifire.buttonsColor
                               : Colors.transparent,
-                          selectedindex9 ? notifire.getdarkscolor : Colors.grey,
+                          selectedindex9 ? notifire.darksColor : Colors.grey,
                           selectedindex9
-                              ? notifire.getdarkscolor
+                              ? notifire.darksColor
                               : Colors.grey),
                     ),
                     SizedBox(height: height / 100),
@@ -555,13 +548,13 @@ class _SettingState extends State<Setting> {
                       child: locatename(
                           "Burmingham",
                           selectedindex10
-                              ? notifire.getbuttonscolor
+                              ? notifire.buttonsColor
                               : Colors.transparent,
                           selectedindex10
-                              ? notifire.getdarkscolor
+                              ? notifire.darksColor
                               : Colors.grey,
                           selectedindex10
-                              ? notifire.getdarkscolor
+                              ? notifire.darksColor
                               : Colors.grey),
                     ),
                     SizedBox(height: height / 100),
@@ -574,13 +567,13 @@ class _SettingState extends State<Setting> {
                       child: locatename(
                           "Bristol",
                           selectedindex11
-                              ? notifire.getbuttonscolor
+                              ? notifire.buttonsColor
                               : Colors.transparent,
                           selectedindex11
-                              ? notifire.getdarkscolor
+                              ? notifire.darksColor
                               : Colors.grey,
                           selectedindex11
-                              ? notifire.getdarkscolor
+                              ? notifire.darksColor
                               : Colors.grey),
                     ),
                     SizedBox(height: height / 100),
@@ -593,13 +586,13 @@ class _SettingState extends State<Setting> {
                       child: locatename(
                           "Liverpool",
                           selectedindex12
-                              ? notifire.getbuttonscolor
+                              ? notifire.buttonsColor
                               : Colors.transparent,
                           selectedindex12
-                              ? notifire.getdarkscolor
+                              ? notifire.darksColor
                               : Colors.grey,
                           selectedindex12
-                              ? notifire.getdarkscolor
+                              ? notifire.darksColor
                               : Colors.grey),
                     ),
                     SizedBox(height: height / 100),
@@ -612,13 +605,13 @@ class _SettingState extends State<Setting> {
                       child: locatename(
                           "Glasgow",
                           selectedindex13
-                              ? notifire.getbuttonscolor
+                              ? notifire.buttonsColor
                               : Colors.transparent,
                           selectedindex13
-                              ? notifire.getdarkscolor
+                              ? notifire.darksColor
                               : Colors.grey,
                           selectedindex13
-                              ? notifire.getdarkscolor
+                              ? notifire.darksColor
                               : Colors.grey),
                     ),
                     SizedBox(height: height / 40),
@@ -635,9 +628,9 @@ class _SettingState extends State<Setting> {
                               height: height / 30,
                               width: width / 5,
                               decoration: BoxDecoration(
-                                color: notifire.getprimerycolor,
+                                color: notifire.primaryColor,
                                 border:
-                                    Border.all(color: notifire.getbuttonscolor),
+                                    Border.all(color: notifire.buttonsColor),
                                 borderRadius: const BorderRadius.all(
                                   Radius.circular(15),
                                 ),
@@ -646,7 +639,7 @@ class _SettingState extends State<Setting> {
                                 child: Text(
                                   "Cancle",
                                   style: TextStyle(
-                                      color: notifire.getbuttonscolor,
+                                      color: notifire.buttonsColor,
                                       fontFamily: 'Gilroy Normal',
                                       fontSize: 12.sp),
                                 ),
@@ -667,7 +660,7 @@ class _SettingState extends State<Setting> {
                               height: height / 30,
                               width: width / 5,
                               decoration: BoxDecoration(
-                                color: notifire.getbuttonscolor,
+                                color: notifire.buttonsColor,
                                 borderRadius: const BorderRadius.all(
                                   Radius.circular(15),
                                 ),
@@ -700,7 +693,7 @@ class _SettingState extends State<Setting> {
             " Select ",
             textAlign: TextAlign.center,
             style: TextStyle(
-                color: notifire.getdarkscolor,
+                color: notifire.darksColor,
                 fontFamily: 'Gilroy_Bold',
                 fontSize: 17.sp),
           ),
@@ -709,13 +702,13 @@ class _SettingState extends State<Setting> {
     );
   }
 
-  _showMyDialog() async {
+  _showMyDialog(ColorState notifire) async {
     return showDialog(
       context: context, useRootNavigator: true,
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
         return AlertDialog(
-          backgroundColor: notifire.getprimerycolor,
+          backgroundColor: notifire.primaryColor,
           content: StatefulBuilder(
             builder: (BuildContext context, StateSetter setState) {
               return Container(
@@ -733,10 +726,10 @@ class _SettingState extends State<Setting> {
                       child: locatename(
                           "London",
                           selectedindex
-                              ? notifire.getbuttonscolor
+                              ? notifire.buttonsColor
                               : Colors.transparent,
-                          selectedindex ? notifire.getdarkscolor : Colors.grey,
-                          selectedindex ? notifire.getdarkscolor : Colors.grey),
+                          selectedindex ? notifire.darksColor : Colors.grey,
+                          selectedindex ? notifire.darksColor : Colors.grey),
                     ),
                     SizedBox(height: height / 100),
                     GestureDetector(
@@ -748,11 +741,11 @@ class _SettingState extends State<Setting> {
                       child: locatename(
                           "Manchester",
                           selectedindex1
-                              ? notifire.getbuttonscolor
+                              ? notifire.buttonsColor
                               : Colors.transparent,
-                          selectedindex1 ? notifire.getdarkscolor : Colors.grey,
+                          selectedindex1 ? notifire.darksColor : Colors.grey,
                           selectedindex1
-                              ? notifire.getdarkscolor
+                              ? notifire.darksColor
                               : Colors.grey),
                     ),
                     SizedBox(height: height / 100),
@@ -765,11 +758,11 @@ class _SettingState extends State<Setting> {
                       child: locatename(
                           "Edinburgh",
                           selectedindex2
-                              ? notifire.getbuttonscolor
+                              ? notifire.buttonsColor
                               : Colors.transparent,
-                          selectedindex2 ? notifire.getdarkscolor : Colors.grey,
+                          selectedindex2 ? notifire.darksColor : Colors.grey,
                           selectedindex2
-                              ? notifire.getdarkscolor
+                              ? notifire.darksColor
                               : Colors.grey),
                     ),
                     SizedBox(height: height / 100),
@@ -782,11 +775,11 @@ class _SettingState extends State<Setting> {
                       child: locatename(
                           "Burmingham",
                           selectedindex3
-                              ? notifire.getbuttonscolor
+                              ? notifire.buttonsColor
                               : Colors.transparent,
-                          selectedindex3 ? notifire.getdarkscolor : Colors.grey,
+                          selectedindex3 ? notifire.darksColor : Colors.grey,
                           selectedindex3
-                              ? notifire.getdarkscolor
+                              ? notifire.darksColor
                               : Colors.grey),
                     ),
                     SizedBox(height: height / 100),
@@ -799,11 +792,11 @@ class _SettingState extends State<Setting> {
                       child: locatename(
                           "Bristol",
                           selectedindex4
-                              ? notifire.getbuttonscolor
+                              ? notifire.buttonsColor
                               : Colors.transparent,
-                          selectedindex4 ? notifire.getdarkscolor : Colors.grey,
+                          selectedindex4 ? notifire.darksColor : Colors.grey,
                           selectedindex4
-                              ? notifire.getdarkscolor
+                              ? notifire.darksColor
                               : Colors.grey),
                     ),
                     SizedBox(height: height / 100),
@@ -816,11 +809,11 @@ class _SettingState extends State<Setting> {
                       child: locatename(
                           "Liverpool",
                           selectedindex5
-                              ? notifire.getbuttonscolor
+                              ? notifire.buttonsColor
                               : Colors.transparent,
-                          selectedindex5 ? notifire.getdarkscolor : Colors.grey,
+                          selectedindex5 ? notifire.darksColor : Colors.grey,
                           selectedindex5
-                              ? notifire.getdarkscolor
+                              ? notifire.darksColor
                               : Colors.grey),
                     ),
                     SizedBox(height: height / 100),
@@ -833,11 +826,11 @@ class _SettingState extends State<Setting> {
                       child: locatename(
                           "Glasgow",
                           selectedindex6
-                              ? notifire.getbuttonscolor
+                              ? notifire.buttonsColor
                               : Colors.transparent,
-                          selectedindex6 ? notifire.getdarkscolor : Colors.grey,
+                          selectedindex6 ? notifire.darksColor : Colors.grey,
                           selectedindex6
-                              ? notifire.getdarkscolor
+                              ? notifire.darksColor
                               : Colors.grey),
                     ),
                     SizedBox(height: height / 40),
@@ -854,9 +847,9 @@ class _SettingState extends State<Setting> {
                               height: height / 30,
                               width: width / 5,
                               decoration: BoxDecoration(
-                                color: notifire.getprimerycolor,
+                                color: notifire.primaryColor,
                                 border:
-                                    Border.all(color: notifire.getbuttonscolor),
+                                    Border.all(color: notifire.buttonsColor),
                                 borderRadius: const BorderRadius.all(
                                   Radius.circular(15),
                                 ),
@@ -865,7 +858,7 @@ class _SettingState extends State<Setting> {
                                 child: Text(
                                   "Cancle",
                                   style: TextStyle(
-                                      color: notifire.getbuttonscolor,
+                                      color: notifire.buttonsColor,
                                       fontFamily: 'Gilroy Normal',
                                       fontSize: 12.sp),
                                 ),
@@ -886,7 +879,7 @@ class _SettingState extends State<Setting> {
                               height: height / 30,
                               width: width / 5,
                               decoration: BoxDecoration(
-                                color: notifire.getbuttonscolor,
+                                color: notifire.buttonsColor,
                                 borderRadius: const BorderRadius.all(
                                   Radius.circular(15),
                                 ),
@@ -919,7 +912,7 @@ class _SettingState extends State<Setting> {
             " Select ",
             textAlign: TextAlign.center,
             style: TextStyle(
-                color: notifire.getdarkscolor,
+                color: notifire.darksColor,
                 fontFamily: 'Gilroy_Bold',
                 fontSize: 17.sp),
           ),
@@ -960,7 +953,7 @@ class _SettingState extends State<Setting> {
     );
   }
 
-  Widget lines(img, name) {
+  Widget lines(img, name,ColorState notifire) {
     return Container(
       color: Colors.transparent,
       child: Column(
@@ -975,7 +968,7 @@ class _SettingState extends State<Setting> {
               ),
               Image.asset(
                 img,
-                color: notifire.getdarkscolor,
+                color: notifire.darksColor,
                 height: height / 35,
               ),
               SizedBox(
@@ -987,13 +980,13 @@ class _SettingState extends State<Setting> {
                   fontSize: 14.sp,
                   fontWeight: FontWeight.w500,
                   fontFamily: 'Gilroy Normal',
-                  color: notifire.getdarkscolor,
+                  color: notifire.darksColor,
                 ),
               ),
               const Spacer(),
               Icon(
                 Icons.arrow_forward_ios,
-                color: notifire.getdarkscolor,
+                color: notifire.darksColor,
                 size: 14.sp,
               ),
               SizedBox(
@@ -1009,7 +1002,7 @@ class _SettingState extends State<Setting> {
     );
   }
 
-  Widget line(img, name, se) {
+  Widget line(img, name, se,ColorState notifire) {
     return Column(
       children: [
         Row(
@@ -1019,7 +1012,7 @@ class _SettingState extends State<Setting> {
             ),
             Image.asset(
               img,
-              color: notifire.getdarkscolor,
+              color: notifire.darksColor,
               height: height / 35,
             ),
             SizedBox(
@@ -1031,7 +1024,7 @@ class _SettingState extends State<Setting> {
                 fontSize: 14.sp,
                 fontWeight: FontWeight.w500,
                 fontFamily: 'Gilroy Normal',
-                color: notifire.getdarkscolor,
+                color: notifire.darksColor,
               ),
             ),
             const Spacer(),

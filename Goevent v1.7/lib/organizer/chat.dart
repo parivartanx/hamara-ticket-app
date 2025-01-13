@@ -1,43 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
-import '../utils/colornotifire.dart';
+import 'package:goevent2/providers/color_provider.dart';
 import '../utils/media.dart';
 
-class Chat extends StatefulWidget {
+class Chat extends ConsumerStatefulWidget {
   const Chat({Key? key}) : super(key: key);
 
   @override
   _ChatState createState() => _ChatState();
 }
 
-class _ChatState extends State<Chat> {
-  late ColorNotifire notifire;
+class _ChatState extends ConsumerState<Chat> {
 
-  getdarkmodepreviousstate() async {
-    final prefs = await SharedPreferences.getInstance();
-    bool? previusstate = prefs.getBool("setIsDark");
-    if (previusstate == null) {
-      notifire.setIsDark = false;
-    } else {
-      notifire.setIsDark = previusstate;
-    }
-  }
+
 
   @override
   void initState() {
     super.initState();
-    getdarkmodepreviousstate();
+    ref.read(colorProvider.notifier).getdarkmodepreviousstate();
   }
 
   @override
   Widget build(BuildContext context) {
-    notifire = Provider.of<ColorNotifire>(context, listen: true);
+    final notifire = ref.watch(colorProvider);
     return ScreenUtilInit(
       builder:  (BuildContext context, child) =>  Scaffold(
-        backgroundColor: notifire.getprimerycolor,
+        backgroundColor: notifire.primaryColor,
         body: SingleChildScrollView(
           child: Column(
             children: [
@@ -54,7 +43,7 @@ class _ChatState extends State<Chat> {
                       Navigator.pop(context);
                     },
                     child:
-                        Icon(Icons.arrow_back, color: notifire.getdarkscolor),
+                        Icon(Icons.arrow_back, color: notifire.darksColor),
                   ),
                   SizedBox(
                     width: width / 80,
@@ -65,7 +54,7 @@ class _ChatState extends State<Chat> {
                       fontSize: 18.sp,
                       fontWeight: FontWeight.w900,
                       fontFamily: 'Gilroy Medium',
-                      color: notifire.getdarkscolor,
+                      color: notifire.darksColor,
                     ),
                   ),
                   const Spacer(),
@@ -113,7 +102,7 @@ class _ChatState extends State<Chat> {
                       height: height / 10,
                       width: width / 1.5,
                       decoration: BoxDecoration(
-                          color: notifire.getpinkcolor,
+                          color: notifire.pinkColor,
                           borderRadius: const BorderRadius.only(
                               topRight: Radius.circular(15),
                               bottomLeft: Radius.circular(15),
@@ -126,7 +115,7 @@ class _ChatState extends State<Chat> {
                               style: TextStyle(
                               fontSize: 15.sp,
                               fontFamily: 'Gilroy Medium',
-                              color: notifire.gettextcolor,
+                              color: notifire.textColor,
                             ),),),
                       ),
                     ),
@@ -161,7 +150,7 @@ class _ChatState extends State<Chat> {
                           height: height / 15,
                           width: width / 1.5,
                           decoration: BoxDecoration(
-                              color: notifire.gettopcolor,
+                              color: notifire.topColor,
                               borderRadius: const BorderRadius.only(
                                   topLeft: Radius.circular(15),
                                   bottomLeft: Radius.circular(15),
@@ -207,7 +196,7 @@ class _ChatState extends State<Chat> {
                       height: height / 8,
                       width: width / 1.5,
                       decoration: BoxDecoration(
-                          color: notifire.getpinkcolor,
+                          color: notifire.pinkColor,
                           borderRadius: const BorderRadius.only(
                               topRight: Radius.circular(15),
                               bottomLeft: Radius.circular(15),
@@ -220,7 +209,7 @@ class _ChatState extends State<Chat> {
                             style: TextStyle(
                               fontSize: 15.sp,
                               fontFamily: 'Gilroy Medium',
-                              color: notifire.gettextcolor,
+                              color: notifire.textColor,
                             ),),),
                       ),
                     ),
@@ -255,7 +244,7 @@ class _ChatState extends State<Chat> {
                           height: height / 15,
                           width: width / 1.5,
                           decoration: BoxDecoration(
-                              color: notifire.gettopcolor,
+                              color: notifire.topColor,
                               borderRadius: const BorderRadius.only(
                                   topLeft: Radius.circular(15),
                                   bottomLeft: Radius.circular(15),
@@ -297,7 +286,7 @@ class _ChatState extends State<Chat> {
               Container(
                 height: height / 10,
                 width: width,
-                color: notifire.getpinkcolor,
+                color: notifire.pinkColor,
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: Row(
@@ -312,7 +301,7 @@ class _ChatState extends State<Chat> {
                         child: Padding(
                           padding: EdgeInsets.only(left: width / 40),
                           child: TextField(
-                            style: TextStyle(color: notifire.gettextcolor),
+                            style: TextStyle(color: notifire.textColor),
                             decoration: const InputDecoration(
                                 hintStyle: TextStyle(color: Colors.grey),
                                 hintText: "Write a reply...",

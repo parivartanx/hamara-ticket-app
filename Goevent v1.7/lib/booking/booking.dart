@@ -1,48 +1,38 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:goevent2/payment/finalticket.dart';
+import 'package:goevent2/providers/color_provider.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../organizer/oprofile.dart';
 import '../utils/botton.dart';
-import '../utils/colornotifire.dart';
 import '../utils/media.dart';
 import '../utils/string.dart';
 
-class Booking extends StatefulWidget {
+class Booking extends ConsumerStatefulWidget {
   const Booking({Key? key}) : super(key: key);
 
   @override
   _BookingState createState() => _BookingState();
 }
 
-class _BookingState extends State<Booking> {
-  late ColorNotifire notifire;
+class _BookingState extends ConsumerState<Booking> {
 
-  getdarkmodepreviousstate() async {
-    final prefs = await SharedPreferences.getInstance();
-    bool? previusstate = prefs.getBool("setIsDark");
-    if (previusstate == null) {
-      notifire.setIsDark = false;
-    } else {
-      notifire.setIsDark = previusstate;
-    }
-  }
+ 
 
   @override
   void initState() {
     super.initState();
-    getdarkmodepreviousstate();
+    ref.read(colorProvider.notifier).getdarkmodepreviousstate();
   }
 
   @override
   Widget build(BuildContext context) {
-    notifire = Provider.of<ColorNotifire>(context, listen: true);
+    final notifire = ref.watch(colorProvider);
     return ScreenUtilInit(
       builder: (BuildContext context, child) => Scaffold(
-        backgroundColor: notifire.getprimerycolor,
+        backgroundColor: notifire.primaryColor,
         floatingActionButton: Padding(
           padding: const EdgeInsets.fromLTRB(20, 0, 20, 10),
           child: SizedBox(
@@ -73,7 +63,7 @@ class _BookingState extends State<Booking> {
                           height: height / 1.1,
                           child: Container(
                             decoration: BoxDecoration(
-                              color: notifire.getprimerycolor,
+                              color: notifire.primaryColor,
                               borderRadius: const BorderRadius.only(
                                 topLeft: Radius.circular(25),
                                 topRight: Radius.circular(25),
@@ -84,7 +74,7 @@ class _BookingState extends State<Booking> {
                                 children: [
                                   Container(
                                     decoration: BoxDecoration(
-                                      color: notifire.getcardcolor,
+                                      color: notifire.cardColor,
                                       borderRadius: const BorderRadius.only(
                                         topLeft: Radius.circular(25),
                                         topRight: Radius.circular(25),
@@ -98,7 +88,7 @@ class _BookingState extends State<Booking> {
                                         ),
                                         Container(
                                           decoration: BoxDecoration(
-                                            color: notifire.gettextcolor,
+                                            color: notifire.textColor,
                                             borderRadius:
                                                 const BorderRadius.all(
                                               Radius.circular(10),
@@ -145,13 +135,13 @@ class _BookingState extends State<Booking> {
                                           style: TextStyle(
                                             fontSize: 16.sp,
                                             fontFamily: 'Gilroy Bold',
-                                            color: notifire.getdarkscolor,
+                                            color: notifire.darksColor,
                                           ),
                                         ),
                                         const Spacer(),
                                         Icon(
                                           Icons.more_vert,
-                                          color: notifire.getdarkscolor,
+                                          color: notifire.darksColor,
                                         ),
                                       ],
                                     ),
@@ -184,7 +174,7 @@ class _BookingState extends State<Booking> {
                                                     fontWeight: FontWeight.w800,
                                                     fontFamily: 'Gilroy Medium',
                                                     color:
-                                                        notifire.getdarkscolor,
+                                                        notifire.darksColor,
                                                   ),
                                                 ),
                                                 Text(
@@ -208,7 +198,7 @@ class _BookingState extends State<Booking> {
                                               height: height / 10,
                                               width: width / 1.5,
                                               decoration: BoxDecoration(
-                                                color: notifire.getpinkcolor,
+                                                color: notifire.pinkColor,
                                                 borderRadius:
                                                     const BorderRadius.only(
                                                   topRight: Radius.circular(15),
@@ -229,7 +219,7 @@ class _BookingState extends State<Booking> {
                                                       fontFamily:
                                                           'Gilroy Medium',
                                                       color:
-                                                          notifire.gettextcolor,
+                                                          notifire.textColor,
                                                     ),
                                                   ),
                                                 ),
@@ -272,7 +262,7 @@ class _BookingState extends State<Booking> {
                                               height: height / 15,
                                               width: width / 1.5,
                                               decoration: BoxDecoration(
-                                                  color: notifire.getcardcolor,
+                                                  color: notifire.cardColor,
                                                   borderRadius:
                                                       const BorderRadius.only(
                                                           topLeft: Radius
@@ -329,7 +319,7 @@ class _BookingState extends State<Booking> {
                                                 fontSize: 13.sp,
                                                 fontWeight: FontWeight.w800,
                                                 fontFamily: 'Gilroy Medium',
-                                                color: notifire.getdarkscolor,
+                                                color: notifire.darksColor,
                                               ),
                                             ),
                                             Text(
@@ -399,7 +389,7 @@ class _BookingState extends State<Booking> {
                                                 fontSize: 13.sp,
                                                 fontWeight: FontWeight.w800,
                                                 fontFamily: 'Gilroy Medium',
-                                                color: notifire.getdarkscolor,
+                                                color: notifire.darksColor,
                                               ),
                                             ),
                                             Text(
@@ -427,7 +417,7 @@ class _BookingState extends State<Booking> {
                                           height: height / 8,
                                           width: width / 1.5,
                                           decoration: BoxDecoration(
-                                              color: notifire.getpinkcolor,
+                                              color: notifire.pinkColor,
                                               borderRadius:
                                                   const BorderRadius.only(
                                                       topRight:
@@ -445,7 +435,7 @@ class _BookingState extends State<Booking> {
                                                 style: TextStyle(
                                                   fontSize: 15.sp,
                                                   fontFamily: 'Gilroy Medium',
-                                                  color: notifire.gettextcolor,
+                                                  color: notifire.textColor,
                                                 ),
                                               ),
                                             ),
@@ -487,7 +477,7 @@ class _BookingState extends State<Booking> {
                                               width: width / 1.5,
                                               decoration: BoxDecoration(
                                                   color: notifire
-                                                      .getbuttonscolor,
+                                                      .buttonsColor,
                                                   borderRadius:
                                                       const BorderRadius.only(
                                                           topLeft: Radius
@@ -525,7 +515,7 @@ class _BookingState extends State<Booking> {
                                   Container(
                                     height: height / 10,
                                     width: width,
-                                    color: notifire.getpinkcolor,
+                                    color: notifire.pinkColor,
                                     child: Padding(
                                       padding: const EdgeInsets.symmetric(
                                           horizontal: 20),
@@ -544,7 +534,7 @@ class _BookingState extends State<Booking> {
                                               child: TextField(
                                                 style: TextStyle(
                                                     color:
-                                                        notifire.gettextcolor),
+                                                        notifire.textColor),
                                                 decoration:
                                                     const InputDecoration(
                                                         hintStyle:
@@ -594,7 +584,7 @@ class _BookingState extends State<Booking> {
                 );
               },
               child: Custombutton.button(
-                notifire.getbuttonscolor,
+                notifire.buttonsColor,
                 CustomStrings.msg,
                 SizedBox(
                   width: width / 3.5,
@@ -678,15 +668,15 @@ class _BookingState extends State<Booking> {
                       ),
                       Container(
                         decoration: BoxDecoration(
-                            color: notifire.getcardcolor,
+                            color: notifire.cardColor,
                             borderRadius:
                                 const BorderRadius.all(Radius.circular(15))),
                         width: width / 1.2,
                         height: height / 8,
                         child: Card(
-                          color: notifire.getcardcolor,
+                          color: notifire.cardColor,
                           elevation: 15,
-                          shadowColor: notifire.getcardcolor,
+                          shadowColor: notifire.cardColor,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(15),
                           ),
@@ -695,7 +685,7 @@ class _BookingState extends State<Booking> {
                             children: [
                               GestureDetector(
                                 child: Container(
-                                  color: notifire.getcardcolor,
+                                  color: notifire.cardColor,
                                   child: Column(
                                     children: [
                                       SizedBox(
@@ -714,7 +704,7 @@ class _BookingState extends State<Booking> {
                                           fontSize: height / 50,
                                           fontWeight: FontWeight.w500,
                                           fontFamily: 'Gilroy Medium',
-                                          color: notifire.gettextcolor,
+                                          color: notifire.textColor,
                                         ),
                                       ),
                                     ],
@@ -722,7 +712,7 @@ class _BookingState extends State<Booking> {
                                 ),
                               ),
                               Container(
-                                color: notifire.getcardcolor,
+                                color: notifire.cardColor,
                                 child: Column(
                                   children: [
                                     SizedBox(
@@ -741,7 +731,7 @@ class _BookingState extends State<Booking> {
                                         fontSize: height / 50,
                                         fontWeight: FontWeight.w500,
                                         fontFamily: 'Gilroy Medium',
-                                        color: notifire.gettextcolor,
+                                        color: notifire.textColor,
                                       ),
                                     ),
                                   ],
@@ -757,7 +747,7 @@ class _BookingState extends State<Booking> {
                                   );
                                 },
                                 child: Container(
-                                  color: notifire.getcardcolor,
+                                  color: notifire.cardColor,
                                   child: Column(
                                     children: [
                                       SizedBox(
@@ -776,7 +766,7 @@ class _BookingState extends State<Booking> {
                                           fontSize: height / 50,
                                           fontWeight: FontWeight.w500,
                                           fontFamily: 'Gilroy Medium',
-                                          color: notifire.gettextcolor,
+                                          color: notifire.textColor,
                                         ),
                                       ),
                                     ],
@@ -802,7 +792,7 @@ class _BookingState extends State<Booking> {
                     fontSize: 35.sp,
                     fontWeight: FontWeight.w500,
                     fontFamily: 'Gilroy Medium',
-                    color: notifire.getdarkscolor,
+                    color: notifire.darksColor,
                   ),
                 ),
               ),
@@ -827,7 +817,7 @@ class _BookingState extends State<Booking> {
                           height: height / 15,
                           width: width / 7,
                           decoration: BoxDecoration(
-                            color: notifire.getcardcolor,
+                            color: notifire.cardColor,
                             borderRadius: const BorderRadius.all(
                               Radius.circular(10),
                             ),
@@ -849,7 +839,7 @@ class _BookingState extends State<Booking> {
                                 fontSize: 15.sp,
                                 fontWeight: FontWeight.w500,
                                 fontFamily: 'Gilroy Medium',
-                                color: notifire.getdarkscolor,
+                                color: notifire.darksColor,
                               ),
                             ),
                             SizedBox(
@@ -880,7 +870,7 @@ class _BookingState extends State<Booking> {
                           child: Container(
                             height: height / 30,
                             width: width / 6,
-                            color: notifire.getcardcolor,
+                            color: notifire.cardColor,
                             child: Center(
                               child: Text(
                                 "Follow",
@@ -902,12 +892,12 @@ class _BookingState extends State<Booking> {
                 height: height / 40,
               ),
               concert("image/date.png", "14 December, 2021",
-                  "Tuesday, 4:00PM - 9:00PM"),
+                  "Tuesday, 4:00PM - 9:00PM",notifire),
               SizedBox(
                 height: height / 40,
               ),
               concert("image/direction.png", "Gala Convention Center",
-                  "36 Guild Street London, UK"),
+                  "36 Guild Street London, UK",notifire),
               SizedBox(
                 height: height / 40,
               ),
@@ -959,7 +949,7 @@ class _BookingState extends State<Booking> {
                       height: height / 17,
                       width: width / 7,
                       decoration: BoxDecoration(
-                        color: notifire.getbuttonscolor,
+                        color: notifire.buttonsColor,
                         shape: BoxShape.circle,
                       ),
                       child: Center(
@@ -1024,7 +1014,7 @@ class _BookingState extends State<Booking> {
     );
   }
 
-  Widget concert(img, name1, name2) {
+  Widget concert(img, name1, name2,ColorState notifire) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Row(
@@ -1033,7 +1023,7 @@ class _BookingState extends State<Booking> {
             height: height / 15,
             width: width / 7,
             decoration: BoxDecoration(
-              color: notifire.getcardcolor,
+              color: notifire.cardColor,
               borderRadius: const BorderRadius.all(
                 Radius.circular(10),
               ),
@@ -1055,7 +1045,7 @@ class _BookingState extends State<Booking> {
                   fontSize: 15.sp,
                   fontWeight: FontWeight.w500,
                   fontFamily: 'Gilroy Medium',
-                  color: notifire.getdarkscolor,
+                  color: notifire.darksColor,
                 ),
               ),
               SizedBox(
@@ -1095,7 +1085,7 @@ class _BookingState extends State<Booking> {
                                           children: <Widget>[
                                             Container(
                                               decoration: BoxDecoration(
-                                                  color: notifire.getcardcolor,
+                                                  color: notifire.cardColor,
                                                   borderRadius:
                                                       const BorderRadius.only(
                                                           topLeft:
@@ -1111,9 +1101,9 @@ class _BookingState extends State<Booking> {
                                                 backspaceButtonIconColor:
                                                     Colors.red,
                                                 buttonTextColor:
-                                                    notifire.getdarkscolor,
+                                                    notifire.darksColor,
                                                 dialOutputTextColor:
-                                                    notifire.getdarkscolor,
+                                                    notifire.darksColor,
                                                 keyPressed: (value) {},
                                                 makeCall: (number) {},
                                               ),

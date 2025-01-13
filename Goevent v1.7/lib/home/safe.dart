@@ -1,44 +1,34 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:goevent2/providers/color_provider.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../payment/payment.dart';
-import '../utils/colornotifire.dart';
 import '../utils/media.dart';
 import '../utils/string.dart';
 
-class Safe extends StatefulWidget {
+class Safe extends ConsumerStatefulWidget {
   const Safe({Key? key}) : super(key: key);
 
   @override
   _SafeState createState() => _SafeState();
 }
 
-class _SafeState extends State<Safe> {
-  late ColorNotifire notifire;
+class _SafeState extends ConsumerState<Safe> {
   bool isChecked = false;
 
-  getdarkmodepreviousstate() async {
-    final prefs = await SharedPreferences.getInstance();
-    bool? previusstate = prefs.getBool("setIsDark");
-    if (previusstate == null) {
-      notifire.setIsDark = false;
-    } else {
-      notifire.setIsDark = previusstate;
-    }
-  }
+  
 
   @override
   void initState() {
     super.initState();
-    getdarkmodepreviousstate();
+    ref.read(colorProvider.notifier).getdarkmodepreviousstate();
   }
 
   @override
   Widget build(BuildContext context) {
-    notifire = Provider.of<ColorNotifire>(context, listen: true);
+    final notifire = ref.watch(colorProvider);  
     return ScreenUtilInit(
       builder:  (BuildContext context, child) =>  Scaffold(
         backgroundColor: Colors.transparent.withOpacity(0.5),
@@ -56,7 +46,7 @@ class _SafeState extends State<Safe> {
               ),
               Container(
                 decoration: BoxDecoration(
-                    color: notifire.getprimerycolor,
+                    color: notifire.primaryColor,
                     borderRadius: const BorderRadius.only(
                         topRight: Radius.circular(30),
                         topLeft: Radius.circular(30))),
@@ -90,7 +80,7 @@ class _SafeState extends State<Safe> {
                             fontSize: 15.sp,
                             fontWeight: FontWeight.w600,
                             fontFamily: 'Gilroy Bold',
-                            color: notifire.getdarkscolor,
+                            color: notifire.darksColor,
                           ),
                         ),
                       ],
@@ -116,7 +106,7 @@ class _SafeState extends State<Safe> {
                             fontSize: 22.sp,
                             fontWeight: FontWeight.w600,
                             fontFamily: 'Gilroy Bold',
-                            color: notifire.getdarkscolor,
+                            color: notifire.darksColor,
                           ),
                         ),
                       ],
@@ -218,7 +208,7 @@ class _SafeState extends State<Safe> {
                           Checkbox(
                             checkColor: Colors.white,
                             fillColor: MaterialStateProperty.resolveWith(
-                                (states) => notifire.getbuttonscolor),
+                                (states) => notifire.buttonsColor),
                             value: isChecked,
                             onChanged: (bool? value) {
                               setState(() {
@@ -231,7 +221,7 @@ class _SafeState extends State<Safe> {
                             style: TextStyle(
                               fontSize: 12.sp,
                               fontFamily: 'Gilroy Normal',
-                              color: notifire.gettextcolor,
+                              color: notifire.textColor,
                             ),
                           ),
                         ],
@@ -254,7 +244,7 @@ class _SafeState extends State<Safe> {
                             borderRadius: const BorderRadius.all(
                               Radius.circular(10),
                             ),
-                            color: notifire.getbuttonscolor,
+                            color: notifire.buttonsColor,
                           ),
                           height: height / 15,
                           width: width / 1.5,

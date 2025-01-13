@@ -1,50 +1,38 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:goevent2/providers/color_provider.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../booking/booking.dart';
-import '../utils/colornotifire.dart';
 import '../utils/media.dart';
 
-class Bookmark extends StatefulWidget {
+class Bookmark extends ConsumerStatefulWidget {
   const Bookmark({Key? key}) : super(key: key);
 
   @override
   _BookmarkState createState() => _BookmarkState();
 }
 
-class _BookmarkState extends State<Bookmark> {
+class _BookmarkState extends ConsumerState<Bookmark> {
   bool selected = false;
   bool selected1 = false;
   bool selected2 = false;
   bool selected3 = false;
 
-  late ColorNotifire notifire;
-
-  getdarkmodepreviousstate() async {
-    final prefs = await SharedPreferences.getInstance();
-    bool? previusstate = prefs.getBool("setIsDark");
-    if (previusstate == null) {
-      notifire.setIsDark = false;
-    } else {
-      notifire.setIsDark = previusstate;
-    }
-  }
 
   @override
   void initState() {
     super.initState();
-    getdarkmodepreviousstate();
+    ref.read(colorProvider.notifier).getdarkmodepreviousstate();
   }
 
   @override
   Widget build(BuildContext context) {
-    notifire = Provider.of<ColorNotifire>(context, listen: true);
+    final notifire = ref.watch(colorProvider);
     return ScreenUtilInit(
       builder:  (BuildContext context, child) =>  Scaffold(
-        backgroundColor: notifire.getprimerycolor,
+        backgroundColor: notifire.primaryColor,
         body: SingleChildScrollView(
           child: Column(
             children: [  SizedBox(
@@ -60,7 +48,7 @@ class _BookmarkState extends State<Bookmark> {
                       Navigator.pop(context);
                     },
                     child:
-                    Icon(Icons.arrow_back, color: notifire.getdarkscolor),
+                    Icon(Icons.arrow_back, color: notifire.darksColor),
                   ),
                   SizedBox(
                     width: width / 80,
@@ -71,11 +59,11 @@ class _BookmarkState extends State<Bookmark> {
                       fontSize: 18.sp,
                       fontWeight: FontWeight.w900,
                       fontFamily: 'Gilroy Medium',
-                      color: notifire.getdarkscolor,
+                      color: notifire.darksColor,
                     ),
                   ),
                   const Spacer(),
-                  Icon(Icons.more_vert,color: notifire.getdarkscolor,),
+                  Icon(Icons.more_vert,color: notifire.darksColor,),
                   SizedBox(
                     width: width / 20,
                   ),
@@ -93,7 +81,7 @@ class _BookmarkState extends State<Bookmark> {
                     },
                     child: Container(
                         decoration: BoxDecoration(
-                          color: notifire.getprimerycolor,
+                          color: notifire.primaryColor,
                           borderRadius:
                           const BorderRadius.all(Radius.circular(7),),
                         ),
@@ -108,7 +96,7 @@ class _BookmarkState extends State<Bookmark> {
                               color: const Color(0xffF0635A),
                             ))),
                   ),
-                  "image/p11.png"),
+                  "image/p11.png",notifire),
               SizedBox(height: height / 60,),
               events(
                   GestureDetector(
@@ -119,7 +107,7 @@ class _BookmarkState extends State<Bookmark> {
                     },
                     child: Container(
                         decoration: BoxDecoration(
-                          color: notifire.getprimerycolor,
+                          color: notifire.primaryColor,
                           borderRadius:
                           const BorderRadius.all(Radius.circular(7),),
                         ),
@@ -134,7 +122,7 @@ class _BookmarkState extends State<Bookmark> {
                             color: const Color(0xffF0635A),
                           ))),
                   ),
-                  "image/p10.png"),
+                  "image/p10.png",notifire),
               SizedBox(height: height / 60,),
               events(
                   GestureDetector(
@@ -145,7 +133,7 @@ class _BookmarkState extends State<Bookmark> {
                     },
                     child: Container(
                         decoration: BoxDecoration(
-                          color: notifire.getprimerycolor,
+                          color: notifire.primaryColor,
                           borderRadius:
                           const BorderRadius.all(Radius.circular(7)),
                         ),
@@ -160,7 +148,7 @@ class _BookmarkState extends State<Bookmark> {
                             color: const Color(0xffF0635A),
                           ))),
                   ),
-                  "image/p11.png"),
+                  "image/p11.png",notifire),
               SizedBox(height: height / 60,),
               events(
                   GestureDetector(
@@ -171,7 +159,7 @@ class _BookmarkState extends State<Bookmark> {
                     },
                     child: Container(
                         decoration: BoxDecoration(
-                          color: notifire.getprimerycolor,
+                          color: notifire.primaryColor,
                           borderRadius:
                           const BorderRadius.all(Radius.circular(7)),
                         ),
@@ -186,7 +174,7 @@ class _BookmarkState extends State<Bookmark> {
                             color: const Color(0xffF0635A),
                           ))),
                   ),
-                  "image/p10.png"),
+                  "image/p10.png",notifire),
               SizedBox(height: height / 60,),
             ],
           ),
@@ -195,7 +183,7 @@ class _BookmarkState extends State<Bookmark> {
     );
   }
 
-  Widget events(se, img) {
+  Widget events(se, img,ColorState notifire) {
     return Stack(
       children: [
         GestureDetector(
@@ -210,17 +198,17 @@ class _BookmarkState extends State<Bookmark> {
             padding: const EdgeInsets.symmetric(horizontal: 12.0),
             child: Container(
               decoration: BoxDecoration(
-                  color: notifire.getprimerycolor,
+                  color: notifire.primaryColor,
                   borderRadius: BorderRadius.circular(15),
                   border: Border.all(
                     width: 1,
-                    color: Color(0xffdcdbdb),
+                    color: const Color(0xffdcdbdb),
                   )
               ),
               width: width,
               child: Card(
                 elevation: 0,
-                color: notifire.getprimerycolor,
+                color: notifire.primaryColor,
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                   child: Stack(
@@ -261,7 +249,7 @@ class _BookmarkState extends State<Bookmark> {
                           Text(
                             "Women's Leadership Conference",
                             style: TextStyle(
-                                color: notifire.getdarkscolor,
+                                color: notifire.darksColor,
                                 fontSize: 16.sp,fontFamily: 'Gilroy Medium',
                                 fontWeight: FontWeight.w600),
                           ),

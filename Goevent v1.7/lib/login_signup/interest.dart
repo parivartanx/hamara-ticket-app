@@ -1,23 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:goevent2/home/home.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
+import '../providers/color_provider.dart';
 import '../utils/botton.dart';
-import '../utils/colornotifire.dart';
 import '../utils/media.dart';
 
-class Interest extends StatefulWidget {
+class Interest extends ConsumerStatefulWidget {
   const Interest({Key? key}) : super(key: key);
 
   @override
   _InterestState createState() => _InterestState();
 }
 
-class _InterestState extends State<Interest> {
-  late ColorNotifire notifire;
+class _InterestState extends ConsumerState<Interest> {
   bool selected1 = false;
   bool selected2 = false;
   bool selected3 = false;
@@ -31,20 +29,12 @@ class _InterestState extends State<Interest> {
   bool selected11 = false;
   bool selected12 = false;
 
-  getdarkmodepreviousstate() async {
-    final prefs = await SharedPreferences.getInstance();
-    bool? previusstate = prefs.getBool("setIsDark");
-    if (previusstate == null) {
-      notifire.setIsDark = false;
-    } else {
-      notifire.setIsDark = previusstate;
-    }
-  }
+  
 
   @override
   void initState() {
     super.initState();
-    getdarkmodepreviousstate();
+    ref.read(colorProvider.notifier).getdarkmodepreviousstate();
   }
   // void _handleURLButtonPress(BuildContext context, String url) {
   //   Navigator.push(context,
@@ -52,10 +42,10 @@ class _InterestState extends State<Interest> {
   // }
   @override
   Widget build(BuildContext context) {
-    notifire = Provider.of<ColorNotifire>(context, listen: true);
+    final notifire = ref.watch(colorProvider);
     return ScreenUtilInit(
       builder:  (BuildContext context, child) =>  Scaffold(
-        backgroundColor: notifire.getprimerycolor,
+        backgroundColor: notifire.primaryColor,
         resizeToAvoidBottomInset: false,
         floatingActionButton: Padding(
           padding: const EdgeInsets.fromLTRB(20,0,20,20),
@@ -73,7 +63,7 @@ class _InterestState extends State<Interest> {
                 //   _handleURLButtonPress(
                 // context, 'http://www.googlemaps.com/'),
               child: Custombutton.button(
-                notifire.getbuttonscolor,
+                notifire.buttonsColor,
                 "NEXT",
                 SizedBox(
                   width: width / 3,
@@ -99,9 +89,9 @@ class _InterestState extends State<Interest> {
                       Navigator.pop(context);
                     },
                     child: Container(
-                        color: notifire.getprimerycolor,
+                        color: notifire.primaryColor,
                         child: Icon(Icons.arrow_back,
-                            color: notifire.getwhitecolor)),
+                            color: notifire.whiteColor)),
                   ),
                 ],
               ),
@@ -112,7 +102,7 @@ class _InterestState extends State<Interest> {
                   fontSize: 20.sp,
                   fontWeight: FontWeight.bold,
                   fontFamily: 'Gilroy Medium',
-                  color: notifire.getwhitecolor,
+                  color: notifire.whiteColor,
                 ),
               ),
               SizedBox(height: height / 40),
@@ -130,7 +120,7 @@ class _InterestState extends State<Interest> {
                         "Music",
                         selected1
                             ? const Color(0xff4e80fe)
-                            : Colors.transparent),
+                            : Colors.transparent,notifire),
                   ),
                   SizedBox(
                     width: width / 10,
@@ -146,7 +136,7 @@ class _InterestState extends State<Interest> {
                         "Art",
                         selected2
                             ? const Color(0xff4e80fe)
-                            : Colors.transparent),
+                            : Colors.transparent,notifire),
                   ),
                 ],
               ),
@@ -165,7 +155,7 @@ class _InterestState extends State<Interest> {
                         "Sport",
                         selected3
                             ? const Color(0xff4e80fe)
-                            : Colors.transparent),
+                            : Colors.transparent,notifire),
                   ),
                   SizedBox(
                     width: width / 10,
@@ -181,7 +171,7 @@ class _InterestState extends State<Interest> {
                         "Party",
                         selected4
                             ? const Color(0xff4e80fe)
-                            : Colors.transparent),
+                            : Colors.transparent,notifire),
                   ),
                 ],
               ),
@@ -200,7 +190,7 @@ class _InterestState extends State<Interest> {
                         "Food",
                         selected5
                             ? const Color(0xff4e80fe)
-                            : Colors.transparent),
+                            : Colors.transparent,notifire),
                   ),
                   SizedBox(
                     width: width / 10,
@@ -216,7 +206,7 @@ class _InterestState extends State<Interest> {
                         "Others",
                         selected6
                             ? const Color(0xff4e80fe)
-                            : Colors.transparent),
+                            : Colors.transparent,notifire),
                   ),
                 ],
               ),
@@ -228,7 +218,7 @@ class _InterestState extends State<Interest> {
     );
   }
 
-  Widget interest(img1,img2, name, clr) {
+  Widget interest(img1,img2, name, clr,ColorState notifire) {
     return Column(
       children: [
         Container(
@@ -259,7 +249,7 @@ class _InterestState extends State<Interest> {
           height: height / 40,
         ),
         Text(name, style: TextStyle(
-          color: notifire.getwhitecolor,
+          color: notifire.whiteColor,
           fontSize: 12.sp,
           fontFamily: 'Gilroy Medium',
         ),),

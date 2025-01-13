@@ -1,25 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
+import 'package:get/get.dart';
+import 'package:go_router/go_router.dart';
+// import 'package:goevent2/providers/color_provider.dart';
 import 'package:goevent2/utils/media.dart';
 import 'package:goevent2/utils/string.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:provider/provider.dart';
 
 import 'package:goevent2/login_signup/login.dart';
-import 'utils/colornotifire.dart';
 
-class Onbonding extends StatefulWidget {
+class Onbonding extends ConsumerStatefulWidget {
+  static const routePath = '/onbonding';
+  static const routeName = 'onbonding';
   const Onbonding({Key? key}) : super(key: key);
 
   @override
   _OnbondingState createState() => _OnbondingState();
 }
 
-class _OnbondingState extends State<Onbonding> {
+class _OnbondingState extends ConsumerState<Onbonding> {
   final int _numPages = 3;
 
-  late ColorNotifire notifire;
   final PageController _pageController = PageController(initialPage: 0);
   int _currentPage = 0;
 
@@ -46,7 +50,7 @@ class _OnbondingState extends State<Onbonding> {
 
   @override
   Widget build(BuildContext context) {
-    notifire = Provider.of<ColorNotifire>(context, listen: true);
+    // final notifier = ref.read(colorProvider);
     return ScreenUtilInit(
       builder:  (BuildContext context, child) =>  Scaffold(
         backgroundColor: Colors.white,
@@ -61,7 +65,7 @@ class _OnbondingState extends State<Onbonding> {
               children: <Widget>[
                 Container(
                   color: Colors.white,
-                  height: MediaQuery.of(context).size.height / 1.1,
+                  height: context.screenHeight / 1.1,
                   child: PageView(
                     physics: const ClampingScrollPhysics(),
                     controller: _pageController,
@@ -77,7 +81,7 @@ class _OnbondingState extends State<Onbonding> {
                           children: <Widget>[
                             Stack(
                               children: [
-                                Image.asset("image/onbonding1.png",fit: BoxFit.fill,height: height / 1.5,width: width,),
+                                Image.asset("assets/image/onbonding1.png",fit: BoxFit.fill,height: context.screenHeight / 1.5,width: context.screenWidth,),
                               ],
                             ),
                             Container(
@@ -86,12 +90,12 @@ class _OnbondingState extends State<Onbonding> {
                                   borderRadius: BorderRadius.only(
                                       topRight: Radius.circular(50),
                                       topLeft: Radius.circular(50))),
-                              height: height / 4,
+                              height: context.screenHeight / 4,
                               child: Center(
                                 child: Column(
                                   children: [
                                     SizedBox(
-                                      height: height / 30,
+                                      height: context.screenHeight / 30,
                                     ),
                                     Text(
                                       CustomStrings.onbonding1,
@@ -110,7 +114,7 @@ class _OnbondingState extends State<Onbonding> {
                                           fontSize: 20.sp),
                                     ),
                                     SizedBox(
-                                      height: height / 30,
+                                      height: context.screenHeight / 30,
                                     ),
                                     Text(
                                       "In publishing and graphic design, Lorem is",
@@ -139,7 +143,7 @@ class _OnbondingState extends State<Onbonding> {
                           children: <Widget>[
                             Stack(
                               children: [
-                                Image.asset("image/onbonding2.png",fit: BoxFit.fill,height: height / 1.5,width: width,),
+                                Image.asset("image/onbonding2.png",fit: BoxFit.fill,height: context.screenHeight / 1.5,width: width,),
                               ],
                             ),
                             Container(
@@ -148,12 +152,12 @@ class _OnbondingState extends State<Onbonding> {
                                   borderRadius: BorderRadius.only(
                                       topRight: Radius.circular(50),
                                       topLeft: Radius.circular(50),),),
-                              height: height / 4,
+                              height: context.screenHeight / 4,
                               child: Center(
                                 child: Column(
                                   children: [
                                     SizedBox(
-                                      height: height / 30,
+                                      height: context.screenHeight / 30,
                                     ),
                                     Text(
                                       "Web Have Modern Events",
@@ -172,7 +176,7 @@ class _OnbondingState extends State<Onbonding> {
                                           fontSize: 20.sp),
                                     ),
                                     SizedBox(
-                                      height: height / 30,
+                                      height: context.screenHeight / 30,
                                     ),
                                     Text(
                                       "In publishing and graphic design, Lorem is",
@@ -201,7 +205,7 @@ class _OnbondingState extends State<Onbonding> {
                           children: <Widget>[
                             Stack(
                               children: [
-                                Image.asset("image/onbonding3.png",fit: BoxFit.fill,height: height / 1.5,width: width,),
+                                Image.asset("image/onbonding3.png",fit: BoxFit.fill,height: context.screenHeight / 1.5,width: width,),
                               ],
                             ),
                             Container(
@@ -210,12 +214,12 @@ class _OnbondingState extends State<Onbonding> {
                                   borderRadius: BorderRadius.only(
                                       topRight: Radius.circular(50),
                                       topLeft: Radius.circular(50))),
-                              height: height / 4,
+                              height: context.screenHeight / 4,
                               child: Center(
                                 child: Column(
                                   children: [
                                     SizedBox(
-                                      height: height / 30,
+                                      height: context.screenHeight / 30,
                                     ),
                                     Text(
                                       "To Look Up More Events or",
@@ -234,7 +238,7 @@ class _OnbondingState extends State<Onbonding> {
                                           fontSize: 20.sp),
                                     ),
                                     SizedBox(
-                                      height: height / 30,
+                                      height: context.screenHeight / 30,
                                     ),
                                     Text(
                                       "In publishing and graphic design, Lorem is",
@@ -262,7 +266,7 @@ class _OnbondingState extends State<Onbonding> {
                 ),
                 _currentPage != _numPages - 1
                     ? Container(
-                        height: height / 11,
+                        height: context.screenHeight / 11,
                         color: const Color(0xff5669FF),
                         child: Align(
                           child: Padding(
@@ -274,15 +278,17 @@ class _OnbondingState extends State<Onbonding> {
                               children: <Widget>[
                                 GestureDetector(
                                   onTap: () {
-                                    Navigator.push(
-                                        context,
-                                        PageTransition(
-                                            type: PageTransitionType.fade,
-                                            child: const Login()));
+                                    // Navigator.push(
+                                    //     context,
+                                    //     PageTransition(
+                                    //         type: PageTransitionType.fade,
+                                    //         child: const Login()));
+
+                                    context.pushNamed(Login.routeName);
                                   },
                                   child: Container(
                                     color: Colors.transparent,
-                                    height: height / 20,
+                                    height: context.screenHeight / 20,
                                     child: Padding(
                                       padding: const EdgeInsets.symmetric(
                                           horizontal: 15.0),
@@ -315,7 +321,7 @@ class _OnbondingState extends State<Onbonding> {
                                   },
                                   child: Container(
                                     color: Colors.transparent,
-                                    height: height / 20,
+                                    height: context.screenHeight / 20,
                                     child: Padding(
                                       padding: const EdgeInsets.symmetric(
                                           horizontal: 15.0),
@@ -338,7 +344,7 @@ class _OnbondingState extends State<Onbonding> {
                       )
                     : Container(
                         color: const Color(0xff5669FF),
-                        height: height / 11,
+                        height: context.screenHeight / 11,
                         child: Align(
                           child: Padding(
                             padding:
@@ -357,7 +363,7 @@ class _OnbondingState extends State<Onbonding> {
                                   },
                                   child: Container(
                                     color: Colors.transparent,
-                                    height: height / 20,
+                                    height: context.screenHeight / 20,
                                     child: Padding(
                                       padding: const EdgeInsets.symmetric(
                                           horizontal: 15.0),
@@ -391,7 +397,7 @@ class _OnbondingState extends State<Onbonding> {
                                   },
                                   child: Container(
                                     color: Colors.transparent,
-                                    height: height / 20,
+                                    height: context.screenHeight / 20,
                                     child: Padding(
                                       padding: const EdgeInsets.symmetric(
                                           horizontal: 15.0),

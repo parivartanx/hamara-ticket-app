@@ -1,25 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:goevent2/organizer/about.dart';
 import 'package:goevent2/organizer/events.dart';
 import 'package:goevent2/organizer/message.dart';
 import 'package:goevent2/organizer/review.dart';
+import 'package:goevent2/providers/color_provider.dart';
 import 'package:goevent2/utils/string.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-import '../utils/colornotifire.dart';
 import '../utils/media.dart';
 
-class Organize extends StatefulWidget {
+class Organize extends ConsumerStatefulWidget {
   const Organize({Key? key}) : super(key: key);
 
   @override
   _OrganizeState createState() => _OrganizeState();
 }
 
-class _OrganizeState extends State<Organize> with SingleTickerProviderStateMixin  {
+class _OrganizeState extends ConsumerState<Organize> with SingleTickerProviderStateMixin  {
 
   TabController? controller;
   List<Widget> tabs = const [
@@ -27,31 +26,21 @@ class _OrganizeState extends State<Organize> with SingleTickerProviderStateMixin
     Event(),
     Review(),
   ];
-  getdarkmodepreviousstate() async {
-    final prefs = await SharedPreferences.getInstance();
-    bool? previusstate = prefs.getBool("setIsDark");
-    if (previusstate == null) {
-      notifire.setIsDark = false;
-    } else {
-      notifire.setIsDark = previusstate;
-    }
-  }
 
   @override
   void initState() {
     super.initState();
-    getdarkmodepreviousstate();
     controller = TabController(length: 3, vsync: this);
+    ref.read(colorProvider.notifier).getdarkmodepreviousstate();
   }
 
-  late ColorNotifire notifire;
 
   @override
   Widget build(BuildContext context) {
-    notifire = Provider.of<ColorNotifire>(context, listen: true);
+    final notifire = ref.watch(colorProvider);
     return ScreenUtilInit(
       builder:  (BuildContext context, child) =>  Scaffold(
-        backgroundColor: notifire.getprimerycolor,
+        backgroundColor: notifire.primaryColor,
         body: SingleChildScrollView(
           child: Column(
             children: [
@@ -67,7 +56,7 @@ class _OrganizeState extends State<Organize> with SingleTickerProviderStateMixin
                     onTap: () {
                       Navigator.pop(context);
                     },
-                    child: Icon(Icons.arrow_back, color: notifire.getdarkscolor),
+                    child: Icon(Icons.arrow_back, color: notifire.darksColor),
                   ),
                   SizedBox(
                     width: width / 80,
@@ -95,7 +84,7 @@ class _OrganizeState extends State<Organize> with SingleTickerProviderStateMixin
                   fontSize: 19.sp,
                   fontWeight: FontWeight.w900,
                   fontFamily: 'Gilroy Medium',
-                  color: notifire.getdarkscolor,
+                  color: notifire.darksColor,
                 ),
               ),
               SizedBox(
@@ -112,7 +101,7 @@ class _OrganizeState extends State<Organize> with SingleTickerProviderStateMixin
                           fontSize: 15.sp,
                           fontWeight: FontWeight.w900,
                           fontFamily: 'Gilroy Medium',
-                          color: notifire.getdarkscolor,
+                          color: notifire.darksColor,
                         ),
                       ),
                       SizedBox(
@@ -147,7 +136,7 @@ class _OrganizeState extends State<Organize> with SingleTickerProviderStateMixin
                           fontSize: 15.sp,
                           fontWeight: FontWeight.w900,
                           fontFamily: 'Gilroy Medium',
-                          color: notifire.getdarkscolor,
+                          color: notifire.darksColor,
                         ),
                       ),
                       SizedBox(
@@ -173,7 +162,7 @@ class _OrganizeState extends State<Organize> with SingleTickerProviderStateMixin
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    buttons("image/user-plus.png","Follow",notifire.getbuttonscolor,Colors.white,Border.all(color: notifire.getbuttonscolor),SizedBox(
+                    buttons("image/user-plus.png","Follow",notifire.buttonsColor,Colors.white,Border.all(color: notifire.buttonsColor),SizedBox(
                       width: width /
                           10,
                     ),),
@@ -185,7 +174,7 @@ class _OrganizeState extends State<Organize> with SingleTickerProviderStateMixin
                                 type: PageTransitionType.fade,
                                 child: const Message()));
                       },
-                      child: buttons("image/mes.png","Message",Colors.white,notifire.getbuttonscolor,Border.all(color: notifire.getbuttonscolor),SizedBox(
+                      child: buttons("image/mes.png","Message",Colors.white,notifire.buttonsColor,Border.all(color: notifire.buttonsColor),SizedBox(
                         width: width /
                             12,
                       ),),
@@ -201,10 +190,10 @@ class _OrganizeState extends State<Organize> with SingleTickerProviderStateMixin
                   child: Column(
                     children: <Widget>[
                       TabBar(
-                        indicatorColor: notifire.getbuttonscolor,
+                        indicatorColor: notifire.buttonsColor,
                         indicatorSize: TabBarIndicatorSize.label,
                         controller: controller,
-                        labelColor: notifire.getbuttonscolor,
+                        labelColor: notifire.buttonsColor,
                         unselectedLabelColor: Colors.grey,
                         tabs: const [
                           Tab(text: "ABOUT"),
