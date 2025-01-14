@@ -2,12 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:goevent2/extensions/media_query_ext.dart';
 import 'package:goevent2/login_signup/resetpass.dart';
 import 'package:goevent2/payment/payment.dart';
 import 'package:goevent2/providers/color_provider.dart';
 import 'package:page_transition/page_transition.dart';
 
-import '../utils/media.dart';
 import 'document.dart';
 
 class Setting extends ConsumerStatefulWidget {
@@ -50,6 +50,9 @@ class _SettingState extends ConsumerState<Setting> {
   @override
   Widget build(BuildContext context) {
     final notifire = ref.watch(colorProvider);
+    final height = context.height;
+    final width = context.width;
+    
     return ScreenUtilInit(
       builder:  (BuildContext context, child) =>  Scaffold(
         backgroundColor: notifire.primaryColor,
@@ -108,7 +111,7 @@ class _SettingState extends ConsumerState<Setting> {
                         width: width / 30,
                       ),
                       Image.asset(
-                        "image/p1.png",
+                        "assets/image/p1.png",
                         height: height / 15,
                       ),
                       SizedBox(
@@ -205,7 +208,7 @@ class _SettingState extends ConsumerState<Setting> {
                               ),
                             );
                           },
-                          child: lines("image/Lock.png", "Change Password",notifire),
+                          child: lines("assets/image/Lock.png", "Change Password",notifire),
                         ),
                         GestureDetector(
                             onTap: () {
@@ -218,7 +221,7 @@ class _SettingState extends ConsumerState<Setting> {
                               );
                             },
                             child: lines(
-                                "image/document.png", "Document Management",notifire)),
+                                "assets/image/document.png", "Document Management",notifire)),
                         GestureDetector(
                             onTap: () {
                               Navigator.push(
@@ -227,7 +230,7 @@ class _SettingState extends ConsumerState<Setting> {
                                       type: PageTransitionType.fade,
                                       child: const Payment(),),);
                             },
-                            child: lines("image/payment.png", "Payment",notifire)),
+                            child: lines("assets/image/payment.png", "Payment",notifire)),
                       ],
                     ),
                   ),
@@ -271,7 +274,7 @@ class _SettingState extends ConsumerState<Setting> {
                     child: Column(
                       children: [
                         line(
-                          "image/newsletter.png",
+                          "assets/image/newsletter.png",
                           "Newsletter",
                           Transform.scale(
                             scale: 0.7,
@@ -290,7 +293,7 @@ class _SettingState extends ConsumerState<Setting> {
                           notifire,
                         ),
                         line(
-                          "image/mess.png",
+                          "assets/image/mess.png",
                           "Text Message",
                           Transform.scale(
                             scale: 0.7,
@@ -307,7 +310,7 @@ class _SettingState extends ConsumerState<Setting> {
                           notifire
                         ),
                         line(
-                          "image/phone.png",
+                          "assets/image/phone.png",
                           "Phone Call",
                           Transform.scale(
                             scale: 0.7,
@@ -338,7 +341,7 @@ class _SettingState extends ConsumerState<Setting> {
                                   width: width / 25,
                                 ),
                                 Image.asset(
-                                  "image/currency.png",
+                                  "assets/image/currency.png",
                                   color: notifire.darksColor,
                                   height: height / 35,
                                 ),
@@ -356,7 +359,7 @@ class _SettingState extends ConsumerState<Setting> {
                                 ),
                                 const Spacer(),
                                 Text(
-                                  "\$USD",
+                                  "\₹INR",
                                   style: TextStyle(
                                     fontSize: 14.sp,
                                     fontWeight: FontWeight.w500,
@@ -391,7 +394,7 @@ class _SettingState extends ConsumerState<Setting> {
                                   width: width / 25,
                                 ),
                                 Image.asset(
-                                  "image/language.png",
+                                  "assets/image/language.png",
                                   color: notifire.darksColor,
                                   height: height / 35,
                                 ),
@@ -433,7 +436,7 @@ class _SettingState extends ConsumerState<Setting> {
                           height: height / 100,
                         ),
                         line(
-                          "image/darkmode.png",
+                          "assets/image/darkmode.png",
                           "Dark Mode",
                           Transform.scale(
                             scale: 0.7,
@@ -473,7 +476,7 @@ class _SettingState extends ConsumerState<Setting> {
     );
   }
 
-  _showMyDialog2(ColorState notifire) async {
+  _showMyDialog2(ColorState notifire,) async {
     return showDialog(
       context: context, useRootNavigator: true,
       barrierDismissible: false, // user must tap button!
@@ -484,8 +487,8 @@ class _SettingState extends ConsumerState<Setting> {
             builder: (BuildContext context, StateSetter setState) {
               return Container(
                 color: Colors.transparent,
-                height: height / 2,
-                width: width / 1.1,
+                height: context.height / 2,
+                width: context.width / 1.1,
                 child: Column(
                   children: [
                     GestureDetector(
@@ -504,7 +507,7 @@ class _SettingState extends ConsumerState<Setting> {
                               ? notifire.darksColor
                               : Colors.grey),
                     ),
-                    SizedBox(height: height / 100),
+                    SizedBox(height: context.height / 100),
                     GestureDetector(
                       onTap: () {
                         setState(() {
@@ -521,7 +524,7 @@ class _SettingState extends ConsumerState<Setting> {
                               ? notifire.darksColor
                               : Colors.grey),
                     ),
-                    SizedBox(height: height / 100),
+                    SizedBox(height: context.height / 100),
                     GestureDetector(
                       onTap: () {
                         setState(() {
@@ -538,7 +541,7 @@ class _SettingState extends ConsumerState<Setting> {
                               ? notifire.darksColor
                               : Colors.grey),
                     ),
-                    SizedBox(height: height / 100),
+                    SizedBox(height: context.height / 100),
                     GestureDetector(
                       onTap: () {
                         setState(() {
@@ -557,7 +560,7 @@ class _SettingState extends ConsumerState<Setting> {
                               ? notifire.darksColor
                               : Colors.grey),
                     ),
-                    SizedBox(height: height / 100),
+                    SizedBox(height: context.height / 100),
                     GestureDetector(
                       onTap: () {
                         setState(() {
@@ -576,7 +579,7 @@ class _SettingState extends ConsumerState<Setting> {
                               ? notifire.darksColor
                               : Colors.grey),
                     ),
-                    SizedBox(height: height / 100),
+                    SizedBox(height: context.height / 100),
                     GestureDetector(
                       onTap: () {
                         setState(() {
@@ -595,7 +598,7 @@ class _SettingState extends ConsumerState<Setting> {
                               ? notifire.darksColor
                               : Colors.grey),
                     ),
-                    SizedBox(height: height / 100),
+                    SizedBox(height: context.height / 100),
                     GestureDetector(
                       onTap: () {
                         setState(() {
@@ -614,7 +617,7 @@ class _SettingState extends ConsumerState<Setting> {
                               ? notifire.darksColor
                               : Colors.grey),
                     ),
-                    SizedBox(height: height / 40),
+                    SizedBox(height: context.height / 40),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -625,8 +628,8 @@ class _SettingState extends ConsumerState<Setting> {
                           child: Padding(
                             padding: const EdgeInsets.all(5.0),
                             child: Container(
-                              height: height / 30,
-                              width: width / 5,
+                              height: context.height / 30,
+                              width: context.width / 5,
                               decoration: BoxDecoration(
                                 color: notifire.primaryColor,
                                 border:
@@ -648,7 +651,7 @@ class _SettingState extends ConsumerState<Setting> {
                           ),
                         ),
                         SizedBox(
-                          width: width / 30,
+                          width: context.width / 30,
                         ),
                         GestureDetector(
                           onTap: () {
@@ -657,8 +660,8 @@ class _SettingState extends ConsumerState<Setting> {
                           child: Padding(
                             padding: const EdgeInsets.all(5.0),
                             child: Container(
-                              height: height / 30,
-                              width: width / 5,
+                              height: context.height / 30,
+                              width: context.width / 5,
                               decoration: BoxDecoration(
                                 color: notifire.buttonsColor,
                                 borderRadius: const BorderRadius.all(
@@ -713,8 +716,8 @@ class _SettingState extends ConsumerState<Setting> {
             builder: (BuildContext context, StateSetter setState) {
               return Container(
                 color: Colors.transparent,
-                height: height / 2,
-                width: width / 1.1,
+                height: context.height / 2,
+                width: context.width / 1.1,
                 child: Column(
                   children: [
                     GestureDetector(
@@ -731,7 +734,7 @@ class _SettingState extends ConsumerState<Setting> {
                           selectedindex ? notifire.darksColor : Colors.grey,
                           selectedindex ? notifire.darksColor : Colors.grey),
                     ),
-                    SizedBox(height: height / 100),
+                    SizedBox(height: context.height / 100),
                     GestureDetector(
                       onTap: () {
                         setState(() {
@@ -748,7 +751,7 @@ class _SettingState extends ConsumerState<Setting> {
                               ? notifire.darksColor
                               : Colors.grey),
                     ),
-                    SizedBox(height: height / 100),
+                    SizedBox(height: context.height / 100),
                     GestureDetector(
                       onTap: () {
                         setState(() {
@@ -765,7 +768,7 @@ class _SettingState extends ConsumerState<Setting> {
                               ? notifire.darksColor
                               : Colors.grey),
                     ),
-                    SizedBox(height: height / 100),
+                    SizedBox(height: context.height / 100),
                     GestureDetector(
                       onTap: () {
                         setState(() {
@@ -782,7 +785,7 @@ class _SettingState extends ConsumerState<Setting> {
                               ? notifire.darksColor
                               : Colors.grey),
                     ),
-                    SizedBox(height: height / 100),
+                    SizedBox(height: context.height / 100),
                     GestureDetector(
                       onTap: () {
                         setState(() {
@@ -799,7 +802,7 @@ class _SettingState extends ConsumerState<Setting> {
                               ? notifire.darksColor
                               : Colors.grey),
                     ),
-                    SizedBox(height: height / 100),
+                    SizedBox(height: context.height / 100),
                     GestureDetector(
                       onTap: () {
                         setState(() {
@@ -816,7 +819,7 @@ class _SettingState extends ConsumerState<Setting> {
                               ? notifire.darksColor
                               : Colors.grey),
                     ),
-                    SizedBox(height: height / 100),
+                    SizedBox(height: context.height / 100),
                     GestureDetector(
                       onTap: () {
                         setState(() {
@@ -833,7 +836,7 @@ class _SettingState extends ConsumerState<Setting> {
                               ? notifire.darksColor
                               : Colors.grey),
                     ),
-                    SizedBox(height: height / 40),
+                    SizedBox(height: context.height / 40),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -844,8 +847,8 @@ class _SettingState extends ConsumerState<Setting> {
                           child: Padding(
                             padding: const EdgeInsets.all(5.0),
                             child: Container(
-                              height: height / 30,
-                              width: width / 5,
+                              height: context.height / 30,
+                              width: context.width / 5,
                               decoration: BoxDecoration(
                                 color: notifire.primaryColor,
                                 border:
@@ -867,7 +870,7 @@ class _SettingState extends ConsumerState<Setting> {
                           ),
                         ),
                         SizedBox(
-                          width: width / 30,
+                          width: context.width / 30,
                         ),
                         GestureDetector(
                           onTap: () {
@@ -876,8 +879,8 @@ class _SettingState extends ConsumerState<Setting> {
                           child: Padding(
                             padding: const EdgeInsets.all(5.0),
                             child: Container(
-                              height: height / 30,
-                              width: width / 5,
+                              height: context.height / 30,
+                              width: context.width / 5,
                               decoration: BoxDecoration(
                                 color: notifire.buttonsColor,
                                 borderRadius: const BorderRadius.all(
@@ -933,7 +936,7 @@ class _SettingState extends ConsumerState<Setting> {
               size: 20.sp,
               color: locationcolor,
             ),
-            SizedBox(width: width / 100),
+            SizedBox(width: context.width / 10),
             Text(
               txt,
               style: TextStyle(
@@ -959,20 +962,20 @@ class _SettingState extends ConsumerState<Setting> {
       child: Column(
         children: [
           SizedBox(
-            height: height / 100,
+            height: context.height / 100,
           ),
           Row(
             children: [
               SizedBox(
-                width: width / 25,
+                width: context.width / 25,
               ),
               Image.asset(
                 img,
                 color: notifire.darksColor,
-                height: height / 35,
+                height: context.height / 35,
               ),
               SizedBox(
-                width: width / 30,
+                width: context.width / 30,
               ),
               Text(
                 name,
@@ -990,12 +993,12 @@ class _SettingState extends ConsumerState<Setting> {
                 size: 14.sp,
               ),
               SizedBox(
-                width: width / 20,
+                width: context.width / 20,
               ),
             ],
           ),
           SizedBox(
-            height: height / 100,
+            height: context.height / 100,
           ),
         ],
       ),
@@ -1008,15 +1011,15 @@ class _SettingState extends ConsumerState<Setting> {
         Row(
           children: [
             SizedBox(
-              width: width / 25,
+              width: context.width / 25,
             ),
             Image.asset(
               img,
               color: notifire.darksColor,
-              height: height / 35,
+              height: context.height / 35,
             ),
             SizedBox(
-              width: width / 30,
+              width: context.width / 30,
             ),
             Text(
               name,
@@ -1030,7 +1033,7 @@ class _SettingState extends ConsumerState<Setting> {
             const Spacer(),
             se,
             SizedBox(
-              width: width / 20,
+              width: context.width / 20,
             ),
           ],
         ),

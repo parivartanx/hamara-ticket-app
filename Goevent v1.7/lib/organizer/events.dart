@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:goevent2/extensions/media_query_ext.dart';
 import 'package:goevent2/providers/color_provider.dart';
 
-import '../utils/media.dart';
+
 
 class Event extends ConsumerStatefulWidget {
   const Event({Key? key}) : super(key: key);
@@ -23,6 +24,7 @@ class _EventState extends ConsumerState<Event> {
   @override
   Widget build(BuildContext context) {
     final notifire = ref.watch(colorProvider);
+    final height = context.height;
     return ScreenUtilInit(
       builder: (BuildContext context, child) =>  Scaffold(
         backgroundColor: notifire.primaryColor,
@@ -32,23 +34,23 @@ class _EventState extends ConsumerState<Event> {
               SizedBox(
                 height: height / 100,
               ),
-              cards("image/n2.png",notifire),
+              cards("assets/image/n2.png",notifire),
               SizedBox(
                 height: height / 100,
               ),
-              cards("image/g1.png",notifire),
+              cards("assets/image/g1.png",notifire),
               SizedBox(
                 height: height / 100,
               ),
-              cards("image/n1.png",notifire),
+              cards("assets/image/n1.png",notifire),
               SizedBox(
                 height: height / 100,
               ),
-              cards("image/g1.png",notifire),
+              cards("assets/image/g1.png",notifire),
               SizedBox(
                 height: height / 100,
               ),
-              cards("image/n1.png",notifire),
+              cards("assets/image/n1.png",notifire),
               SizedBox(
                 height: height / 100,
               ),
@@ -72,15 +74,15 @@ class _EventState extends ConsumerState<Event> {
           ),
           color: notifire.cardColor,
         ),
-        height: height / 7.5,
-        width: width,
+        height: context.height / 7.5,
+        width: context.width,
         child: Padding(
           padding: const EdgeInsets.only(left: 8, right: 8, bottom: 5, top: 5),
           child: Row(
             children: [
               Container(
-                width: width / 5,
-                height: height / 8,
+                width: context.width / 5,
+                height: context.height / 8,
                 decoration: const BoxDecoration(
                   borderRadius: BorderRadius.all(
                     Radius.circular(10),
@@ -97,18 +99,18 @@ class _EventState extends ConsumerState<Event> {
               Column(
                 children: [
                   SizedBox(
-                    height: height / 200,
+                    height: context.height / 200,
                   ),
                   Row(
                     children: [
                       SizedBox(
-                        width: width / 50,
+                        width: context.width / 50,
                       ),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           SizedBox(
-                            height: height / 100,
+                            height: context.height / 100,
                           ),
                           Row(
                             children: [
@@ -123,7 +125,7 @@ class _EventState extends ConsumerState<Event> {
                             ],
                           ),
                           SizedBox(
-                            height: height / 100,
+                            height: context.height / 100,
                           ),
                           Text(
                             "Women's leadership \n conference",

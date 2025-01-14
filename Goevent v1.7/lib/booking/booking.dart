@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:goevent2/extensions/media_query_ext.dart';
 import 'package:goevent2/payment/finalticket.dart';
 import 'package:goevent2/providers/color_provider.dart';
 import 'package:page_transition/page_transition.dart';
 
 import '../organizer/oprofile.dart';
 import '../utils/botton.dart';
-import '../utils/media.dart';
 import '../utils/string.dart';
 
 class Booking extends ConsumerStatefulWidget {
@@ -30,6 +30,8 @@ class _BookingState extends ConsumerState<Booking> {
   @override
   Widget build(BuildContext context) {
     final notifire = ref.watch(colorProvider);
+    final height = context.height;
+    final width = context.width;
     return ScreenUtilInit(
       builder: (BuildContext context, child) => Scaffold(
         backgroundColor: notifire.primaryColor,
@@ -157,7 +159,7 @@ class _BookingState extends ConsumerState<Booking> {
                                         Row(
                                           children: [
                                             Image.asset(
-                                              "image/p1.png",
+                                              "assets/image/p1.png",
                                               height: height / 20,
                                             ),
                                             SizedBox(
@@ -303,7 +305,7 @@ class _BookingState extends ConsumerState<Booking> {
                                     child: Row(
                                       children: [
                                         Image.asset(
-                                          "image/p1.png",
+                                          "assets/image/p1.png",
                                           height: height / 20,
                                         ),
                                         SizedBox(
@@ -344,21 +346,21 @@ class _BookingState extends ConsumerState<Booking> {
                                     child: Row(
                                       children: [
                                         Image.asset(
-                                          "image/b1.png",
+                                          "assets/image/b1.png",
                                           height: height / 13,
                                         ),
                                         SizedBox(
                                           width: width / 30,
                                         ),
                                         Image.asset(
-                                          "image/b2.png",
+                                          "assets/image/b2.png",
                                           height: height / 13,
                                         ),
                                         SizedBox(
                                           width: width / 30,
                                         ),
                                         Image.asset(
-                                          "image/b3.png",
+                                          "assets/image/b3.png",
                                           height: height / 13,
                                         ),
                                       ],
@@ -373,7 +375,7 @@ class _BookingState extends ConsumerState<Booking> {
                                     child: Row(
                                       children: [
                                         Image.asset(
-                                          "image/p2.png",
+                                          "assets/image/p2.png",
                                           height: height / 20,
                                         ),
                                         SizedBox(
@@ -552,21 +554,21 @@ class _BookingState extends ConsumerState<Booking> {
                                             width: width / 20,
                                           ),
                                           Image.asset(
-                                            "image/smile.png",
+                                            "assets/image/smile.png",
                                             height: height / 30,
                                           ),
                                           SizedBox(
                                             width: width / 30,
                                           ),
                                           Image.asset(
-                                            "image/gallary.png",
+                                            "assets/image/gallary.png",
                                             height: height / 30,
                                           ),
                                           SizedBox(
                                             width: width / 30,
                                           ),
                                           Image.asset(
-                                            "image/clip.png",
+                                            "assets/image/clip.png",
                                             height: height / 30,
                                           ),
                                         ],
@@ -607,7 +609,7 @@ class _BookingState extends ConsumerState<Booking> {
                     width: width,
                     height: height / 4,
                     child: Image.asset(
-                      "image/event.png",
+                      "assets/image/event.png",
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -653,7 +655,7 @@ class _BookingState extends ConsumerState<Booking> {
                             child: Padding(
                               padding: const EdgeInsets.all(7),
                               child: Image.asset(
-                                "image/save.png",
+                                "assets/image/save.png",
                                 color: Colors.white,
                               ),
                             ),
@@ -692,7 +694,7 @@ class _BookingState extends ConsumerState<Booking> {
                                         height: height / 100,
                                       ),
                                       Image.asset(
-                                        "image/Call.png",
+                                        "assets/image/Call.png",
                                         height: height / 17,
                                       ),
                                       SizedBox(
@@ -719,7 +721,7 @@ class _BookingState extends ConsumerState<Booking> {
                                       height: height / 100,
                                     ),
                                     Image.asset(
-                                      "image/Directions.png",
+                                      "assets/image/Directions.png",
                                       height: height / 17,
                                     ),
                                     SizedBox(
@@ -754,7 +756,7 @@ class _BookingState extends ConsumerState<Booking> {
                                         height: height / 100,
                                       ),
                                       Image.asset(
-                                        "image/Ticket.png",
+                                        "assets/image/Ticket.png",
                                         height: height / 17,
                                       ),
                                       SizedBox(
@@ -824,7 +826,7 @@ class _BookingState extends ConsumerState<Booking> {
                           ),
                           child: Padding(
                             padding: const EdgeInsets.all(8),
-                            child: Image.asset("image/p4.png"),
+                            child: Image.asset("assets/image/p4.png"),
                           ),
                         ),
                         SizedBox(
@@ -891,12 +893,12 @@ class _BookingState extends ConsumerState<Booking> {
               SizedBox(
                 height: height / 40,
               ),
-              concert("image/date.png", "14 December, 2021",
+              concert("assets/image/date.png", "14 December, 2021",
                   "Tuesday, 4:00PM - 9:00PM",notifire),
               SizedBox(
                 height: height / 40,
               ),
-              concert("image/direction.png", "Gala Convention Center",
+              concert("assets/image/direction.png", "Gala Convention Center",
                   "36 Guild Street London, UK",notifire),
               SizedBox(
                 height: height / 40,
@@ -925,21 +927,21 @@ class _BookingState extends ConsumerState<Booking> {
                 child: Row(
                   children: [
                     Image.asset(
-                      "image/p1.png",
+                      "assets/image/p1.png",
                       height: height / 15,
                     ),
                     SizedBox(
                       width: width / 30,
                     ),
                     Image.asset(
-                      "image/p2.png",
+                      "assets/image/p2.png",
                       height: height / 15,
                     ),
                     SizedBox(
                       width: width / 30,
                     ),
                     Image.asset(
-                      "image/p3.png",
+                      "assets/image/p3.png",
                       height: height / 15,
                     ),
                     SizedBox(
@@ -1020,8 +1022,8 @@ class _BookingState extends ConsumerState<Booking> {
       child: Row(
         children: [
           Container(
-            height: height / 15,
-            width: width / 7,
+            height: context.height / 15,
+            width: context.width / 7,
             decoration: BoxDecoration(
               color: notifire.cardColor,
               borderRadius: const BorderRadius.all(
@@ -1034,7 +1036,7 @@ class _BookingState extends ConsumerState<Booking> {
             ),
           ),
           SizedBox(
-            width: width / 40,
+            width: context.width / 40,
           ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -1049,7 +1051,7 @@ class _BookingState extends ConsumerState<Booking> {
                 ),
               ),
               SizedBox(
-                height: height / 300,
+                height: context.height / 300,
               ),
               Text(
                 name2,

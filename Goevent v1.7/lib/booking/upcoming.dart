@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:goevent2/booking/comings.dart';
+import 'package:goevent2/extensions/media_query_ext.dart';
 
 import '../providers/color_provider.dart';
-import '../utils/media.dart';
 
 class Upcoming extends ConsumerStatefulWidget {
   const Upcoming({Key? key}) : super(key: key);
@@ -26,6 +26,8 @@ class _UpcomingState extends ConsumerState<Upcoming> {
   @override
   Widget build(BuildContext context) {
     final notifire = ref.watch(colorProvider);
+    final height = context.height;
+    final width = context.width;
     return ScreenUtilInit(
       builder: (BuildContext context, child) => Scaffold(
         backgroundColor: notifire.primaryColor,

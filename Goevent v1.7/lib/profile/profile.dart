@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:goevent2/extensions/media_query_ext.dart';
 import 'package:goevent2/profile/editprofile.dart';
 import 'package:goevent2/providers/color_provider.dart';
 import 'package:goevent2/utils/string.dart';
 import 'package:page_transition/page_transition.dart';
-import '../utils/media.dart';
 
 class Profile extends ConsumerStatefulWidget {
   const Profile({Key? key}) : super(key: key);
@@ -40,6 +40,8 @@ class _ProfileState extends ConsumerState<Profile> {
     final buttonsColor = ref.watch(colorProvider).buttonsColor;
     final textColor = ref.watch(colorProvider).textColor; 
     final pinkColor = ref.watch(colorProvider).pinkColor;
+    final height =  context.height;
+    final width = context.width;
     return ScreenUtilInit(
       builder:  (BuildContext context, child) =>  Scaffold(
         backgroundColor: primaryColor,
@@ -79,7 +81,7 @@ class _ProfileState extends ConsumerState<Profile> {
                 height: height / 25,
               ),
               Image.asset(
-                "image/p2.png",
+                "assets/image/p2.png",
                 height: height / 9,
               ),
               SizedBox(
@@ -187,7 +189,7 @@ class _ProfileState extends ConsumerState<Profile> {
                         width: width / 30,
                       ),
                       Image.asset(
-                        "image/edit.png",
+                        "assets/image/edit.png",
                         height: height / 35,
                       ),
                       SizedBox(
@@ -275,7 +277,7 @@ class _ProfileState extends ConsumerState<Profile> {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           Image.asset(
-                            "image/edit1.png",
+                            "assets/image/edit1.png",
                             height: height / 50,
                           ),
                           Text(
@@ -331,7 +333,7 @@ class _ProfileState extends ConsumerState<Profile> {
 
   Widget game(clr,name) {
     return Container(
-      height: height / 25,
+      height: context.height * .04,
       decoration: BoxDecoration(
         color: clr,
         borderRadius: const BorderRadius.all(

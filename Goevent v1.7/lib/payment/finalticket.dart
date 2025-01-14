@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:goevent2/extensions/media_query_ext.dart';
 import '/booking/booking.dart';
 import '/providers/color_provider.dart';
 import '/utils/string.dart';
 import 'package:page_transition/page_transition.dart';
 
-import '../utils/media.dart';
 
 class Final extends ConsumerStatefulWidget {
   const Final({Key? key}) : super(key: key);
@@ -28,6 +28,9 @@ class _FinalState extends ConsumerState<Final> {
   @override
   Widget build(BuildContext context) {
     final notifire = ref.watch(colorProvider);  
+    final width = context.width;
+    final height = context.height;
+
     return ScreenUtilInit(
       builder: (BuildContext context, child) => Scaffold(
         backgroundColor: notifire.buttonColor,
@@ -76,7 +79,7 @@ class _FinalState extends ConsumerState<Final> {
                       ),
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 9),
-                        child: Image.asset("image/arrow.png"),
+                        child: Image.asset("assets/image/arrow.png"),
                       ),
                     ],
                   ),
@@ -128,7 +131,7 @@ class _FinalState extends ConsumerState<Final> {
               Stack(
                 children: [
                   Image.asset(
-                    "image/cards.png",
+                    "assets/image/cards.png",
                     color: notifire.cardColor,
                   ),
                   Column(
@@ -146,7 +149,7 @@ class _FinalState extends ConsumerState<Final> {
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(15),
                               child: Image.asset(
-                                "image/g3.png",
+                                "assets/image/g3.png",
                                 fit: BoxFit.cover,
                                 height: height / 3.7,
                               ),
@@ -313,7 +316,7 @@ class _FinalState extends ConsumerState<Final> {
                         padding: EdgeInsets.symmetric(horizontal: 45.sp),
                         child: Center(
                           child: Image.asset(
-                            "image/code.png",
+                            "assets/image/code.png",
                             height: height / 10,
                           ),
                         ),

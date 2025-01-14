@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:goevent2/extensions/media_query_ext.dart';
 import 'package:goevent2/providers/color_provider.dart';
 import 'package:page_transition/page_transition.dart';
 
 import '../booking/booking.dart';
-import '../utils/media.dart';
+
 
 class All extends ConsumerStatefulWidget {
   const All({Key? key}) : super(key: key);
@@ -30,6 +31,8 @@ class _AllState extends ConsumerState<All> {
 
   @override
   Widget build(BuildContext context) {
+    final height= context.height;
+    final width = context.width;
     final notifire = ref.watch(colorProvider);
     return ScreenUtilInit(
       builder:  (BuildContext context, child) =>  Scaffold(
@@ -91,13 +94,13 @@ class _AllState extends ConsumerState<All> {
                         child: Padding(
                           padding: const EdgeInsets.all(5),
                           child: selected
-                              ? Image.asset("image/book1.png")
+                              ? Image.asset("assets/image/book1.png")
                               : Image.asset(
-                            "image/book2.png",
+                            "assets/image/book2.png",
                             color: const Color(0xffF0635A),
                           ))),
                   ),
-                  "image/p11.png",notifire),
+                  "assets/image/p11.png",notifire,context.height,context.width),
               SizedBox(height: height / 60,),
               events(
                   GestureDetector(
@@ -117,13 +120,13 @@ class _AllState extends ConsumerState<All> {
                         child: Padding(
                           padding: const EdgeInsets.all(5),
                           child: selected1
-                              ? Image.asset("image/book1.png")
+                              ? Image.asset("assets/image/book1.png")
                               : Image.asset(
-                            "image/book2.png",
+                            "assets/image/book2.png",
                             color: const Color(0xffF0635A),
                           ))),
                   ),
-                  "image/p10.png",notifire),
+                  "assets/image/p10.png",notifire,context.height,context.width),
               SizedBox(height: height / 60,),
               events(
                   GestureDetector(
@@ -143,13 +146,13 @@ class _AllState extends ConsumerState<All> {
                         child: Padding(
                           padding: const EdgeInsets.all(5),
                           child: selected2
-                              ? Image.asset("image/book1.png")
+                              ? Image.asset("assets/image/book1.png")
                               : Image.asset(
-                            "image/book2.png",
+                            "assets/image/book2.png",
                             color: const Color(0xffF0635A),
                           ))),
                   ),
-                  "image/p11.png",notifire),
+                  "assets/image/p11.png",notifire,context.height,context.width),
               SizedBox(height: height / 60,),
               events(
                   GestureDetector(
@@ -169,13 +172,13 @@ class _AllState extends ConsumerState<All> {
                         child: Padding(
                           padding: const EdgeInsets.all(5),
                           child: selected3
-                              ? Image.asset("image/book1.png")
+                              ? Image.asset("assets/image/book1.png")
                               : Image.asset(
-                            "image/book2.png",
+                            "assets/image/book2.png",
                             color: const Color(0xffF0635A),
                           ))),
                   ),
-                  "image/p10.png",notifire),
+                  "assets/image/p10.png",notifire,context.height,context.width),
               SizedBox(height: height / 60,),
             ],
           ),
@@ -184,7 +187,7 @@ class _AllState extends ConsumerState<All> {
     );
   }
 
-  Widget events(se, img,ColorState notifire) {
+  Widget events(se, img,ColorState notifire,double height,double width) {
     return Stack(
       children: [
         GestureDetector(
@@ -260,7 +263,7 @@ class _AllState extends ConsumerState<All> {
                           Row(
                             children: [
                               Image.asset(
-                                "image/location.png",
+                                "assets/image/location.png",
                                 height: height / 40,
                               ),
                               Text(
@@ -278,7 +281,7 @@ class _AllState extends ConsumerState<All> {
                           Stack(
                             children: [
                               Image.asset(
-                                "image/p1.png",
+                                "assets/image/p1.png",
                                 height: height / 28,
                               ),
                               Row(
@@ -289,7 +292,7 @@ class _AllState extends ConsumerState<All> {
                                   Stack(
                                     children: [
                                       Image.asset(
-                                        "image/p2.png",
+                                        "assets/image/p2.png",
                                         height: height / 30,
                                       ),
                                       Row(
@@ -300,7 +303,7 @@ class _AllState extends ConsumerState<All> {
                                           Stack(
                                             children: [
                                               Image.asset(
-                                                "image/p3.png",
+                                                "assets/image/p3.png",
                                                 height: height / 30,
                                               ),
                                             ],

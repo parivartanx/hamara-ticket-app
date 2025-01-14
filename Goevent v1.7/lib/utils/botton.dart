@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:goevent2/extensions/media_query_ext.dart';
 
-import 'media.dart';
 
 class Custombutton {
   static Widget button(clr,text,siz,siz2){
@@ -14,8 +14,8 @@ class Custombutton {
             ),
             color: clr,
           ),
-          height: height / 15,
-          width: width / 1,
+          height: context.height *.07,
+          width: context.width,
           child: Row(
             children: [
               siz,
@@ -29,7 +29,7 @@ class Custombutton {
               siz2,
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 9),
-                child: Image.asset("image/arrow.png"),
+                child: Image.asset("assets/image/arrow.png"),
               ),
             ],
           ),

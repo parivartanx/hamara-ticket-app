@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:goevent2/extensions/media_query_ext.dart';
 import 'package:goevent2/organizer/about.dart';
 import 'package:goevent2/organizer/events.dart';
 import 'package:goevent2/organizer/message.dart';
@@ -9,7 +10,6 @@ import 'package:goevent2/providers/color_provider.dart';
 import 'package:goevent2/utils/string.dart';
 import 'package:page_transition/page_transition.dart';
 
-import '../utils/media.dart';
 
 class Organize extends ConsumerStatefulWidget {
   const Organize({Key? key}) : super(key: key);
@@ -38,6 +38,8 @@ class _OrganizeState extends ConsumerState<Organize> with SingleTickerProviderSt
   @override
   Widget build(BuildContext context) {
     final notifire = ref.watch(colorProvider);
+    final height = context.height;
+    final width = context.width;
     return ScreenUtilInit(
       builder:  (BuildContext context, child) =>  Scaffold(
         backgroundColor: notifire.primaryColor,
@@ -72,7 +74,7 @@ class _OrganizeState extends ConsumerState<Organize> with SingleTickerProviderSt
                 height: height / 25,
               ),
               Image.asset(
-                "image/p1.png",
+                "assets/image/p1.png",
                 height: height / 9,
               ),
               SizedBox(
@@ -162,7 +164,7 @@ class _OrganizeState extends ConsumerState<Organize> with SingleTickerProviderSt
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    buttons("image/user-plus.png","Follow",notifire.buttonsColor,Colors.white,Border.all(color: notifire.buttonsColor),SizedBox(
+                    buttons("assets/image/user-plus.png","Follow",notifire.buttonsColor,Colors.white,Border.all(color: notifire.buttonsColor),SizedBox(
                       width: width /
                           10,
                     ),),
@@ -174,7 +176,7 @@ class _OrganizeState extends ConsumerState<Organize> with SingleTickerProviderSt
                                 type: PageTransitionType.fade,
                                 child: const Message()));
                       },
-                      child: buttons("image/mes.png","Message",Colors.white,notifire.buttonsColor,Border.all(color: notifire.buttonsColor),SizedBox(
+                      child: buttons("assets/image/mes.png","Message",Colors.white,notifire.buttonsColor,Border.all(color: notifire.buttonsColor),SizedBox(
                         width: width /
                             12,
                       ),),
@@ -222,8 +224,8 @@ class _OrganizeState extends ConsumerState<Organize> with SingleTickerProviderSt
   }
   Widget buttons (img,name,clr,clr1,bor,siz){
     return Container(
-      height: height / 18,
-      width: width / 2.5,
+      height: context.height / 18,
+      width: context.width / 2.5,
       decoration: BoxDecoration(
         border: bor,
         color: clr,
@@ -236,11 +238,11 @@ class _OrganizeState extends ConsumerState<Organize> with SingleTickerProviderSt
             Image.asset(
               img, color: clr1,
               height:
-              height /
+              context.height /
                   50,
             ),
             SizedBox(
-              width: width /
+              width: context.width /
                   40,
             ),
              Text(

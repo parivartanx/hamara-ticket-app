@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:goevent2/extensions/media_query_ext.dart';
 import 'package:goevent2/providers/color_provider.dart';
 
-import '../utils/media.dart';
+
 import '../utils/string.dart';
 
 class Empty extends ConsumerStatefulWidget {
@@ -24,6 +25,8 @@ class _EmptyState extends ConsumerState<Empty> {
   @override
   Widget build(BuildContext context) {
     final notifire = ref.watch(colorProvider);
+    final height = context.height;
+    final width = context.width;
     return ScreenUtilInit(builder:  (BuildContext context, child) =>  Scaffold(
       backgroundColor: notifire.primaryColor,
       body: SingleChildScrollView(
@@ -66,7 +69,7 @@ class _EmptyState extends ConsumerState<Empty> {
             SizedBox(
               height: height / 7,
             ),
-            Image.asset("image/notification.png",height: height / 3,),
+            Image.asset("assets/image/notification.png",height: height / 3,),
             Text(CustomStrings.no, style: TextStyle(
               fontSize: 18.sp,
               fontWeight: FontWeight.w900,

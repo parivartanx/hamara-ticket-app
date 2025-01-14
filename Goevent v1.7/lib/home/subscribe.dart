@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:goevent2/extensions/media_query_ext.dart';
 import 'package:goevent2/home/home.dart';
 import 'package:page_transition/page_transition.dart';
 
 import '../payment/paymethod.dart';
 import '../providers/color_provider.dart';
 import '../utils/botton.dart';
-import '../utils/media.dart';
 import '../utils/string.dart';
 
 class Subscribe extends ConsumerStatefulWidget {
@@ -31,6 +31,9 @@ class _SubscribeState extends ConsumerState<Subscribe> {
   @override
   Widget build(BuildContext context) {
     final notifire = ref.watch(colorProvider);
+    final height=  context.height;
+    final width = context.width;
+
     return ScreenUtilInit(
       builder:  (BuildContext context, child) =>  Scaffold(
         backgroundColor: notifire.primaryColor,
@@ -89,7 +92,7 @@ class _SubscribeState extends ConsumerState<Subscribe> {
                   ),
                   const Spacer(),
                   Image.asset(
-                    "image/scanner.png",
+                    "assets/image/scanner.png",
                     height: height / 30,
                   ),
                   SizedBox(
@@ -129,15 +132,15 @@ class _SubscribeState extends ConsumerState<Subscribe> {
               SizedBox(
                 height: height / 40,
               ),
-              method(0, CustomStrings.apple, "image/apple.png",notifire),
+              method(0, CustomStrings.apple, "assets/image/apple.png",notifire),
               SizedBox(
                 height: height / 60,
               ),
-              method(1, CustomStrings.paypal, "image/paypal.png",notifire),
+              method(1, CustomStrings.paypal, "assets/image/paypal.png",notifire),
               SizedBox(
                 height: height / 60,
               ),
-              method(2, CustomStrings.google, "image/google.png",notifire),
+              method(2, CustomStrings.google, "assets/image/google.png",notifire),
               SizedBox(
                 height: height / 60,
               ),
@@ -183,7 +186,7 @@ class _SubscribeState extends ConsumerState<Subscribe> {
                         width: width / 30,
                       ),
                       Image.asset(
-                        "image/pay.png",
+                        "assets/image/pay.png",
                         height: height / 35,
                       ),
                       SizedBox(
@@ -290,7 +293,7 @@ class _SubscribeState extends ConsumerState<Subscribe> {
                                     child: Text(
                                       "APPLY",
                                       style: TextStyle(
-                                        fontSize: 16.sp,
+                                        fontSize: 14.sp,
                                         fontWeight: FontWeight.w600,
                                         fontFamily: 'Gilroy Normal',
                                         color: Colors.white,
@@ -319,6 +322,8 @@ class _SubscribeState extends ConsumerState<Subscribe> {
       context: context, useRootNavigator: true,
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
+        final height= context.height;
+        final width = context.width;
         return AlertDialog(
           backgroundColor: notifire.primaryColor,
           content: StatefulBuilder(
@@ -342,7 +347,7 @@ class _SubscribeState extends ConsumerState<Subscribe> {
                             )),
                       ],
                     ),
-                    Image.asset("image/done.gif"),
+                    Image.asset("assets/image/done.gif"),
                     Text(
                       CustomStrings.success,
                       style: TextStyle(
@@ -423,8 +428,8 @@ class _SubscribeState extends ConsumerState<Subscribe> {
           );
         },
         child: Container(
-          height: height / 12,
-          width: width,
+          height: context.height / 12,
+          width: context.width,
           decoration: BoxDecoration(
               borderRadius: const BorderRadius.all(
                 Radius.circular(10),
@@ -433,14 +438,14 @@ class _SubscribeState extends ConsumerState<Subscribe> {
           child: Row(
             children: [
               SizedBox(
-                width: width / 30,
+                width: context.width / 30,
               ),
               Image.asset(
                 img,
-                height: height / 25,
+                height: context.height / 25,
               ),
               SizedBox(
-                width: width / 30,
+                width: context.width / 30,
               ),
               Text(
                 name,

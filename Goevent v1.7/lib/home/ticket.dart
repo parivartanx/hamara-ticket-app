@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:goevent2/extensions/media_query_ext.dart';
 import 'package:goevent2/providers/color_provider.dart';
-import 'package:goevent2/utils/media.dart';
+import 'package:goevent2/utils/botton.dart';
+
 import 'package:goevent2/utils/string.dart';
 import 'package:page_transition/page_transition.dart';
 
 import '../payment/payment.dart';
-import '../utils/botton.dart';
 
 class Ticket extends ConsumerStatefulWidget {
   const Ticket({Key? key}) : super(key: key);
@@ -32,6 +33,8 @@ class _TicketState extends ConsumerState<Ticket> {
   @override
   Widget build(BuildContext context) {
     final notifire = ref.watch(colorProvider);
+    final height =  context.height;
+    final width = context.width;
     return ScreenUtilInit(
       builder:  (BuildContext context, child) =>  Scaffold(
         backgroundColor: notifire.primaryColor,
@@ -116,7 +119,7 @@ class _TicketState extends ConsumerState<Ticket> {
                                     height: height / 50,
                                   ),
                                   Image.asset(
-                                    "image/protection.png",
+                                    "assets/image/protection.png",
                                     height: height / 5,
                                   ),
                                   SizedBox(
@@ -302,7 +305,7 @@ class _TicketState extends ConsumerState<Ticket> {
                                                   const EdgeInsets.symmetric(
                                                       vertical: 9),
                                               child: Image.asset(
-                                                  "image/arrow.png"),
+                                                  "assets/image/arrow.png"),
                                             ),
                                           ],
                                         ),
@@ -559,8 +562,8 @@ class _TicketState extends ConsumerState<Ticket> {
         ),
         border: Border.all(width: 1, color:const Color(0xffdcdbdb)),
       ),
-      height: height / 12,
-      width: width / 2.5,
+      height: context.height / 12,
+      width: context.width / 2.5,
       child: Center(
         child: Text(
           name,

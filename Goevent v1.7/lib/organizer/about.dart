@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:goevent2/extensions/media_query_ext.dart';
 import 'package:goevent2/providers/color_provider.dart';
-import 'package:goevent2/utils/media.dart';
+
 
 import '../utils/string.dart';
 
@@ -25,6 +26,8 @@ class _AboutState extends ConsumerState<About> {
   @override
   Widget build(BuildContext context) {
     final notifire = ref.watch(colorProvider);
+    final height = context.height;
+
     return ScreenUtilInit(
       builder:  (BuildContext context, child) =>
           Scaffold(

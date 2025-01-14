@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:goevent2/extensions/media_query_ext.dart';
 import 'package:goevent2/providers/color_provider.dart';
 import 'package:page_transition/page_transition.dart';
 
 import '../utils/botton.dart';
-import '../utils/media.dart';
+
 import '../utils/string.dart';
 import 'finalticket.dart';
 
@@ -28,6 +29,8 @@ class _PayMethodState extends ConsumerState<PayMethod> {
   @override
   Widget build(BuildContext context) {
     final notifire = ref.watch(colorProvider);
+    final height= context.height;
+    final width = context.width;
     return ScreenUtilInit(
       builder:  (BuildContext context, child) =>  Scaffold(
         backgroundColor: notifire.primaryColor,
@@ -114,7 +117,7 @@ class _PayMethodState extends ConsumerState<PayMethod> {
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Image.asset("image/method.png"),
+                child: Image.asset("assets/image/method.png"),
               ),
               SizedBox(
                 height: height / 40,

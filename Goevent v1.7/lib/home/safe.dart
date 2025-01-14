@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:goevent2/extensions/media_query_ext.dart';
 import 'package:goevent2/providers/color_provider.dart';
 import 'package:page_transition/page_transition.dart';
 
 import '../payment/payment.dart';
-import '../utils/media.dart';
 import '../utils/string.dart';
 
 class Safe extends ConsumerStatefulWidget {
@@ -28,7 +28,9 @@ class _SafeState extends ConsumerState<Safe> {
 
   @override
   Widget build(BuildContext context) {
-    final notifire = ref.watch(colorProvider);  
+    final notifire = ref.watch(colorProvider); 
+    final height= context.height;
+    final width = context.width; 
     return ScreenUtilInit(
       builder:  (BuildContext context, child) =>  Scaffold(
         backgroundColor: Colors.transparent.withOpacity(0.5),
@@ -89,7 +91,7 @@ class _SafeState extends ConsumerState<Safe> {
                       height: height / 50,
                     ),
                     Image.asset(
-                      "image/protection.png",
+                      "assets/image/protection.png",
                       height: height / 5,
                     ),
                     SizedBox(
@@ -266,7 +268,7 @@ class _SafeState extends ConsumerState<Safe> {
                               Padding(
                                 padding:
                                     const EdgeInsets.symmetric(vertical: 9),
-                                child: Image.asset("image/arrow.png"),
+                                child: Image.asset("assets/image/arrow.png"),
                               ),
                             ],
                           ),

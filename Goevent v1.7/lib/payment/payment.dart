@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:goevent2/extensions/media_query_ext.dart';
 import 'package:goevent2/payment/finalticket.dart';
 import 'package:goevent2/payment/paymethod.dart';
 import 'package:goevent2/providers/color_provider.dart';
 import 'package:page_transition/page_transition.dart';
 
 import '../utils/botton.dart';
-import '../utils/media.dart';
+
 import '../utils/string.dart';
 
 class Payment extends ConsumerStatefulWidget {
@@ -31,6 +32,8 @@ class _PaymentState extends ConsumerState<Payment> {
   @override
   Widget build(BuildContext context) {
     final notifire = ref.watch(colorProvider);
+    final height = context.height;
+    final width = context.width;
     return ScreenUtilInit(
       builder:  (BuildContext context, child) =>  Scaffold(
         backgroundColor: notifire.primaryColor,
@@ -96,7 +99,7 @@ class _PaymentState extends ConsumerState<Payment> {
                   ),
                   const Spacer(),
                   Image.asset(
-                    "image/scanner.png",
+                    "assets/image/scanner.png",
                     height: height / 30,
                   ),
                   SizedBox(
@@ -136,15 +139,15 @@ class _PaymentState extends ConsumerState<Payment> {
               SizedBox(
                 height: height / 40,
               ),
-              method(0, CustomStrings.apple, "image/apple.png",notifire),
+              method(0, CustomStrings.apple, "assets/image/apple.png",notifire),
               SizedBox(
                 height: height / 60,
               ),
-              method(1, CustomStrings.paypal, "image/paypal.png",notifire),
+              method(1, CustomStrings.paypal, "assets/image/paypal.png",notifire),
               SizedBox(
                 height: height / 60,
               ),
-              method(2, CustomStrings.google, "image/google.png",notifire),
+              method(2, CustomStrings.google, "assets/image/google.png",notifire),
               SizedBox(
                 height: height / 60,
               ),
@@ -190,7 +193,7 @@ class _PaymentState extends ConsumerState<Payment> {
                         width: width / 30,
                       ),
                       Image.asset(
-                        "image/pay.png",
+                        "assets/image/pay.png",
                         height: height / 35,
                       ),
                       SizedBox(
@@ -333,8 +336,8 @@ class _PaymentState extends ConsumerState<Payment> {
           );
         },
         child: Container(
-          height: height / 12,
-          width: width,
+          height: context.height / 12,
+          width: context.width,
           decoration: BoxDecoration(
               borderRadius: const BorderRadius.all(
                 Radius.circular(10),
@@ -343,14 +346,14 @@ class _PaymentState extends ConsumerState<Payment> {
           child: Row(
             children: [
               SizedBox(
-                width: width / 30,
+                width: context.width / 30,
               ),
               Image.asset(
                 img,
-                height: height / 25,
+                height: context.height / 25,
               ),
               SizedBox(
-                width: width / 30,
+                width: context.width / 30,
               ),
               Text(
                 name,

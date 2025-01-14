@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'config/app_route.dart';
-import 'splashscreen.dart';
+// import 'splashscreen.dart';
 import 'utils/app_color.dart';
 
 void main() {

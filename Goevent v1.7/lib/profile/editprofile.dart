@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:goevent2/extensions/media_query_ext.dart';
 import 'package:goevent2/providers/color_provider.dart';
 import 'package:goevent2/utils/string.dart';
 
 import '../utils/botton.dart';
-import '../utils/media.dart';
 import '../utils/wtextfield.dart';
 
 class Edit extends ConsumerStatefulWidget {
@@ -28,6 +28,8 @@ class _EditState extends ConsumerState<Edit> {
   @override
   Widget build(BuildContext context) {
     final notifire = ref.watch(colorProvider);
+    final height= context.height;
+    final width = context.width;
     return ScreenUtilInit(
       builder:  (BuildContext context, child) =>  Scaffold(
         backgroundColor: notifire.primaryColor,
@@ -95,7 +97,7 @@ class _EditState extends ConsumerState<Edit> {
                 children: [
                   Center(
                     child: Image.asset(
-                      "image/p2.png",
+                      "assets/image/p2.png",
                       height: height / 9,
                     ),
                   ),
@@ -112,7 +114,7 @@ class _EditState extends ConsumerState<Edit> {
                           ),
                           child: Padding(
                             padding:  const EdgeInsets.all(8),
-                            child: Image.asset("image/camera.png"),
+                            child: Image.asset("assets/image/camera.png"),
                           ),
                         ),
                       )

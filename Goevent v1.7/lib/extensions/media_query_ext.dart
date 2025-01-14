@@ -4,9 +4,9 @@ import 'package:flutter/widgets.dart';
 extension MediaQueryExt on BuildContext {
   Size get screenSize => MediaQuery.of(this).size;
 
-  double get screenWidth => screenSize.width;
+  double get width => screenSize.width;
 
-  double get screenHeight => screenSize.height;
+  double get height => screenSize.height;
 
   double get screenAspectRatio => screenSize.aspectRatio;
 

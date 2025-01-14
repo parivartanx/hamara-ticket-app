@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:goevent2/extensions/media_query_ext.dart';
 import 'package:goevent2/home/home.dart';
 import 'package:page_transition/page_transition.dart';
 
 import '../providers/color_provider.dart';
 import '../utils/botton.dart';
-import '../utils/media.dart';
+
 
 class Interest extends ConsumerStatefulWidget {
   const Interest({Key? key}) : super(key: key);
@@ -43,6 +44,8 @@ class _InterestState extends ConsumerState<Interest> {
   @override
   Widget build(BuildContext context) {
     final notifire = ref.watch(colorProvider);
+    final height = context.height;
+    final width = context.width;
     return ScreenUtilInit(
       builder:  (BuildContext context, child) =>  Scaffold(
         backgroundColor: notifire.primaryColor,
@@ -116,7 +119,7 @@ class _InterestState extends ConsumerState<Interest> {
                       });
                     },
                     child: interest(
-                        "image/music.png","image/music1.png",
+                        "assets/image/music.png","assets/image/music1.png",
                         "Music",
                         selected1
                             ? const Color(0xff4e80fe)
@@ -132,7 +135,7 @@ class _InterestState extends ConsumerState<Interest> {
                       });
                     },
                     child: interest(
-                        "image/paint.png","image/paint1.png",
+                        "assets/image/paint.png","assets/image/paint1.png",
                         "Art",
                         selected2
                             ? const Color(0xff4e80fe)
@@ -151,7 +154,7 @@ class _InterestState extends ConsumerState<Interest> {
                       });
                     },
                     child: interest(
-                        "image/sports.png","image/sport1.png",
+                        "assets/image/sports.png","assets/image/sport1.png",
                         "Sport",
                         selected3
                             ? const Color(0xff4e80fe)
@@ -167,7 +170,7 @@ class _InterestState extends ConsumerState<Interest> {
                       });
                     },
                     child: interest(
-                        "image/sports.png","image/party1.png",
+                        "assets/image/sports.png","assets/image/party1.png",
                         "Party",
                         selected4
                             ? const Color(0xff4e80fe)
@@ -186,7 +189,7 @@ class _InterestState extends ConsumerState<Interest> {
                       });
                     },
                     child: interest(
-                        "image/paint.png","image/paint1.png",
+                        "assets/image/paint.png","assets/image/paint1.png",
                         "Food",
                         selected5
                             ? const Color(0xff4e80fe)
@@ -202,7 +205,7 @@ class _InterestState extends ConsumerState<Interest> {
                       });
                     },
                     child: interest(
-                        "image/music.png","image/other1.png",
+                        "assets/image/music.png","assets/image/other1.png",
                         "Others",
                         selected6
                             ? const Color(0xff4e80fe)
@@ -235,18 +238,18 @@ class _InterestState extends ConsumerState<Interest> {
               children: [
                 Image.asset(
                   img1,
-                  height: height / 6,
+                  height: context.height / 6,
                 ),
                 Center(
                   child: Image.asset(
                    img2,
-                    height: height / 10,
+                    height: context.height / 10,
                   ),
                 ),
               ],
             )),
         SizedBox(
-          height: height / 40,
+          height: context.height / 40,
         ),
         Text(name, style: TextStyle(
           color: notifire.whiteColor,

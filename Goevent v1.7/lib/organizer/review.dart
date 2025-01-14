@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:goevent2/extensions/media_query_ext.dart';
 import 'package:goevent2/providers/color_provider.dart';
 
-import '../utils/media.dart';
 import '../utils/string.dart';
 
 class Review extends ConsumerStatefulWidget {
@@ -25,6 +25,7 @@ class _ReviewState extends ConsumerState<Review> {
   @override
   Widget build(BuildContext context) {
     final notifire = ref.watch(colorProvider);
+    final height = context.height;
     return ScreenUtilInit(
       builder: (BuildContext context, child) =>  Scaffold(
         backgroundColor: notifire.primaryColor,
@@ -34,23 +35,23 @@ class _ReviewState extends ConsumerState<Review> {
               SizedBox(
                 height: height / 70,
               ),
-              revies(CustomStrings.rocks, "image/p2.png",notifire),
+              revies(CustomStrings.rocks, "assets/image/p2.png",notifire),
               SizedBox(
                 height: height / 100,
               ),
-              revies(CustomStrings.angelina, "image/p3.png",notifire),
+              revies(CustomStrings.angelina, "assets/image/p3.png",notifire),
               SizedBox(
                 height: height / 100,
               ),
-              revies(CustomStrings.zenifero, "image/p4.png",notifire),
+              revies(CustomStrings.zenifero, "assets/image/p4.png",notifire),
               SizedBox(
                 height: height / 100,
               ),
-              revies(CustomStrings.rocks, "image/p1.png",notifire),
+              revies(CustomStrings.rocks, "assets/image/p1.png",notifire),
               SizedBox(
                 height: height / 100,
               ),
-              revies(CustomStrings.angelina, "image/p2.png",notifire),
+              revies(CustomStrings.angelina, "assets/image/p2.png",notifire),
               SizedBox(
                 height: height / 100,
               ),
@@ -63,22 +64,22 @@ class _ReviewState extends ConsumerState<Review> {
 
   Widget revies(name, img,ColorState notifire) {
     return Container(
-      height: height / 5.5,
+      height: context.height / 5.5,
       color: Colors.transparent,
       child: Row(
         children: [
           Padding(
-            padding: EdgeInsets.only(bottom: height / 13),
+            padding: EdgeInsets.only(bottom: context.height / 13),
             child: Image.asset(
               img,
-              height: height / 20,
+              height: context.height / 20,
             ),
           ),
-          SizedBox(width: width / 30),
+          SizedBox(width: context.width / 30),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: height / 100),
+              SizedBox(height: context.height / 100),
               Text(
                 name,
                 style: TextStyle(
@@ -107,7 +108,7 @@ class _ReviewState extends ConsumerState<Review> {
                   ),
                 ],
               ),
-              SizedBox(height: height / 100),
+              SizedBox(height: context.height / 100),
               Text(
                 CustomStrings.review,
                 style: TextStyle(
@@ -120,7 +121,7 @@ class _ReviewState extends ConsumerState<Review> {
           ),
           const Spacer(),
           Padding(
-            padding: EdgeInsets.only(bottom: height / 11),
+            padding: EdgeInsets.only(bottom: context.height / 11),
             child: Text(
               CustomStrings.feb,
               style: TextStyle(

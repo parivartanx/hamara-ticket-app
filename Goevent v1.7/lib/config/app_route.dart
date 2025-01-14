@@ -9,11 +9,12 @@ import 'package:flutter/material.dart';
 final appRouter = GoRouter(
   initialLocation: Onbonding.routePath,
   routes: [
-    GoRoute(
-      name: Home.routeName, // Optional, add name to your routes. Allows you navigate by name instead of path
-      path: Home.routePath,
-      builder: (context, state) => const Home(),
-    ),
+    GoRoute(path: Home.routePath,name: Home.routeName ,builder: (context,state) => const Home()),
+    // GoRoute(
+    //   name: Home.routeName, // Optional, add name to your routes. Allows you navigate by name instead of path
+    //   path: Home.routePath,
+    //   builder: (context, state) => const Home(),
+    // ),
 
     GoRoute(
       path: Onbonding.routePath,

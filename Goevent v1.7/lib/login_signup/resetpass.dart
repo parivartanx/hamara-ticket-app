@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:goevent2/extensions/media_query_ext.dart';
 import 'package:goevent2/providers/color_provider.dart';
 
 import '../utils/botton.dart';
 import '../utils/ctextfield.dart';
-import '../utils/media.dart';
 
 class Resetpassword extends ConsumerStatefulWidget {
   const Resetpassword({Key? key}) : super(key: key);
@@ -26,6 +26,8 @@ class _ResetpasswordState extends ConsumerState<Resetpassword> {
   @override
   Widget build(BuildContext context) {
     final notifire = ref.watch(colorProvider);
+    final height = context.height;
+    final width = context.width;
     return ScreenUtilInit(
       builder: (BuildContext context, child) =>  Scaffold(
         backgroundColor: notifire.primaryColor,
@@ -104,7 +106,7 @@ class _ResetpasswordState extends ConsumerState<Resetpassword> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Customtextfild.textField("Password",Colors.grey,notifire.whiteColor,
-                    "image/Lock.png",),
+                    "assets/image/Lock.png",),
               ),
               SizedBox(height: height / 20,),
               GestureDetector(

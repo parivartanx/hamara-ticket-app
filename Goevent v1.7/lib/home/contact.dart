@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:goevent2/extensions/media_query_ext.dart';
 import 'package:goevent2/providers/color_provider.dart';
 import 'package:goevent2/utils/string.dart';
 
-import '../utils/media.dart';
 
 class Contact extends ConsumerStatefulWidget {
   const Contact({Key? key}) : super(key: key);
@@ -24,6 +24,9 @@ class _ContactState extends ConsumerState<Contact> {
 
   @override
   Widget build(BuildContext context) {
+    final height= context.height;
+    final width = context.width;
+    
    final notifire = ref.watch(colorProvider);
     return ScreenUtilInit(
       builder:  (BuildContext context, child) =>  Scaffold(

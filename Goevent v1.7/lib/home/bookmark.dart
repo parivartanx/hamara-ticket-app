@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:goevent2/extensions/media_query_ext.dart';
 import 'package:goevent2/providers/color_provider.dart';
 import 'package:page_transition/page_transition.dart';
 
 import '../booking/booking.dart';
-import '../utils/media.dart';
 
 class Bookmark extends ConsumerStatefulWidget {
   const Bookmark({Key? key}) : super(key: key);
@@ -29,19 +29,22 @@ class _BookmarkState extends ConsumerState<Bookmark> {
 
   @override
   Widget build(BuildContext context) {
+    final height= context.height;
+    final width = context.width;
     final notifire = ref.watch(colorProvider);
     return ScreenUtilInit(
       builder:  (BuildContext context, child) =>  Scaffold(
         backgroundColor: notifire.primaryColor,
         body: SingleChildScrollView(
           child: Column(
-            children: [  SizedBox(
-              height: height / 20,
+            children: [  
+              SizedBox(
+              height: context.height/20,
             ),
               Row(
                 children: [
                   SizedBox(
-                    width: width / 20,
+                    width: context.width / 20,
                   ),
                   GestureDetector(
                     onTap: () {
@@ -51,7 +54,7 @@ class _BookmarkState extends ConsumerState<Bookmark> {
                     Icon(Icons.arrow_back, color: notifire.darksColor),
                   ),
                   SizedBox(
-                    width: width / 80,
+                    width: context.width/ 20 ,
                   ),
                   Text(
                     "Bookmark",
@@ -64,9 +67,9 @@ class _BookmarkState extends ConsumerState<Bookmark> {
                   ),
                   const Spacer(),
                   Icon(Icons.more_vert,color: notifire.darksColor,),
-                  SizedBox(
-                    width: width / 20,
-                  ),
+                  // SizedBox(
+                  //   width: width / 20,
+                  // ),
                 ],
               ),
               SizedBox(
@@ -90,13 +93,13 @@ class _BookmarkState extends ConsumerState<Bookmark> {
                         child: Padding(
                             padding: const EdgeInsets.all(5),
                             child: selected
-                                ? Image.asset("image/book1.png")
+                                ? Image.asset("assets/image/book1.png")
                                 : Image.asset(
-                              "image/book2.png",
+                              "assets/image/book2.png",
                               color: const Color(0xffF0635A),
                             ))),
                   ),
-                  "image/p11.png",notifire),
+                  "assets/image/p11.png",notifire,context.width,context.height),
               SizedBox(height: height / 60,),
               events(
                   GestureDetector(
@@ -116,13 +119,13 @@ class _BookmarkState extends ConsumerState<Bookmark> {
                         child: Padding(
                           padding: const EdgeInsets.all(5),
                           child: selected1
-                              ? Image.asset("image/book1.png")
+                              ? Image.asset("assets/image/book1.png")
                               : Image.asset(
-                            "image/book2.png",
+                            "assets/image/book2.png",
                             color: const Color(0xffF0635A),
                           ))),
                   ),
-                  "image/p10.png",notifire),
+                  "assets/image/p10.png",notifire,context.width,context.height),
               SizedBox(height: height / 60,),
               events(
                   GestureDetector(
@@ -142,13 +145,13 @@ class _BookmarkState extends ConsumerState<Bookmark> {
                         child: Padding(
                           padding: const EdgeInsets.all(5),
                           child: selected2
-                              ? Image.asset("image/book1.png")
+                              ? Image.asset("assets/image/book1.png")
                               : Image.asset(
-                            "image/book2.png",
+                            "assets/image/book2.png",
                             color: const Color(0xffF0635A),
                           ))),
                   ),
-                  "image/p11.png",notifire),
+                  "assets/image/p11.png",notifire,context.width,context.height),
               SizedBox(height: height / 60,),
               events(
                   GestureDetector(
@@ -168,13 +171,13 @@ class _BookmarkState extends ConsumerState<Bookmark> {
                         child: Padding(
                           padding: const EdgeInsets.all(5),
                           child: selected3
-                              ? Image.asset("image/book1.png")
+                              ? Image.asset("assets/image/book1.png")
                               : Image.asset(
-                            "image/book2.png",
+                            "assets/image/book2.png",
                             color: const Color(0xffF0635A),
                           ))),
                   ),
-                  "image/p10.png",notifire),
+                  "assets/image/p10.png",notifire,context.width,context.height),
               SizedBox(height: height / 60,),
             ],
           ),
@@ -183,7 +186,7 @@ class _BookmarkState extends ConsumerState<Bookmark> {
     );
   }
 
-  Widget events(se, img,ColorState notifire) {
+  Widget events(se, img,ColorState notifire,double width,double height) {
     return Stack(
       children: [
         GestureDetector(
@@ -259,7 +262,7 @@ class _BookmarkState extends ConsumerState<Bookmark> {
                           Row(
                             children: [
                               Image.asset(
-                                "image/location.png",
+                                "assets/image/location.png",
                                 height: height / 40,
                               ),
                               Text(
@@ -277,7 +280,7 @@ class _BookmarkState extends ConsumerState<Bookmark> {
                           Stack(
                             children: [
                               Image.asset(
-                                "image/p1.png",
+                                "assets/image/p1.png",
                                 height: height / 28,
                               ),
                               Row(
@@ -288,7 +291,7 @@ class _BookmarkState extends ConsumerState<Bookmark> {
                                   Stack(
                                     children: [
                                       Image.asset(
-                                        "image/p2.png",
+                                        "assets/image/p2.png",
                                         height: height / 30,
                                       ),
                                       Row(
@@ -299,7 +302,7 @@ class _BookmarkState extends ConsumerState<Bookmark> {
                                           Stack(
                                             children: [
                                               Image.asset(
-                                                "image/p3.png",
+                                                "assets/image/p3.png",
                                                 height: height / 30,
                                               ),
                                             ],

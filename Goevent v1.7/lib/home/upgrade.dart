@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:goevent2/extensions/media_query_ext.dart';
 import '/home/subscribe.dart';
 import '/providers/color_provider.dart';
 import 'package:page_transition/page_transition.dart';
 
 import '../utils/botton.dart';
-import '../utils/media.dart';
+
 
 class Membership extends ConsumerStatefulWidget {
   const Membership({Key? key}) : super(key: key);
@@ -31,6 +32,8 @@ class _MembershipState extends ConsumerState<Membership> {
   @override
   Widget build(BuildContext context) {
     final notifire = ref.watch(colorProvider);
+    final height = context.height;
+    final width = context.width;
     return ScreenUtilInit(
       builder:  (BuildContext context, child) =>  Scaffold(
         backgroundColor: notifire.primaryColor,
@@ -89,7 +92,7 @@ class _MembershipState extends ConsumerState<Membership> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Image.asset(
-                            "image/head.png",
+                            "assets/image/head.png",
                             height: height / 12,
                           ),
                           SizedBox(
@@ -285,14 +288,14 @@ class _MembershipState extends ConsumerState<Membership> {
             Radius.circular(20),
           ),
         ),
-        height: height / 10,
-        width: width,
+        height: context.height / 10,
+        width: context.width,
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 20.sp),
           child: Row(
             children: [
               Container(
-                height: height / 37,
+                height: context.height / 37,
                 decoration: BoxDecoration(
                   border: Border.all(color: Colors.grey),
                   shape: BoxShape.circle,
@@ -302,20 +305,20 @@ class _MembershipState extends ConsumerState<Membership> {
                   child: Padding(
                     padding: const EdgeInsets.all(5.0),
                     child: Image.asset(
-                      "image/right.png",
+                      "assets/image/right.png",
                       color: clr1,
                     ),
                   ),
                 ),
               ),
               SizedBox(
-                width: width / 30,
+                width: context.width / 30,
               ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SizedBox(
-                    height: height / 35,
+                    height: context.height / 35,
                   ),
                   Text(
                     name1,
@@ -340,7 +343,7 @@ class _MembershipState extends ConsumerState<Membership> {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   SizedBox(
-                    height: height / 25,
+                    height: context.height / 25,
                   ),
                   Text(
                     name3,

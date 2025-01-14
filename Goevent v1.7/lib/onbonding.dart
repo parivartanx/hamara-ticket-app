@@ -6,7 +6,6 @@ import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 // import 'package:goevent2/providers/color_provider.dart';
-import 'package:goevent2/utils/media.dart';
 import 'package:goevent2/utils/string.dart';
 import 'package:page_transition/page_transition.dart';
 
@@ -143,7 +142,7 @@ class _OnbondingState extends ConsumerState<Onbonding> {
                           children: <Widget>[
                             Stack(
                               children: [
-                                Image.asset("image/onbonding2.png",fit: BoxFit.fill,height: context.screenHeight / 1.5,width: width,),
+                                Image.asset("assets/image/onbonding2.png",fit: BoxFit.fill,height: context.screenHeight / 1.5,width: context.width,),
                               ],
                             ),
                             Container(
@@ -205,7 +204,7 @@ class _OnbondingState extends ConsumerState<Onbonding> {
                           children: <Widget>[
                             Stack(
                               children: [
-                                Image.asset("image/onbonding3.png",fit: BoxFit.fill,height: context.screenHeight / 1.5,width: width,),
+                                Image.asset("assets/image/onbonding3.png",fit: BoxFit.fill,height: context.screenHeight / 1.5,width: context.width,),
                               ],
                             ),
                             Container(

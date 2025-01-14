@@ -1,15 +1,11 @@
-import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
 import 'package:goevent2/extensions/media_query_ext.dart';
 import 'package:goevent2/providers/color_provider.dart';
-import 'package:goevent2/utils/media.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'onbonding.dart';
 
 class Splashscreen extends ConsumerStatefulWidget {
   static const routePath = '/splashscreen';
@@ -59,15 +55,15 @@ class _SplashscreenState extends ConsumerState<Splashscreen> {
             child: Column(
               children: [
                 SizedBox(
-                  height: context.screenHeight / 2.5,
+                  height: context.height / 2.5,
                 ),
                 Container(
                   color: Colors.transparent,
-                  height: context.screenHeight / 7,
+                  height: context.height / 7,
                   child: Image.asset("assets/image/getevent.png"),
                 ),
                 SizedBox(
-                  height: context.screenHeight / 30,
+                  height: context.height / 30,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,

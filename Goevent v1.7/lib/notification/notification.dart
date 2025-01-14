@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:goevent2/extensions/media_query_ext.dart';
 import 'package:goevent2/notification/empty.dart';
 import 'package:goevent2/providers/color_provider.dart';
 import 'package:page_transition/page_transition.dart';
-
-import '../utils/media.dart';
 import '../utils/string.dart';
 
 class Note extends ConsumerStatefulWidget {
@@ -28,6 +27,8 @@ class _NoteState extends ConsumerState<Note> {
   @override
   Widget build(BuildContext context) {
     final notifire = ref.watch(colorProvider);
+    final height = context.height;
+    final width = context.width;
     return ScreenUtilInit(
       builder:  (BuildContext context, child) =>  Scaffold(
         backgroundColor: notifire.primaryColor,
@@ -69,24 +70,24 @@ class _NoteState extends ConsumerState<Note> {
                 ],
               ),
               SizedBox(height: height / 40),
-              notifications( "David Silbia"," Invite Jo Malone","Just Now","London's Mother's","image/p1.png",SizedBox(
+              notifications( "David Silbia"," Invite Jo Malone","Just Now","London's Mother's","assets/image/p1.png",SizedBox(
                 width: width / 18,
               ),notifire),
               SizedBox(height: height / 100),
-              not( "Adan Safi"," Started","5 min ago","International Kids Safe","image/p2.png",SizedBox(
+              not( "Adan Safi"," Started","5 min ago","International Kids Safe","assets/image/p2.png",SizedBox(
                 width: width / 4.5,
               ),notifire),SizedBox(height: height / 100),
-              notifications( "Joan Baker"," Invite A virtual","20 min ago","Evening of smooth Jazz","image/p3.png",SizedBox(
+              notifications( "Joan Baker"," Invite A virtual","20 min ago","Evening of smooth Jazz","assets/image/p3.png",SizedBox(
                 width: width / 15,
-              ),notifire),SizedBox(height: height / 100),not( "Ronald C.Kinch"," Like You","1 hr ago","events","image/p4.png",SizedBox(
+              ),notifire),SizedBox(height: height / 100),not( "Ronald C.Kinch"," Like You","1 hr ago","events","assets/image/p4.png",SizedBox(
                 width: width / 7,
-              ),notifire),SizedBox(height: height / 100),not( "Clara Tolson"," Join Your","9 hr ago","Event Gala Music Festival","image/p1.png",SizedBox(
+              ),notifire),SizedBox(height: height / 100),not( "Clara Tolson"," Join Your","9 hr ago","Event Gala Music Festival","assets/image/p1.png",SizedBox(
                 width: width / 6,
               ),notifire),SizedBox(height: height / 100),
-              notifications( "Jennifer Fritz"," Invite You","Tue,5:10 pm","International Kids Safe","image/p2.png",SizedBox(
+              notifications( "Jennifer Fritz"," Invite You","Tue,5:10 pm","International Kids Safe","assets/image/p2.png",SizedBox(
                 width: width / 9,
               ),notifire),SizedBox(height: height / 100),
-              not( "Eric G.Prickett"," Started","Wen,3:30 pm","Following you","image/p3.png",SizedBox(
+              not( "Eric G.Prickett"," Started","Wen,3:30 pm","Following you","assets/image/p3.png",SizedBox(
                 width: width / 10,
               ),notifire),SizedBox(height: height / 100),
             ],
@@ -97,7 +98,7 @@ class _NoteState extends ConsumerState<Note> {
   }
   Widget notifications(name1,name2,name3,name4,img,wid,ColorState notifire){
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
+      padding: const EdgeInsets.symmetric(horizontal: 10),
       child: GestureDetector(
         onTap: (){
           Navigator.push(
@@ -107,8 +108,8 @@ class _NoteState extends ConsumerState<Note> {
                   child:  const Empty(),),);
         },
         child: Container(
-          height: height / 8,
-          width: width,
+          height: context.height / 8,
+          width: context.width,
           color: Colors.transparent,
           child: Row(
             children: [
@@ -116,11 +117,11 @@ class _NoteState extends ConsumerState<Note> {
                 padding: EdgeInsets.only(bottom: 40.sp),
                 child: Image.asset(
                   img,
-                  height: height / 15,
+                  height: context.height / 15,
                 ),
               ),
               SizedBox(
-                width: width / 30,
+                width: context.width / 30,
               ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -168,13 +169,13 @@ class _NoteState extends ConsumerState<Note> {
                     ],
                   ),
                   SizedBox(
-                    height: height / 100,
+                    height: context.height / 100,
                   ),
                   Row(
                     children: [
                       Container(
-                        height: height / 22,
-                        width: width / 4,
+                        height: context.height / 22,
+                        width: context.width / 4,
                         decoration: BoxDecoration(
                           border: Border.all(color: Colors.grey),
                           color: Colors.transparent,
@@ -193,11 +194,11 @@ class _NoteState extends ConsumerState<Note> {
                         ),
                       ),
                       SizedBox(
-                        width: width / 60,
+                        width: context.width / 60,
                       ),
                       Container(
-                        height: height / 22,
-                        width: width / 4,
+                        height: context.height / 22,
+                        width: context.width / 4,
                         decoration: BoxDecoration(
                           border: Border.all(
                               color: notifire.buttonsColor),
@@ -228,7 +229,7 @@ class _NoteState extends ConsumerState<Note> {
   }
   Widget not(name1,name2,name3,name4,img,wid,ColorState notifire){
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
+      padding: const EdgeInsets.symmetric(horizontal: 10),
       child: GestureDetector(
         onTap: (){
           Navigator.push(
@@ -238,8 +239,8 @@ class _NoteState extends ConsumerState<Note> {
               child:  const Empty(),),);
         },
         child: Container(
-          height: height / 12,
-          width: width,
+          height: context.height / 12,
+          width: context.width,
           color: Colors.transparent,
           child: Row(
             children: [
@@ -247,11 +248,11 @@ class _NoteState extends ConsumerState<Note> {
                 padding: EdgeInsets.only(bottom: 10.sp),
                 child: Image.asset(
                   img,
-                  height: height / 15,
+                  height: context.height / 15,
                 ),
               ),
               SizedBox(
-                width: width / 30,
+                width: context.width / 30,
               ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -299,7 +300,7 @@ class _NoteState extends ConsumerState<Note> {
                     ],
                   ),
                   SizedBox(
-                    height: height / 100,
+                    height: context.height / 100,
                   ),
                 ],
               ),

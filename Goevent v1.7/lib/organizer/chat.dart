@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:goevent2/extensions/media_query_ext.dart';
 import 'package:goevent2/providers/color_provider.dart';
-import '../utils/media.dart';
 
 class Chat extends ConsumerStatefulWidget {
   const Chat({Key? key}) : super(key: key);
@@ -24,6 +24,8 @@ class _ChatState extends ConsumerState<Chat> {
   @override
   Widget build(BuildContext context) {
     final notifire = ref.watch(colorProvider);
+    final height= context.height;
+    final width = context.width;
     return ScreenUtilInit(
       builder:  (BuildContext context, child) =>  Scaffold(
         backgroundColor: notifire.primaryColor,
@@ -310,11 +312,11 @@ class _ChatState extends ConsumerState<Chat> {
                         ),
                       ),
                       SizedBox(width: width / 20,),
-                      Image.asset("image/smile.png",height: height / 30,),
+                      Image.asset("assets/image/smile.png",height: height / 30,),
                       SizedBox(width: width / 30,),
-                      Image.asset("image/gallary.png",height: height / 30,),
+                      Image.asset("assets/image/gallary.png",height: height / 30,),
                       SizedBox(width: width / 30,),
-                      Image.asset("image/clip.png",height: height / 30,),
+                      Image.asset("assets/image/clip.png",height: height / 30,),
                     ],
                   ),
                 ),

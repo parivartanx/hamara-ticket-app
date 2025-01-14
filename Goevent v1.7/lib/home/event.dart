@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:goevent2/extensions/media_query_ext.dart';
 import 'package:goevent2/home/ticket.dart';
 import 'package:goevent2/organizer/oprofile.dart';
 import 'package:goevent2/providers/color_provider.dart';
-import 'package:goevent2/utils/media.dart';
 import 'package:goevent2/utils/string.dart';
 import 'package:page_transition/page_transition.dart';
 
@@ -27,6 +27,8 @@ class _EventsState extends ConsumerState<Events> {
   @override
   Widget build(BuildContext context) {
     final notifire = ref.watch(colorProvider);
+    final height= context.height;
+    final width = context.width;
     return ScreenUtilInit(
       builder: (BuildContext context, child) => Scaffold(
         backgroundColor: notifire.primaryColor,
@@ -65,7 +67,7 @@ class _EventsState extends ConsumerState<Events> {
                     width: width,
                     height: height / 4,
                     child: Image.asset(
-                      "image/event.png",
+                      "assets/image/event.png",
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -105,7 +107,7 @@ class _EventsState extends ConsumerState<Events> {
                             child: Padding(
                               padding: const EdgeInsets.all(7),
                               child: Image.asset(
-                                "image/save.png",
+                                "assets/image/save.png",
                                 color: Colors.white,
                               ),
                             ),
@@ -138,7 +140,7 @@ class _EventsState extends ConsumerState<Events> {
                                     Column(
                                       children: [
                                         Image.asset(
-                                          "image/p1.png",
+                                          "assets/image/p1.png",
                                           height: height / 30,
                                         ),
                                       ],
@@ -151,7 +153,7 @@ class _EventsState extends ConsumerState<Events> {
                                         Stack(
                                           children: [
                                             Image.asset(
-                                              "image/p2.png",
+                                              "assets/image/p2.png",
                                               height: height / 30,
                                             ),
                                             Row(
@@ -162,7 +164,7 @@ class _EventsState extends ConsumerState<Events> {
                                                 Stack(
                                                   children: [
                                                     Image.asset(
-                                                      "image/p3.png",
+                                                      "assets/image/p3.png",
                                                       height: height / 30,
                                                     ),
                                                   ],
@@ -225,11 +227,11 @@ class _EventsState extends ConsumerState<Events> {
                 ),
               ),
               SizedBox(height: height / 40),
-              concert("image/date.png", "14 December, 2021",
-                  "Tuesday, 4:00PM - 9:00PM",notifire),
+              concert("assets/image/date.png", "14 December, 2021",
+                  "Tuesday, 4:00PM - 9:00PM",notifire,context.height,context.width),
               SizedBox(height: height / 40),
-              concert("image/direction.png", "Gala Convention Center",
-                  "36 Guild Street London, UK",notifire),
+              concert("assets/image/direction.png", "Gala Convention Center",
+                  "36 Guild Street London, UK",notifire,context.height,context.width),
               SizedBox(height: height / 40),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -258,7 +260,7 @@ class _EventsState extends ConsumerState<Events> {
                           ),
                           child: Padding(
                             padding: const EdgeInsets.all(8),
-                            child: Image.asset("image/p1.png"),
+                            child: Image.asset("assets/image/p1.png"),
                           ),
                         ),
                         SizedBox(width: width / 38),
@@ -366,7 +368,7 @@ class _EventsState extends ConsumerState<Events> {
     );
   }
 
-  Widget concert(img, name1, name2, ColorState notifire) {
+  Widget concert(img, name1, name2, ColorState notifire,double height, double width) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Row(

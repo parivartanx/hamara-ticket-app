@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:goevent2/booking/booking.dart';
+import 'package:goevent2/extensions/media_query_ext.dart';
 import 'package:goevent2/providers/color_provider.dart';
 import 'package:page_transition/page_transition.dart';
 
-import '../utils/media.dart';
 
 class Comings extends ConsumerStatefulWidget {
   const Comings({Key? key}) : super(key: key);
@@ -29,6 +29,8 @@ class _ComingsState extends ConsumerState<Comings> {
   @override
   Widget build(BuildContext context) {
     final notifire = ref.watch(colorProvider);
+    final height = context.height;
+    final width = context.width;
     return ScreenUtilInit(
       builder:  (BuildContext context, child) =>  Scaffold(
         backgroundColor: Colors.transparent,
@@ -56,15 +58,15 @@ class _ComingsState extends ConsumerState<Comings> {
                       child: Padding(
                         padding: const EdgeInsets.all(5),
                         child: selected
-                            ? Image.asset("image/book1.png")
+                            ? Image.asset("assets/image/book1.png")
                             : Image.asset(
-                                "image/book2.png",
+                                "assets/image/book2.png",
                                 color: const Color(0xffF0635A),
                               ),
                       ),
                     ),
                   ),
-                  "image/p11.png",notifire),
+                  "assets/image/p11.png",notifire),
               SizedBox(
                 height: height / 60,
               ),
@@ -86,15 +88,15 @@ class _ComingsState extends ConsumerState<Comings> {
                       child: Padding(
                         padding: const EdgeInsets.all(5),
                         child: selected1
-                            ? Image.asset("image/book1.png")
+                            ? Image.asset("assets/image/book1.png")
                             : Image.asset(
-                                "image/book2.png",
+                                "assets/image/book2.png",
                                 color: const Color(0xffF0635A),
                               ),
                       ),
                     ),
                   ),
-                  "image/p10.png",notifire),
+                  "assets/image/p10.png",notifire),
               SizedBox(
                 height: height / 60,
               ),
@@ -116,15 +118,15 @@ class _ComingsState extends ConsumerState<Comings> {
                       child: Padding(
                         padding: const EdgeInsets.all(5),
                         child: selected2
-                            ? Image.asset("image/book1.png")
+                            ? Image.asset("assets/image/book1.png")
                             : Image.asset(
-                                "image/book2.png",
+                                "assets/image/book2.png",
                                 color: const Color(0xffF0635A),
                               ),
                       ),
                     ),
                   ),
-                  "image/p11.png",notifire),
+                  "assets/image/p11.png",notifire),
               SizedBox(
                 height: height / 60,
               ),
@@ -146,15 +148,15 @@ class _ComingsState extends ConsumerState<Comings> {
                       child: Padding(
                         padding: const EdgeInsets.all(5),
                         child: selected3
-                            ? Image.asset("image/book1.png")
+                            ? Image.asset("assets/image/book1.png")
                             : Image.asset(
-                                "image/book2.png",
+                                "assets/image/book2.png",
                                 color: const Color(0xffF0635A),
                               ),
                       ),
                     ),
                   ),
-                  "image/p10.png",notifire),
+                  "assets/image/p10.png",notifire),
               SizedBox(
                 height: height / 60,
               ),
@@ -185,7 +187,7 @@ class _ComingsState extends ConsumerState<Comings> {
                   color: const Color(0xffdcdbdb),
                 )
             ),
-            width: width,
+            width: context.width,
             child: Card(
               elevation: 0,
               color: notifire.primaryColor,
@@ -197,8 +199,8 @@ class _ComingsState extends ConsumerState<Comings> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Container(
-                          height: height / 5.5,
-                          width: width,
+                          height: context.height / 5.5,
+                          width: context.width,
                           decoration: const BoxDecoration(
                             borderRadius: BorderRadius.all(Radius.circular(15)),
                             color: Colors.transparent,
@@ -210,13 +212,13 @@ class _ComingsState extends ConsumerState<Comings> {
                                   child: Image.asset(
                                     img,
                                     fit: BoxFit.cover,
-                                    height: height / 3.5,
-                                    width: width,
+                                    height: context.height / 3.5,
+                                    width: context.width,
                                   )),
                               Column(
                                 children: [
                                   SizedBox(
-                                    height: height / 70,
+                                    height: context.height / 70,
                                   ),
                                 ],
                               ),
@@ -224,7 +226,7 @@ class _ComingsState extends ConsumerState<Comings> {
                           ),
                         ),
                         SizedBox(
-                          height: height / 40,
+                          height: context.height / 40,
                         ),
                         Text(
                           "Women's Leadership Conference",
@@ -234,13 +236,13 @@ class _ComingsState extends ConsumerState<Comings> {
                               fontWeight: FontWeight.w600),
                         ),
                         SizedBox(
-                          height: height / 120,
+                          height: context.height / 120,
                         ),
                         Row(
                           children: [
                             Image.asset(
-                              "image/location.png",
-                              height: height / 40,
+                              "assets/image/location.png",
+                              height: context.height / 40,
                             ),
                             Text(
                               " 36 Guild Street London , UK",
@@ -252,35 +254,35 @@ class _ComingsState extends ConsumerState<Comings> {
                           ],
                         ),
                         SizedBox(
-                          height: height / 100,
+                          height: context.height / 100,
                         ),
                         Stack(
                           children: [
                             Image.asset(
-                              "image/p1.png",
-                              height: height / 28,
+                              "assets/image/p1.png",
+                              height: context.height / 28,
                             ),
                             Row(
                               children: [
                                 SizedBox(
-                                  width: width / 20,
+                                  width: context.width / 20,
                                 ),
                                 Stack(
                                   children: [
                                     Image.asset(
-                                      "image/p2.png",
-                                      height: height / 30,
+                                      "assets/image/p2.png",
+                                      height: context.height / 30,
                                     ),
                                     Row(
                                       children: [
                                         SizedBox(
-                                          width: width / 20,
+                                          width: context.width / 20,
                                         ),
                                         Stack(
                                           children: [
                                             Image.asset(
-                                              "image/p3.png",
-                                              height: height / 30,
+                                              "assets/image/p3.png",
+                                              height: context.height / 30,
                                             ),
                                           ],
                                         ),

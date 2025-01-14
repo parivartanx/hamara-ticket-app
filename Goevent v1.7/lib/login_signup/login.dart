@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:goevent2/extensions/media_query_ext.dart';
 import 'package:goevent2/login_signup/resetpass.dart';
 import 'package:goevent2/login_signup/signup.dart';
 import 'package:goevent2/providers/color_provider.dart';
@@ -11,7 +12,7 @@ import '../home/home.dart';
 import '../utils/botton.dart';
 import '../utils/ctextfield.dart';
 import '../utils/itextfield.dart';
-import '../utils/media.dart';
+
 
 class Login extends ConsumerStatefulWidget {
   static const routeName = 'Login';
@@ -42,7 +43,10 @@ class _LoginState extends ConsumerState<Login> {
   @override
   Widget build(BuildContext context) {
     final notifire = ref.watch(colorProvider);
+    final height= context.height;
+    final width = context.width;
     return ScreenUtilInit(
+      designSize: Size(context.width, context.height),
       builder:  (BuildContext context, child) =>  Scaffold(
         backgroundColor: notifire.primaryColor,
         body: SingleChildScrollView(
@@ -51,7 +55,7 @@ class _LoginState extends ConsumerState<Login> {
               SizedBox(height: height / 11),
               Center(
                 child: Image.asset(
-                  "image/getevent.png",
+                  "assets/image/getevent.png",
                   height: height / 13,
                 ),
               ),
@@ -89,7 +93,7 @@ class _LoginState extends ConsumerState<Login> {
                   "User",
                   Colors.grey,
                   notifire.whiteColor,
-                  "image/Message.png",
+                  "assets/image/Message.png",
                 ),
               ),
               SizedBox(height: height / 40),
@@ -100,13 +104,13 @@ class _LoginState extends ConsumerState<Login> {
                   "Password",
                   Colors.grey,
                   notifire.whiteColor,
-                  "image/Lock.png",
+                  "assets/image/Lock.png",
                   GestureDetector(
                       onTap: () {
                         _toggle();
                       },
                       child: _obscureText
-                          ? Image.asset("image/eye.png")
+                          ? Image.asset("assets/image/eye.png")
                           : const Icon(
                               Icons.remove_red_eye,
                               color: Colors.grey,
@@ -212,10 +216,10 @@ class _LoginState extends ConsumerState<Login> {
                     );
                   },
                   child: log(notifire.blackColor, "Login with Google",
-                      "image/google.png", notifire.whiteColor)),
+                      "assets/image/google.png", notifire.whiteColor)),
               SizedBox(height: height / 50),
               log(notifire.blackColor, "Login with Facebook",
-                  "image/facebook.png", notifire.whiteColor),
+                  "assets/image/facebook.png", notifire.whiteColor),
               SizedBox(height: height / 30),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -275,19 +279,19 @@ class _LoginState extends ConsumerState<Login> {
             ),
             color: clr,
           ),
-          height: height / 15,
-          width: width / 1.5,
+          height: context.height / 15,
+          width: context.width / 1.5,
           child: Row(
             children: [
               SizedBox(
-                width: width / 10,
+                width: context.width / 10,
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 9),
                 child: Image.asset(img),
               ),
               SizedBox(
-                width: width / 20,
+                width: context.width / 20,
               ),
               Text(
                 name,

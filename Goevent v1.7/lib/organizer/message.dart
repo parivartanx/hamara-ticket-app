@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:goevent2/extensions/media_query_ext.dart';
 import 'package:goevent2/organizer/chat.dart';
 import 'package:goevent2/providers/color_provider.dart';
 import 'package:page_transition/page_transition.dart';
 
-import '../utils/media.dart';
 import '../utils/string.dart';
 
 class Message extends ConsumerStatefulWidget {
@@ -27,6 +27,8 @@ class _MessageState extends ConsumerState<Message> {
   @override
   Widget build(BuildContext context) {
     final notifire = ref.watch(colorProvider);
+    final height =  context.height;
+    final width = context.width;
     return ScreenUtilInit(
       builder: (BuildContext context, child) => Scaffold(
         backgroundColor: notifire.primaryColor,
@@ -99,7 +101,7 @@ class _MessageState extends ConsumerState<Message> {
                     child: Row(
                       children: [
                         Image.asset(
-                          "image/p1.png",
+                          "assets/image/p1.png",
                           height: height / 15,
                         ),
                         SizedBox(
@@ -199,7 +201,7 @@ class _MessageState extends ConsumerState<Message> {
                     child: Row(
                       children: [
                         Image.asset(
-                          "image/p2.png",
+                          "assets/image/p2.png",
                           height: height / 15,
                         ),
                         SizedBox(
@@ -285,7 +287,7 @@ class _MessageState extends ConsumerState<Message> {
                 ),
               ),
               chats(
-                "image/p3.png",
+                "assets/image/p3.png",
                 "David  Silbia",
                 "Yeah Thanks!",
                 SizedBox(
@@ -294,7 +296,7 @@ class _MessageState extends ConsumerState<Message> {
                 notifire
               ),
               chats(
-                "image/p4.png",
+                "assets/image/p4.png",
                 "David  Silbia",
                 "Looking forward to it!",
                 SizedBox(
@@ -302,7 +304,7 @@ class _MessageState extends ConsumerState<Message> {
                 ),notifire
               ),
               chats(
-                "image/p1.png",
+                "assets/image/p1.png",
                 "Rocks Velkeinjen",
                 "You can take this up?",
                 SizedBox(
@@ -310,7 +312,7 @@ class _MessageState extends ConsumerState<Message> {
                 ),notifire
               ),
               chats(
-                "image/p2.png",
+                "assets/image/p2.png",
                 "Roman Kutep",
                 "Nothing man, cheers!",
                 SizedBox(
@@ -318,7 +320,7 @@ class _MessageState extends ConsumerState<Message> {
                 ),notifire
               ),
               chats(
-                "image/p3.png",
+                "assets/image/p3.png",
                 "Alex Lee",
                 "Okay, Bye!",
                 SizedBox(
@@ -326,7 +328,7 @@ class _MessageState extends ConsumerState<Message> {
                 ),notifire
               ),
               chats(
-                "image/p4.png",
+                "assets/image/p4.png",
                 "Dianna",
                 "Okay, Bye!",
                 SizedBox(
@@ -390,17 +392,17 @@ class _MessageState extends ConsumerState<Message> {
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10),
             child: Container(
-              height: height / 12,
-              width: width,
+              height: context.height / 12,
+              width: context.width,
               color: Colors.transparent,
               child: Row(
                 children: [
-                  Image.asset(img, height: height / 15  ),
-                  SizedBox(width: width / 30),
+                  Image.asset(img, height: context.height / 15  ),
+                  SizedBox(width: context.width / 30),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SizedBox(height: height / 100),
+                      SizedBox(height: context.height / 100),
                       Row(
                         children: [
                           Text(
