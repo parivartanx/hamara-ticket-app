@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:goevent2/booking/booking.dart';
-import 'package:goevent2/extensions/media_query_ext.dart';
-import 'package:goevent2/providers/color_provider.dart';
+import '/booking/booking.dart';
+import '/extensions/media_query_ext.dart';
+import '/providers/color_provider.dart';
 import 'package:page_transition/page_transition.dart';
 
 

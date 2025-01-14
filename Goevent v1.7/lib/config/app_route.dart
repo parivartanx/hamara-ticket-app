@@ -1,7 +1,7 @@
 import 'package:go_router/go_router.dart';
-import 'package:goevent2/login_signup/login.dart';
-import 'package:goevent2/onbonding.dart';
-import 'package:goevent2/splashscreen.dart';
+import '/login_signup/login.dart';
+import '/onbonding.dart';
+import '/splashscreen.dart';
 import '/home/home.dart';
 import 'package:flutter/material.dart';
 

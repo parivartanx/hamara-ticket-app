@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:goevent2/organizer/about.dart';
-import 'package:goevent2/organizer/events.dart';
-import 'package:goevent2/organizer/review.dart';
-import 'package:goevent2/providers/color_provider.dart';
+import '/organizer/about.dart';
+import '/organizer/events.dart';
+import '/organizer/review.dart';
+import '/providers/color_provider.dart';
 
 
 class Follow extends ConsumerStatefulWidget {

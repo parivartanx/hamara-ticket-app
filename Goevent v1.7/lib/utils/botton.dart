@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:goevent2/extensions/media_query_ext.dart';
+import '/extensions/media_query_ext.dart';
 
 
 class Custombutton {

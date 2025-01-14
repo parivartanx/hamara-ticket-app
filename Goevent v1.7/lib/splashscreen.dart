@@ -2,8 +2,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:goevent2/extensions/media_query_ext.dart';
-import 'package:goevent2/providers/color_provider.dart';
+import '/extensions/media_query_ext.dart';
+import '/providers/color_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 

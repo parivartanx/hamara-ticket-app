@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:goevent2/extensions/media_query_ext.dart';
-import 'package:goevent2/home/ticket.dart';
-import 'package:goevent2/organizer/oprofile.dart';
-import 'package:goevent2/providers/color_provider.dart';
-import 'package:goevent2/utils/string.dart';
+import '/extensions/media_query_ext.dart';
+import '/home/ticket.dart';
+import '/organizer/oprofile.dart';
+import '/providers/color_provider.dart';
+import '/utils/string.dart';
 import 'package:page_transition/page_transition.dart';
 
 import '../utils/botton.dart';

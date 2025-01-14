@@ -3,7 +3,7 @@ import 'package:accordion/controllers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:goevent2/extensions/media_query_ext.dart';
+import '/extensions/media_query_ext.dart';
 
 import '../providers/color_provider.dart';
 
