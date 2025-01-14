@@ -6,10 +6,10 @@ import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 // import 'package:goevent2/providers/color_provider.dart';
-import 'package:goevent2/utils/string.dart';
+import '/utils/string.dart';
 import 'package:page_transition/page_transition.dart';
 
-import 'package:goevent2/login_signup/login.dart';
+import '/login_signup/login.dart';
 
 class Onbonding extends ConsumerStatefulWidget {
   static const routePath = '/onbonding';
