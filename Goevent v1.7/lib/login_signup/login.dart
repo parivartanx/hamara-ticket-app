@@ -52,18 +52,17 @@ class _LoginState extends ConsumerState<Login> {
         body: SingleChildScrollView(
           child: Column(
             children: [
-              SizedBox(height: height / 11),
               Center(
                 child: Image.asset(
                   "assets/image/getevent.png",
-                  height: height / 13,
+                  height: height * .2,
                 ),
               ),
-              SizedBox(height: height / 100),
+              SizedBox(height: height *.001),
               Text(
                 "Hamara Ticket",
                 style: TextStyle(
-                  fontSize: 32.sp,
+                  fontSize: 26.sp,
                   fontWeight: FontWeight.w700,
                   fontFamily: 'Gilroy Medium',
                   color: notifire.textColor,
