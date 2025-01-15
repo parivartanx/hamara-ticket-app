@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
+import 'package:hamaraticket/privacy-policy/privacy_policy.dart';
 import '/booking/upcoming.dart';
 import '/extensions/media_query_ext.dart';
 import '/home/bookmark.dart';
@@ -2334,6 +2335,18 @@ class _SideState extends ConsumerState<Side> {
                         );
                       },
                       child: lists("assets/image/helps.png", "Helps & FAQs"),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          PageTransition(
+                            type: PageTransitionType.fade,
+                            child: const PrivacyPolicy(),
+                          ),
+                        );
+                      },
+                      child: lists("assets/image/privacy-policy.png", "Privacy Policy"),
                     ),
                     GestureDetector(
                       onTap: () {

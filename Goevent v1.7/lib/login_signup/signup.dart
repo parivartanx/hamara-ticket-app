@@ -1,6 +1,9 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
+import '../privacy-policy/privacy_policy.dart';
 import '/extensions/media_query_ext.dart';
 import '/login_signup/verification.dart';
 import '/providers/color_provider.dart';
@@ -83,7 +86,7 @@ class _SignupState extends ConsumerState<Signup> {
                 ),
               ),
               Text(
-                "GoEvent",
+                "Hamara Ticket",
                 style: TextStyle(
                   fontSize: 32.sp,
                   fontWeight: FontWeight.w700,
@@ -173,6 +176,23 @@ class _SignupState extends ConsumerState<Signup> {
                 ),
               ),
               SizedBox(height: height / 40),
+              Center(
+                child: SizedBox(
+                  width: context.width*.8,
+                  child: Text.rich(TextSpan(children: [
+                    const TextSpan(text: "By signing up,you agree to our "),
+                    TextSpan(text: "Privacy Policy ",
+                    recognizer: TapGestureRecognizer()..onTap=(){
+                       context.pushNamed(PrivacyPolicy.routeName);
+                                           
+                      },
+                    style:TextStyle(color: notifire.buttonColor) ),
+                    const TextSpan(text: "and "),
+                    TextSpan(text: "Terms & conditions",style: TextStyle(color: notifire.buttonColor))
+                  ]),textAlign: TextAlign.center,),
+                ),
+              ),
+              SizedBox(height: context.height*.02,),
               GestureDetector(
                 onTap: () {
                   Navigator.push(
@@ -243,7 +263,8 @@ class _SignupState extends ConsumerState<Signup> {
                     ),
                   ),
                 ],
-              )
+              ),
+              SizedBox(height: context.height*.02,)
             ],
           ),
         ),

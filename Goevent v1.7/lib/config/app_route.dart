@@ -1,4 +1,5 @@
 import 'package:go_router/go_router.dart';
+import 'package:hamaraticket/privacy-policy/privacy_policy.dart';
 import '/login_signup/login.dart';
 import '/onbonding.dart';
 import '/splashscreen.dart';
@@ -26,6 +27,9 @@ final appRouter = GoRouter(
         path: Splashscreen.routePath,
         name: Splashscreen.routeName,
         builder: (context, state) => const Splashscreen()),
+        
+    GoRoute(path: PrivacyPolicy.routePath,name: PrivacyPolicy.routeName,
+    builder:(context,state) => const PrivacyPolicy() ),
 
     GoRoute(
       path: Login.routePath,

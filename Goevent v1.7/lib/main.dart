@@ -20,6 +20,7 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
+      debugShowCheckedModeBanner: false,
       title: 'Hamara Ticket',
       theme: ThemeData(
         primarySwatch: AppColors.primarySwatch,
