@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "731582399542",
+    "project_id": "hamara-ticket-73786",
+    "storage_bucket": "hamara-ticket-73786.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:731582399542:android:841ec6dd4a5c98e5ef8497",
+        "android_client_info": {
+          "package_name": "com.parivartanx.hamaraticket"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "731582399542-c8ruqv5no25e4hevuojf7puns5sff3ar.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBiqkH4AE2TwCrjDL4hQ2BIdyhYeZb9yaQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "731582399542-c8ruqv5no25e4hevuojf7puns5sff3ar.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "731582399542-emnu0k11vjd5hca925ebq8kravssslki.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.parivartanx.app"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

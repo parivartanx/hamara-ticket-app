@@ -1,14 +1,14 @@
 import 'package:go_router/go_router.dart';
 import 'package:hamaraticket/privacy-policy/privacy_policy.dart';
-import '/login_signup/login.dart';
-import '/onbonding.dart';
-import '/splashscreen.dart';
-import '/home/home.dart';
+import '../features/login/presentation/screens/login.dart';
+import '../features/onboarding/presentation/screen/onboarding_screen.dart';
+import '../features/splash-screen/presentation/screen/splashscreen.dart';
+import '../features/home/presentation/screens/home.dart';
 import 'package:flutter/material.dart';
 
 // GoRouter configuration
 final appRouter = GoRouter(
-  initialLocation: Onbonding.routePath,
+  initialLocation: Splashscreen.routePath,
   routes: [
     GoRoute(path: Home.routePath,name: Home.routeName ,builder: (context,state) => const Home()),
     // GoRoute(
@@ -18,9 +18,9 @@ final appRouter = GoRouter(
     // ),
 
     GoRoute(
-      path: Onbonding.routePath,
-      name: Onbonding.routeName,
-      builder: (context, state) => const Onbonding(),
+      path: OnboardingScreen.routePath,
+      name: OnboardingScreen.routeName,
+      builder: (context, state) => const OnboardingScreen(),
     ),
 
     GoRoute(         

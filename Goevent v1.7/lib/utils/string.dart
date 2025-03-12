@@ -5,8 +5,8 @@ class CustomStrings {
   static const String onbonding2 = 'Nearby Events';
   static const String safe = 'Stay safe, be safe';
   static const String covid = 'Covid - 19 Self Health\nDeclaration';
-  static const String details = 'Enjoy your favorite dishe and a lovely your friends and family and have a great time. Food from local food trucks your friends and family and have a great time. Food from local food trucks..';
-  static const String detail = 'Enjoy your favorite dishe and a lovely your friends and \nfamily and have a great time Enjoy your favorite dishe \nand a lovely your friends and family and have a great time';
+  static const String details = 'Enjoy your favorite dish and a lovely your friends and family and have a great time. Food from local food trucks your friends and family and have a great time. Food from local food trucks..';
+  static const String detail = 'Enjoy your favorite dish and a lovely your friends and \nfamily and have a great time Enjoy your favorite dishe \nand a lovely your friends and family and have a great time';
   static const String payment = 'Payment Method';
   static const String card = 'Add New Card';
   static const String apple = 'Apple Pay';
