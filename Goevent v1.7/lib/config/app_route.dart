@@ -4,18 +4,15 @@ import '../features/login/presentation/screens/login.dart';
 import '../features/onboarding/presentation/screen/onboarding_screen.dart';
 import '../features/splash-screen/presentation/screen/splashscreen.dart';
 import '../features/home/presentation/screens/home.dart';
-import 'package:flutter/material.dart';
 
 // GoRouter configuration
 final appRouter = GoRouter(
-  initialLocation: Splashscreen.routePath,
+  initialLocation: Home.routePath,
   routes: [
-    GoRoute(path: Home.routePath,name: Home.routeName ,builder: (context,state) => const Home()),
-    // GoRoute(
-    //   name: Home.routeName, // Optional, add name to your routes. Allows you navigate by name instead of path
-    //   path: Home.routePath,
-    //   builder: (context, state) => const Home(),
-    // ),
+    GoRoute(
+      path: Home.routePath
+      ,name: Home.routeName ,
+      builder: (context,state) => const Home()),
 
     GoRoute(
       path: OnboardingScreen.routePath,
@@ -34,19 +31,7 @@ final appRouter = GoRouter(
     GoRoute(
       path: Login.routePath,
       name: Login.routeName,
-      pageBuilder: (context, state) => CustomTransitionPage(
-        child: const Login(),
-        transitionsBuilder: (context, animation, secondaryAnimation, child) {
-          return FadeTransition(opacity: animation, child: child);
-        },
-        transitionDuration: const Duration(milliseconds: 300),
-        key: state.pageKey,
-      ),
+      builder: (context, state) => const Login(),
     ),
-    // GoRoute(
-    //   name: 'page2',
-    //   path: '/page2',
-    //   builder: (context, state) => Page2Screen(),
-    // ),
   ],
 );

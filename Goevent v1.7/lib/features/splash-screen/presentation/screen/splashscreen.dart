@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hamaraticket/features/login/presentation/screens/login.dart';
 import '../widgets/ripple_effect.dart';
 import '../widgets/splash_content.dart';
 import '/providers/color_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:math';
-import '/features/onboarding/presentation/screen/onboarding_screen.dart';
 
 class Splashscreen extends ConsumerStatefulWidget {
   static const routePath = '/splashscreen';
@@ -61,7 +60,7 @@ class _SplashscreenState extends ConsumerState<Splashscreen> with SingleTickerPr
   void _navigateToNextScreen() {
     Future.delayed(const Duration(seconds: 2), () {
       if (mounted) {
-        context.pushReplacementNamed(OnboardingScreen.routeName);
+        context.pushReplacementNamed(Login.routeName);
       }
     });
   }
@@ -78,20 +77,17 @@ class _SplashscreenState extends ConsumerState<Splashscreen> with SingleTickerPr
     final screenSize = MediaQuery.of(context).size;
     final maxRadius = sqrt(pow(screenSize.width, 2) + pow(screenSize.height, 2));
 
-    return ScreenUtilInit(
-      designSize: const Size(1080, 2160),
-      builder: (context, child) => Scaffold(
-        body: Stack(
-          children: [
-            RippleEffect(
-              maxRadius: maxRadius,
-              animation: _animation,
-            ),
-            SplashContent(
-              colorScheme: colorScheme,
-            ),
-          ],
-        ),
+    return Scaffold(
+      body: Stack(
+        children: [
+          RippleEffect(
+            maxRadius: maxRadius,
+            animation: _animation,
+          ),
+          SplashContent(
+            colorScheme: colorScheme,
+          ),
+        ],
       ),
     );
   }

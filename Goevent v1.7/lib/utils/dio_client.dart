@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../features/login/data/data_sources/local_datasource.dart';
 import 'endPoints.dart';
 
@@ -122,3 +122,7 @@ class DioClient {
 
 
 }
+
+final dioClientProvider = Provider<DioClient>((ref) {
+  return DioClient();
+});

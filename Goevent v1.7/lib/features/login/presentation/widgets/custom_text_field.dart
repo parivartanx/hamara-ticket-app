@@ -56,7 +56,7 @@ class CustomTextField extends StatelessWidget {
             color: context.colorScheme.primary,
           ),
         ),
-        errorStyle: TextStyle(color: Colors.red),
+        errorStyle: const TextStyle(color: Colors.red),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide(

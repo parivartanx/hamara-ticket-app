@@ -58,14 +58,6 @@ class _OtpInputFieldState extends State<OtpInputField> {
     }
   }
 
-  void _onBackspace(String value, int index) {
-    if (value.isEmpty && index > 0) {
-      // Move to previous field on backspace
-      _controllers[index - 1].clear();
-      _focusNodes[index - 1].requestFocus();
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Row(

@@ -14,6 +14,7 @@ class UpcomingEventsSection extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final bookmarkStates = ref.watch(bookmarkStateProvider);
+    final List<String> imageUrls= ["assets/image/lagoon-waterpark.webp", "assets/image/g2.png", "assets/image/g3.png", "assets/image/g4.png"];
     
     return Column(
       children: [
@@ -22,7 +23,7 @@ class UpcomingEventsSection extends ConsumerWidget {
           child: Row(
             children: [
               Text(
-                CustomStrings.upcoming,
+                "Best Recommendations",
                 style: TextStyle(
                   fontFamily: 'Gilroy Medium',
                   color: context.colorScheme.onSurface,
@@ -70,14 +71,14 @@ class UpcomingEventsSection extends ConsumerWidget {
           scrollDirection: Axis.horizontal,
           child: Row(
             children: [
-              const SizedBox(width: 10),
-              ...List.generate(6, (index) => [
+              // const SizedBox(width: 10),
+              ...List.generate(imageUrls.length, (index) => [
                 EventCard(
                   isSelected: bookmarkStates[index] ?? false,
-                  img: "assets/image/g${(index % 4) + 1}.png",
+                  img: imageUrls[index],
                   onBookmarkToggle: () => ref.read(bookmarkStateProvider.notifier).toggleBookmark(index),
                 ),
-                if (index < 5) SizedBox(width: context.width * 0.04),
+                if (index < imageUrls.length - 1) SizedBox(width: context.width * 0.04),
               ]).expand((widgets) => widgets),
               const SizedBox(width: 10),
             ],
@@ -135,16 +136,15 @@ class EventCard extends StatelessWidget {
                     EventImage(isSelected: isSelected, img: img, onBookmarkToggle: onBookmarkToggle),
                     SizedBox(height: context.height / 40),
                     Text(
-                      "International Band Music...",
+                      "Lagoon Water Park",
                       style: TextStyle(
                         fontFamily: 'Gilroy Medium',
                         color: context.colorScheme.onSurface,
-                        fontSize: 16.sp,
+                        fontSize: 20.sp,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                    SizedBox(height: context.height / 40),
-                    const AttendeesList(),
+                    // const AttendeesList(),
                     SizedBox(height: context.height / 50),
                     const LocationWidget(),
                   ],
@@ -184,25 +184,27 @@ class EventImage extends StatelessWidget {
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(15),
-            child: Image.asset(
-              img,
-              fit: BoxFit.cover,
-              height: context.height / 3.5,
+            child: AspectRatio(
+              aspectRatio: 1.5,
+              child: Image.asset(
+                img,
+                fit: BoxFit.fill,
+              ),
             ),
           ),
-          Column(
-            children: [
-              SizedBox(height: context.height / 70),
-              Row(
-                children: [
-                  SizedBox(width: context.width / 70),
-                  const Spacer(),
-                  BookmarkButton(isSelected: isSelected, onTap: onBookmarkToggle),
-                  SizedBox(width: context.width / 40),
-                ],
-              ),
-            ],
-          ),
+          // Column(
+          //   children: [
+          //     SizedBox(height: context.height *.03),
+          //     Row(
+          //       children: [
+          //         SizedBox(width: context.width / 70),
+          //         const Spacer(),
+          //         BookmarkButton(isSelected: isSelected, onTap: onBookmarkToggle),
+          //         SizedBox(width: context.width / 40),
+          //       ],
+          //     ),
+          //   ],
+          // ),
         ],
       ),
     );

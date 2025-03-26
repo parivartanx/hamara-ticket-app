@@ -6,7 +6,6 @@ import 'package:page_transition/page_transition.dart';
 import '../../../../../notification/notification.dart';
 import '../../../../../providers/color_provider.dart';
 import '../screens/home.dart';
-import 'category_games_widget.dart';
 
 class TopHeaderSection extends ConsumerWidget {
   final ColorState notifire;

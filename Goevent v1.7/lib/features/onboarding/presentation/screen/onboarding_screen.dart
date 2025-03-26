@@ -5,7 +5,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hamaraticket/extensions/media_query_ext.dart';
 import '/utils/string.dart';
-import 'package:page_transition/page_transition.dart';
 
 import '../../../login/presentation/screens/login.dart';
 
