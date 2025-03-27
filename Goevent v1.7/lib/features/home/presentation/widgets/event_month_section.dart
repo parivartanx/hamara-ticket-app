@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:hamaraticket/extensions/media_query_ext.dart';
-import 'package:hamaraticket/features/event-details/presentation/screens/event_details_screen.dart';
-import 'package:hamaraticket/features/home/seeall.dart';
+import '/extensions/media_query_ext.dart';
+import '/features/event-details/presentation/screens/event_details_screen.dart';
+import '/features/home/seeall.dart';
 import 'package:page_transition/page_transition.dart';
 import '../../../../../providers/color_provider.dart';
 

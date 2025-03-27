@@ -8,7 +8,7 @@ import 'collapsed_appbar_title.dart';
 import 'event_month_section.dart';
 import 'expanded_appbar_header.dart';
 import 'nearby_events_section.dart';
-import 'upcoming_events_section.dart';
+import 'best_recommendation_section.dart';
 
 class TwoPanels extends ConsumerStatefulWidget {
   final AnimationController controller;
@@ -112,15 +112,15 @@ class _TwoPanelsState extends ConsumerState<TwoPanels> with TickerProviderStateM
           const SliverToBoxAdapter(
             child: Padding(
               padding: EdgeInsets.only(top: 16.0),
-              child: UpcomingEventsSection(),
+              child: BestRecommendationSection(),
             ),
           ),
           
           // Nearby Events Section
-          SliverToBoxAdapter(
+          const SliverToBoxAdapter(
             child: Padding(
-              padding: const EdgeInsets.only(top: 16.0),
-              child: NearbyEventsSection(notifire: notifire),
+              padding:  EdgeInsets.only(top: 16.0),
+              child: NearbyEventsSection(),
             ),
           ),
           

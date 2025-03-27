@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import '../../../../../utils/string.dart';
+import '../../../../../../utils/string.dart';
 
 // Model class for category items
 class CategoryItem {

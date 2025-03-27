@@ -5,7 +5,6 @@ import '/extensions/media_query_ext.dart';
 import '/features/home/presentation/screens/home.dart';
 import '/notification/notification.dart';
 import 'package:page_transition/page_transition.dart';
-
 import 'search_bar_widget.dart';
 
 class ExpandedAppBarHeader extends StatelessWidget {

@@ -2,7 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:hamaraticket/utils/shared_prefs_manager.dart';
+import '/utils/shared_prefs_manager.dart';
 import 'config/app_route.dart';
 import 'core/theme/app_theme.dart';
 import 'firebase_options.dart';

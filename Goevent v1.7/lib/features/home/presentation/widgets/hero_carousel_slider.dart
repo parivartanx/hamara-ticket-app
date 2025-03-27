@@ -5,7 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hamaraticket/extensions/media_query_ext.dart';
 import 'package:hamaraticket/features/home/seeall.dart';
 import 'package:page_transition/page_transition.dart';
-import '../../providers/carousel_providers.dart';
+import '../providers/carousel_providers.dart';
 
 class HeroCarouselSlider extends ConsumerStatefulWidget {
   const HeroCarouselSlider({Key? key}) : super(key: key);

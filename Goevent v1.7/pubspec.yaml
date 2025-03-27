@@ -55,11 +55,14 @@ dependencies:
   google_sign_in: ^6.3.0
   firebase_auth: ^5.5.1
   carousel_slider: ^5.0.0
+  json_annotation: ^4.9.0
+  intl: ^0.20.2
 
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
 
 
   # The "flutter_lints" package below contains a set of recommended lints to
@@ -70,6 +73,8 @@ dev_dependencies:
   flutter_lints: ^1.0.0
   custom_lint: ^0.7.0
   riverpod_lint: ^2.6.3
+  build_runner: ^2.4.15
+  json_serializable: ^6.9.4
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
