@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../screens/see_all.dart';
 import '/features/home/presentation/widgets/park_card.dart';
 import '/features/home/data/park_data.dart';
 import '/extensions/media_query_ext.dart';
-import '/features/home/seeall.dart';
 import 'package:page_transition/page_transition.dart';
 
 class BestRecommendationSection extends ConsumerWidget {
@@ -38,25 +38,20 @@ class BestRecommendationSection extends ConsumerWidget {
                     ),
                   );
                 },
-                child: Container(
-                  color: Colors.transparent,
-                  child: Row(
-                    children: [
-                      Text(
-                        "See All",
-                        style: TextStyle(
-                          fontFamily: 'Gilroy Medium',
-                          color: const Color(0xff747688),
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.w400,
-                        ),
+                child: Row(
+                  children: [
+                    Text(
+                      "See All",
+                      style: TextStyle(
+                        fontFamily: 'Gilroy Medium',
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.w400,
                       ),
-                      const Icon(
-                        Icons.arrow_right,
-                        color: Color(0xff747688),
-                      ),
-                    ],
-                  ),
+                    ),
+                    const Icon(
+                      Icons.arrow_right,
+                    ),
+                  ],
                 ),
               ),
             ],
@@ -70,8 +65,15 @@ class BestRecommendationSection extends ConsumerWidget {
             children: [
                SizedBox(width: 5.w),
               ...List.generate(parks.length, (index) => [
-                ParkCard(
-                  park: parks[index],    
+                SizedBox(
+                  width: context.width *.45,
+                  child: LayoutBuilder(
+                    builder: (context, constraints) {
+                      return ParkCard(
+                        park: parks[index],    
+                      );
+                    }
+                  ),
                 ),
                 if (index < parks.length - 1) SizedBox(width: context.width * 0.04),
               ]).expand((widgets) => widgets),
@@ -140,10 +142,7 @@ class LocationWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Image.asset(
-          "assets/image/location.png",
-          height: context.height / 40,
-        ),
+        Icon(Icons.location_on, size: 12.sp),
         Text(
           " 36 Guild Street London , UK",
           style: TextStyle(

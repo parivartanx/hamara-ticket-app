@@ -16,7 +16,6 @@ class ParkCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return GestureDetector(
       onTap: () {
-        // TODO: Navigate to park details screen
       },
       child: Container(
         decoration: BoxDecoration(
@@ -27,27 +26,26 @@ class ParkCard extends ConsumerWidget {
             width: 1,
           ),
         ),
-        width: context.width / 1.5,
         child: Card(
           elevation: 0,
           color: context.colorScheme.surface,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-            child: Stack(
-              children: [
-                Column(
+          child: Stack(
+            children: [
+              Padding(
+                padding:  EdgeInsets.symmetric(horizontal: 2.w, vertical: 2.h),
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     ParkImage(
                       img: park.imageUrls.first,
                     ),
-                    SizedBox(height: context.height / 40),
+                    SizedBox(height: context.height*.01 ),
                     Text(
                       park.name,
                       style: TextStyle(
                         fontFamily: 'Gilroy Medium',
                         color: context.colorScheme.onSurface,
-                        fontSize: 20.sp,
+                        fontSize: 14.sp,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
@@ -55,9 +53,9 @@ class ParkCard extends ConsumerWidget {
                     LocationWidget(location: park.address),
                   ],
                 ),
-                DateOverlay(date: park.createdAt),
-              ],
-            ),
+              ),
+              DateOverlay(date: park.createdAt),
+            ],
           ),
         ),
       ),
@@ -76,7 +74,7 @@ class ParkImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: context.height / 5.5,
+      height: context.height*.15,
       width: context.width / 1.7,
       decoration: const BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(15)),
@@ -112,13 +110,17 @@ class LocationWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-         Icon(Icons.location_on, color: Colors.grey,size: 14.sp,),
-        Text(
-          " $location",
-          style: TextStyle(
-            fontFamily: 'Gilroy Medium',
-            color: Colors.grey,
-            fontSize: 14.sp,
+         Icon(Icons.location_on, color: Colors.grey,size: 12.sp,),
+        Expanded(
+          child: Text(
+            " $location",
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              fontFamily: 'Gilroy Medium',
+              color: Colors.grey,
+              fontSize: 12.sp,
+            ),
           ),
         ),
       ],
@@ -138,7 +140,7 @@ class DateOverlay extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        SizedBox(height: context.height / 6),
+        SizedBox(height: context.height *.12),
         Row(
           children: [
             const Spacer(),
@@ -155,7 +157,7 @@ class DateOverlay extends StatelessWidget {
                     "${date.day} ",
                     style: TextStyle(
                       color: const Color(0xffF0635A),
-                      fontSize: 15.sp,
+                      fontSize: 13.sp,
                       fontFamily: 'Gilroy ExtraBold',
                       fontWeight: FontWeight.bold,
                     ),

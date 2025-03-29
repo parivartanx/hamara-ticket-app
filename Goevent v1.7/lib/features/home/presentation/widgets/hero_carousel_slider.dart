@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:hamaraticket/extensions/media_query_ext.dart';
-import 'package:hamaraticket/features/home/seeall.dart';
+import '../screens/see_all.dart';
+import '/extensions/media_query_ext.dart';
 import 'package:page_transition/page_transition.dart';
 import '../providers/carousel_providers.dart';
 

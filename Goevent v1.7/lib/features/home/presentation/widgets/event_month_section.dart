@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../screens/see_all.dart';
 import '/extensions/media_query_ext.dart';
-import '/features/event-details/presentation/screens/event_details_screen.dart';
-import '/features/home/seeall.dart';
 import 'package:page_transition/page_transition.dart';
 import '../../../../../providers/color_provider.dart';
 
@@ -107,13 +106,13 @@ class EventCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(
-          context,
-          PageTransition(
-            type: PageTransitionType.fade,
-            child: const EventDetailsScreen(),
-          ),
-        );
+        // Navigator.push(
+        //   context,
+        //   PageTransition(
+        //     type: PageTransitionType.fade,
+        //     child: const EventDetailsScreen(),
+        //   ),
+        // );
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 12),

@@ -3,9 +3,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
-import 'package:hamaraticket/extensions/media_query_ext.dart';
-import 'package:hamaraticket/features/home/presentation/widgets/home_body.dart';
-import 'package:hamaraticket/features/home/presentation/widgets/side_menu.dart';
+import '/extensions/media_query_ext.dart';
+import '/features/home/presentation/widgets/home_body.dart';
+import '/features/home/presentation/widgets/side_menu.dart';
 import '/providers/color_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

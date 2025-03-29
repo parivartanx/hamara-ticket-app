@@ -32,8 +32,7 @@ class _BookingState extends ConsumerState<Booking> {
     final notifire = ref.watch(colorProvider);
     final height = context.height;
     final width = context.width;
-    return ScreenUtilInit(
-      builder: (BuildContext context, child) => Scaffold(
+    return Scaffold(
         backgroundColor: notifire.primaryColor,
         floatingActionButton: Padding(
           padding: const EdgeInsets.fromLTRB(20, 0, 20, 10),
@@ -1012,8 +1011,7 @@ class _BookingState extends ConsumerState<Booking> {
             ],
           ),
         ),
-      ),
-    );
+      );
   }
 
   Widget concert(img, name1, name2,ColorState notifire) {

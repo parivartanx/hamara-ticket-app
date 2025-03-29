@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:hamaraticket/extensions/media_query_ext.dart';
-import 'package:hamaraticket/features/home/presentation/widgets/hero_carousel_slider.dart';
-import '../../../../providers/color_provider.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '/extensions/media_query_ext.dart';
+import '/features/home/presentation/widgets/hero_carousel_slider.dart';
+import '/providers/color_provider.dart';
 import 'category_games_widget.dart';
 import 'collapsed_appbar_title.dart';
-import 'event_month_section.dart';
+// import 'event_month_section.dart';
 import 'expanded_appbar_header.dart';
 import 'nearby_events_section.dart';
 import 'best_recommendation_section.dart';
@@ -67,8 +68,6 @@ class _TwoPanelsState extends ConsumerState<TwoPanels> with TickerProviderStateM
 
   @override
   Widget build(BuildContext context) {
-    final notifire = ref.watch(colorProvider);
-
     return Scaffold(
       backgroundColor: context.colorScheme.surface,
       body: CustomScrollView(
@@ -117,20 +116,20 @@ class _TwoPanelsState extends ConsumerState<TwoPanels> with TickerProviderStateM
           ),
           
           // Nearby Events Section
-          const SliverToBoxAdapter(
+          SliverToBoxAdapter(
             child: Padding(
-              padding:  EdgeInsets.only(top: 16.0),
-              child: NearbyEventsSection(),
+              padding:  EdgeInsets.only(top: 20.h ),
+              child: const NearbyEventsSection(),
             ),
           ),
           
           // Events This Month Section
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.only(top: 16.0),
-              child: EventMonthSection(notifire: notifire),
-            ),
-          ),
+          // SliverToBoxAdapter(
+          //   child: Padding(
+          //     padding: const EdgeInsets.only(top: 16.0),
+          //     child: EventMonthSection(notifire: notifire),
+          //   ),
+          // ),
           
           // Bottom Padding
           SliverToBoxAdapter(

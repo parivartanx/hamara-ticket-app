@@ -11,6 +11,8 @@ extension MediaQueryExt on BuildContext {
 
   ColorScheme get colorScheme => Theme.of(this).colorScheme;
 
+  TextTheme get textTheme => Theme.of(this).textTheme;
+
   double get screenAspectRatio => screenSize.aspectRatio;
 
   double get screenDensity => MediaQuery.of(this).devicePixelRatio;
