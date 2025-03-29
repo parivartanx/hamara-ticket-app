@@ -57,7 +57,8 @@ dependencies:
   carousel_slider: ^5.0.0
   shimmer: ^3.0.0
   json_annotation: ^4.9.0
-  intl: ^0.20.2
+  table_calendar: ^3.0.9
+  intl: ^0.18.1
 
 
 dev_dependencies:

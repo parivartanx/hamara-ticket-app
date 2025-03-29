@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:hamaraticket/features/buy_ticket/presentation/screens/buy_ticket.dart';
 import '../widgets/event_header_image.dart';
 import '/extensions/media_query_ext.dart';
 import '../../../home/ticket.dart';
@@ -8,7 +9,6 @@ import '/providers/color_provider.dart';
 import 'package:page_transition/page_transition.dart';
 import '/models/event/event_model.dart';
 import 'package:intl/intl.dart';
-import '../widgets/attendees_list.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -54,6 +54,7 @@ class _EventDetailsScreenState extends ConsumerState<EventDetailsScreen> {
             EventHeader(event: event),
             SizedBox(height: context.height / 30),
             EventBody(event: event),
+            SizedBox(height: context.height*.1,)
           ],
         ),
       ),
@@ -76,20 +77,22 @@ class BuyTicketButton extends StatelessWidget {
             context,
             PageTransition(
               type: PageTransitionType.fade,
-              child: const Ticket(),
+              child: const  BuyTicketS(occasionType: 'Park', occasionId: '1', occasionName:"Occasion Name" ,
+                
+              ),
             ),
           ),
           style: ElevatedButton.styleFrom(
             backgroundColor: context.colorScheme.primary,
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(10),
             ),
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.event_available, size: 16, color: Colors.white),
-              SizedBox(width: 8),
+              const Icon(Icons.event_available, size: 16, color: Colors.white),
+              SizedBox(width: 8.w),
               Text(
                 "Buy Ticket",
                 style: TextStyle(
@@ -119,12 +122,23 @@ class EventHeader extends StatelessWidget {
     return Stack(
       children: [
         EventHeaderImage(imageUrl: event.imageUrls.first),
+        Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [Colors.transparent, Colors.black87],
+            ),
+          ),
+          width: context.width,
+          height: context.height / 4,
+        ),
         Column(
           children: [
             SizedBox(height: context.height / 20),
             HeaderActions(event: event),
             SizedBox(height: context.height / 8.5),
-            AttendeesList(event: event),
+            EventStatusCard(event: event),
           ],
         ),
       ],
@@ -148,9 +162,6 @@ class HeaderActions extends StatelessWidget {
         const BackButton(color: Colors.white),
         SizedBox(width: context.width / 80),
         EventTitle(event: event),
-        const Spacer(),
-        SaveButton(),
-        const SizedBox(width: 20),
       ],
     );
   }
@@ -212,25 +223,36 @@ class EventBody extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         EventTitleSection(event: event),
+        SizedBox(height: context.height*.01,),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 8.w),
+          child: Wrap(
+            children: [
+              EventInfoCard(
+                icon: Icons.calendar_month,
+                width: context.width*.5,
+                title: "Date",
+                subtitle: "${_formatDate(event.startDate)} - ${_formatDate(event.endDate)}",
+                colorScheme: context.colorScheme,
+              ),
+              EventInfoCard(
+                icon: Icons.timelapse,
+                width: context.width*.4,
+                title: "Time",
+                subtitle: "${event.startTime} - ${event.endTime}",
+                colorScheme: context.colorScheme,
+              ),
+            ],
+          ),
+        ),
         SizedBox(height: context.height / 40),
         ImageGallery(event: event),
-        SizedBox(height: context.height / 40),
-        EventStatusCard(event: event),
-        SizedBox(height: context.height / 40),
-        EventInfoCard(
-          title: "Date & Time",
-          subtitle: "${_formatDate(event.startDate)} - ${_formatDate(event.endDate)}\n${event.startTime} - ${event.endTime}",
-          colorScheme: context.colorScheme,
-        ),
-        SizedBox(height: context.height / 40),
-        EventInfoCard(
-          title: "Location",
-          subtitle: "${event.location}, ${event.city}\n${event.address}",
-          colorScheme: context.colorScheme,
-        ),
+        // SizedBox(height: context.height / 40),
+        // EventStatusCard(event: event),
         SizedBox(height: context.height / 40),
         if (event.description != null && event.description!.isNotEmpty)
           EventInfoCard(
+            width: context.width,
             title: "Description",
             subtitle: event.description!,
             colorScheme: context.colorScheme,
@@ -238,7 +260,7 @@ class EventBody extends StatelessWidget {
         SizedBox(height: context.height / 40),
         OrganizerCard(event: event),
         SizedBox(height: context.height / 40),
-        AboutEventSection(event: event),
+        // AboutEventSection(event: event),
       ],
     );
   }
@@ -266,7 +288,7 @@ class ImageGallery extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "Event Gallery",
+            "Gallery",
             style: TextStyle(
               fontSize: 17.sp,
               fontWeight: FontWeight.w700,
@@ -360,70 +382,53 @@ class EventStatusCard extends StatelessWidget {
         statusText = 'Unknown';
     }
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: context.colorScheme.surface,
-          borderRadius: BorderRadius.circular(15),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              blurRadius: 10,
-              offset: const Offset(0, 5),
+    return Container(
+      width: context.width*.7,
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: context.colorScheme.surface,
+        borderRadius: BorderRadius.circular(15),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withAlpha(15),
+            blurRadius: 10,
+            offset: const Offset(0, 5),
+          ),
+        ],
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            decoration: BoxDecoration(
+              color: statusColor.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(20),
             ),
-          ],
-        ),
-        child: Row(
-          children: [
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-              decoration: BoxDecoration(
-                color: statusColor.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(20),
+            child: Text(
+              statusText,
+              style: TextStyle(
+                color: statusColor,
+                fontSize: 12.sp,
+                fontWeight: FontWeight.w600,
               ),
-              child: Text(
-                statusText,
+            ),
+          ),
+          SizedBox(height: context.height*.04, child: const VerticalDivider()),
+          Row(
+            children: [
+              Icon(Icons.people, size: 16.sp, color: Colors.grey),
+              SizedBox(width: 4.w),
+              Text(
+                "${event.maxCapacity}",
                 style: TextStyle(
-                  color: statusColor,
-                  fontSize: 12.sp,
-                  fontWeight: FontWeight.w600,
+                  fontSize: 14.sp,
+                  color: context.colorScheme.outline,
                 ),
               ),
-            ),
-            SizedBox(width: 16.w),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Event Capacity",
-                    style: TextStyle(
-                      fontSize: 15.sp,
-                      fontWeight: FontWeight.w600,
-                      color: context.colorScheme.onSurface,
-                    ),
-                  ),
-                  SizedBox(height: 4.h),
-                  Row(
-                    children: [
-                      Icon(Icons.people, size: 16.sp, color: Colors.grey),
-                      SizedBox(width: 4.w),
-                      Text(
-                        "${event.maxCapacity} people",
-                        style: TextStyle(
-                          fontSize: 14.sp,
-                          color: Colors.grey,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
+            ],
+          ),
+        ],
       ),
     );
   }
@@ -431,6 +436,8 @@ class EventStatusCard extends StatelessWidget {
 
 class EventInfoCard extends StatelessWidget {
   final String title;
+  final double width;
+  final IconData? icon;
   final String subtitle;
   final ColorScheme colorScheme;
 
@@ -439,20 +446,24 @@ class EventInfoCard extends StatelessWidget {
     required this.title,
     required this.subtitle,
     required this.colorScheme,
+     this.icon,
+    required this.width,
+
   });
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
+      padding:  EdgeInsets.symmetric(horizontal: 5.w),
       child: Container(
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 6.h ),
+        width: width,
         decoration: BoxDecoration(
           color: colorScheme.surface,
           borderRadius: BorderRadius.circular(15),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
+              color: Colors.black.withAlpha(15),
               blurRadius: 10,
               offset: const Offset(0, 5),
             ),
@@ -461,20 +472,26 @@ class EventInfoCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              title,
-              style: TextStyle(
-                fontSize: 15.sp,
-                fontWeight: FontWeight.w600,
-                fontFamily: 'Gilroy Medium',
-                color: colorScheme.onSurface,
-              ),
+            Row(
+              children: [
+                 icon==null?const SizedBox():Icon(icon, size: 13.sp, ),
+                 icon==null?const SizedBox():SizedBox(width: 5.w,),
+                Text(
+                  title,
+                  style: TextStyle(
+                    fontSize: 13.sp,
+                    fontWeight: FontWeight.w600,
+                    fontFamily: 'Gilroy Medium',
+                    color: colorScheme.onSurface,
+                  ),
+                ),
+              ],
             ),
             SizedBox(height: 8.h),
             Text(
               subtitle,
               style: TextStyle(
-                fontSize: 12.sp,
+                fontSize: 13.sp,
                 fontWeight: FontWeight.w500,
                 fontFamily: 'Gilroy Medium',
                 color: Colors.grey,
@@ -502,6 +519,28 @@ class EventTitleSection extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          Wrap(
+            spacing: 8,
+            runSpacing: 4,
+            children: event.tags.map((tag) {
+              return Container(
+                padding: EdgeInsets.symmetric(horizontal: 12, vertical: 4.h),
+                decoration: BoxDecoration(
+                  border: Border.all(color: context.colorScheme.tertiary.withAlpha(100)),
+                  color: context.colorScheme.surfaceContainerLowest,
+                  borderRadius: BorderRadius.circular(20.r),
+                ),
+                child: Text(
+                  tag,
+                  style: TextStyle(
+                    fontSize: 10.sp,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              );
+            }).toList(),
+          ),
+          SizedBox(height: 8.h),
           Text(
             event.name,
             style: TextStyle(
@@ -512,38 +551,20 @@ class EventTitleSection extends StatelessWidget {
             ),
           ),
           SizedBox(height: 8.h),
-          Wrap(
-            spacing: 8,
-            runSpacing: 4,
-            children: event.tags.map((tag) {
-              return Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                decoration: BoxDecoration(
-                  color: context.colorScheme.primary.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Text(
-                  tag,
-                  style: TextStyle(
-                    color: context.colorScheme.primary,
-                    fontSize: 12.sp,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              );
-            }).toList(),
-          ),
-          SizedBox(height: 8.h),
+          
           Row(
             children: [
               Icon(Icons.location_on, size: 16.sp, color: Colors.grey),
               SizedBox(width: 4.w),
-              Text(
-                event.location,
-                style: TextStyle(
-                  fontSize: 14.sp,
-                  fontFamily: 'Gilroy Medium',
-                  color: Colors.grey,
+              SizedBox(
+                width: context.width*.8,
+                child: Text(
+                  "${event.location}, ${event.address}",
+                  style: TextStyle(
+                    fontSize: 14.sp,
+                    fontFamily: 'Gilroy Medium',
+                    color: Colors.grey,
+                  ),
                 ),
               ),
             ],
@@ -629,7 +650,7 @@ class OrganizerCard extends StatelessWidget {
               ),
               child: Center(
                 child: Text(
-                  "Follow Organizer",
+                  "Follow",
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 12.sp,
@@ -646,41 +667,4 @@ class OrganizerCard extends StatelessWidget {
   }
 }
 
-class AboutEventSection extends StatelessWidget {
-  final Event event;
 
-  const AboutEventSection({
-    super.key,
-    required this.event,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            "About Event",
-            style: TextStyle(
-              fontSize: 17.sp,
-              fontWeight: FontWeight.w700,
-              fontFamily: 'Gilroy Medium',
-              color: context.colorScheme.onSurface,
-            ),
-          ),
-          SizedBox(height: 16.h),
-          Text(
-            event.description ?? "No description available",
-            style: TextStyle(
-              fontSize: 14.sp,
-              fontFamily: 'Gilroy Medium',
-              color: Colors.grey,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}

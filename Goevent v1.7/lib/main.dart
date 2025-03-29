@@ -7,7 +7,6 @@ import 'config/app_route.dart';
 import 'core/theme/app_theme.dart';
 import 'firebase_options.dart';
 
-
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SharedPrefsManager.init();

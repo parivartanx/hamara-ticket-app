@@ -11,8 +11,7 @@ class EventHeaderImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.transparent,
+    return SizedBox(
       width: context.width,
       height: context.height / 4,
       child: Image.network(
