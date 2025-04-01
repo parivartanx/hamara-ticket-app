@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class TermsAndConditions extends StatelessWidget {
+  static const String routeName = 'TermsAndConditions';
+  static const String routePath = '/terms-and-conditions';
   const TermsAndConditions({super.key});
 
   @override

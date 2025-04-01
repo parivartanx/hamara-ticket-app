@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '/booking/booking.dart';
+import 'booking.dart';
 import '/extensions/media_query_ext.dart';
 import '/providers/color_provider.dart';
 import 'package:page_transition/page_transition.dart';
+
+import 'presentation/screens/booking.dart';
 
 
 class Comings extends ConsumerStatefulWidget {

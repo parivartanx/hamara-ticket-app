@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import '../../privacy-policy/privacy_policy.dart';
+import 'package:hamaraticket/features/privacy-policy/privacy_policy.dart';
 import '../login/presentation/screens/login.dart';
 import '/extensions/media_query_ext.dart';
 // import 'verification.dart';
@@ -182,7 +182,7 @@ class _SignupState extends ConsumerState<Signup> {
                     const TextSpan(text: "By signing up,you agree to our "),
                     TextSpan(text: "Privacy Policy ",
                     recognizer: TapGestureRecognizer()..onTap=(){
-                       context.pushNamed(PrivacyPolicy.routeName);
+                       context.pushNamed(PrivacyPolicyScreen.routeName);
                                            
                       },
                     style:TextStyle(color: notifire.buttonColor) ),

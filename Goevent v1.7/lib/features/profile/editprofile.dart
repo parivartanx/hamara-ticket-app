@@ -5,8 +5,8 @@ import '/extensions/media_query_ext.dart';
 import '/providers/color_provider.dart';
 import '/utils/string.dart';
 
-import '../utils/botton.dart';
-import '../utils/wtextfield.dart';
+import '../../utils/botton.dart';
+import '../../utils/wtextfield.dart';
 
 class Edit extends ConsumerStatefulWidget {
   const Edit({Key? key}) : super(key: key);

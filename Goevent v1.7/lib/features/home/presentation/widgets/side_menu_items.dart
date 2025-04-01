@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:hamaraticket/features/terms-and-conditions/screens/terms_and_conditions.dart';
-import '../../../privacy-policy/privacy_policy.dart';
-import '/booking/upcoming.dart';
+import 'package:go_router/go_router.dart';
+import '/features/booking/presentation/screens/booking.dart';
+import '/features/profile/presentation/screens/profile.dart';
+import '/features/terms-and-conditions/screens/terms_and_conditions.dart';
+import '/features/privacy-policy/privacy_policy.dart';
 import '/features/contact/presentation/screens/contact.dart';
-import '/organizer/message.dart';
-import '/profile/profile.dart';
 import 'package:page_transition/page_transition.dart';
 import 'menu_list_item.dart';
 
@@ -21,32 +21,22 @@ class SideMenuItems extends StatelessWidget {
           MenuListItem(
             icon: Icons.person_2,
             title: "My Profile",
-            onTap: () => _navigateTo(context, const Profile()),
-          ),
-          MenuListItem(
-            icon: Icons.message,
-            title: "Message",
-            onTap: () => _navigateTo(context, const Message()),
+            onTap: () => context.pushNamed(Profile.routeName),
           ),
           MenuListItem(
             icon: Icons.calendar_month,
             title: "My Booking",
-            onTap: () => _navigateTo(context, const Upcoming()),
-          ),
-          MenuListItem(
-            icon: Icons.contact_page,
-            title: "Contact us",
-            onTap: () => _navigateTo(context, const Contact()),
+            onTap: () => context.pushNamed(Booking.routeName),
           ),
           MenuListItem(
             icon: Icons.privacy_tip,
             title: "Privacy Policy",
-            onTap: () => _navigateTo(context, const PrivacyPolicyScreen()),
+            onTap: () => context.pushNamed(PrivacyPolicyScreen.routeName),
           ),
           MenuListItem(
             icon: Icons.accessibility,
             title: "Terms & Conditions",
-            onTap: () => _navigateTo(context, const TermsAndConditions()),
+            onTap: () => context.pushNamed(TermsAndConditions.routeName),
           ),
           
           // ... Add other menu items similarly
@@ -55,13 +45,4 @@ class SideMenuItems extends StatelessWidget {
     );
   }
 
-  void _navigateTo(BuildContext context, Widget screen) {
-    Navigator.push(
-      context,
-      PageTransition(
-        type: PageTransitionType.fade,
-        child: screen,
-      ),
-    );
-  }
 }

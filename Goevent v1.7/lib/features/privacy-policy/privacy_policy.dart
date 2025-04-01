@@ -259,6 +259,9 @@ class InfoSubSection extends StatelessWidget {
 }
 
 class PrivacyPolicyScreen extends StatelessWidget {
+  static const routeName = 'Privacy Policy Screen';
+  static const routePath = '/privacy-policy-screen';
+
   const PrivacyPolicyScreen({Key? key}) : super(key: key);
 
   @override
