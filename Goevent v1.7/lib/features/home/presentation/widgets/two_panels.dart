@@ -102,21 +102,100 @@ class _TwoPanelsState extends ConsumerState<TwoPanels>
                 ? CollapsedAppBarTitle(greeting: _greeting, userName: _userName)
                 : null,
             flexibleSpace: FlexibleSpaceBar(
-              background: Column(
+              background: Stack(
                 children: [
-                  // App Bar Header
-                  ExpandedAppBarHeader(
-                      greeting: _greeting, userName: _userName),
+                  // Abstract pattern elements that extend to the categories area
+                  Positioned(
+                    right: -50,
+                    top: -30,
+                    child: Container(
+                      height: 150,
+                      width: 150,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.white.withOpacity(0.1),
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    left: -40,
+                    bottom: -50,
+                    child: Container(
+                      height: 120,
+                      width: 120,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.white.withOpacity(0.15),
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    left: -30,
+                    top: -30,
+                    child: Container(
+                      height: 140,
+                      width: 140,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.white.withOpacity(0.15),
+                      ),
+                    ),
+                  ),
+                  // Extra smaller circle for more visual interest in the categories area
+                  Positioned(
+                    right: 80,
+                    top: 20,
+                    child: Container(
+                      height: 60,
+                      width: 60,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.white.withOpacity(0.08),
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    left: 90,
+                    top: 90,
+                    child: Container(
+                      height: 40,
+                      width: 40,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.white.withOpacity(0.08),
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    right: 30,
+                    bottom: 70,
+                    child: Container(
+                      height: 60,
+                      width: 60,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.white.withOpacity(0.08),
+                      ),
+                    ),
+                  ),
+                  // Content layout
+                  Column(
+                    children: [
+                      // App Bar Header
+                      ExpandedAppBarHeader(
+                          greeting: _greeting, userName: _userName),
 
-                  // Add spacing between search bar and categories
-                  SizedBox(height: 16.h), // Increased from 12.h to 16.h
+                      // Add spacing between search bar and categories
+                      SizedBox(height: 16.h), // Increased from 12.h to 16.h
 
-                  // Categories Section
-                  Container(
-                    padding: EdgeInsets.symmetric(
-                        horizontal: context.width * 0.04,
-                        vertical: 8.0), // Increased from 4.0 to 8.0
-                    child: const CategoryGamesWidget(),
+                      // Categories Section
+                      Container(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: context.width * 0.04,
+                            vertical: 8.0), // Increased from 4.0 to 8.0
+                        child: const CategoryGamesWidget(),
+                      ),
+                    ],
                   ),
                 ],
               ),

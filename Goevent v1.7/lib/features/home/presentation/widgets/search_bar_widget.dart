@@ -10,15 +10,10 @@ class SearchBarWidget extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
-        color: const Color(0x26FFFFFF), // 15% white opacity using hex
+        color: Colors.white.withOpacity(
+            0.15), // Subtle white opacity that matches the circular patterns
         borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
+        // Removed box shadow to blend with background
       ),
       child: Row(
         children: [

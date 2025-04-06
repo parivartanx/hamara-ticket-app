@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../extensions/media_query_ext.dart';
 import '../../data/providers/booking_provider.dart';
 import '../widgets/booking_filter_chip.dart';
@@ -40,21 +41,91 @@ class _BookingState extends ConsumerState<Booking>
     final colorScheme = context.colorScheme;
 
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: colorScheme.surface,
-        foregroundColor: colorScheme.onSurface,
-        elevation: 0,
-        title: Text(
-          'Your Bookings',
-          style: TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-            color: colorScheme.onSurface,
+      backgroundColor: colorScheme.surface,
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(context.height * 0.18),
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                colorScheme.primary,
+                colorScheme.primary.withAlpha(150),
+              ],
+            ),
+            borderRadius: const BorderRadius.only(
+              bottomLeft: Radius.circular(20),
+              bottomRight: Radius.circular(20),
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: colorScheme.shadow.withAlpha(50),
+                blurRadius: 10,
+                offset: const Offset(0, 5),
+              ),
+            ],
+          ),
+          child: Stack(
+            children: [
+              // Abstract pattern elements
+              Positioned(
+                right: -50,
+                top: -30,
+                child: Container(
+                  height: 150,
+                  width: 150,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: colorScheme.onPrimary.withAlpha(10),
+                  ),
+                ),
+              ),
+              Positioned(
+                left: -30,
+                bottom: -20,
+                child: Container(
+                  height: 100,
+                  width: 100,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: colorScheme.onPrimary.withAlpha(15),
+                  ),
+                ),
+              ),
+              // AppBar content
+              SafeArea(
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Your Bookings',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 22.sp,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(height: 8.h),
+                      Text(
+                        'Manage your event tickets',
+                        style: TextStyle(
+                          color: Colors.white.withOpacity(0.8),
+                          fontSize: 14.sp,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ),
       body: Column(
         children: [
+          SizedBox(height: 8.h),
           const BookingFilterSection(),
 
           // Bookings list section (wrapped in animated fade-in)
@@ -83,9 +154,9 @@ class BookingFilterSection extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
       child: SizedBox(
-        height: 40,
+        height: 40.h,
         child: ListView(
           scrollDirection: Axis.horizontal,
           children: const [

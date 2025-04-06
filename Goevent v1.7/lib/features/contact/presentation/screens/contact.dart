@@ -15,10 +15,72 @@ class Contact extends ConsumerStatefulWidget {
 }
 
 class _ContactState extends ConsumerState<Contact> {
+  final _nameController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _subjectController = TextEditingController();
+  final _messageController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+  bool _isSubmitting = false;
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _emailController.dispose();
+    _subjectController.dispose();
+    _messageController.dispose();
+    super.dispose();
+  }
+
   @override
   void initState() {
     super.initState();
     ref.read(colorProvider.notifier).getdarkmodepreviousstate();
+  }
+
+  void _submitForm() {
+    if (_formKey.currentState!.validate()) {
+      setState(() {
+        _isSubmitting = true;
+      });
+
+      // Simulate API call
+      Future.delayed(const Duration(seconds: 2), () {
+        setState(() {
+          _isSubmitting = false;
+        });
+
+        // Show success dialog
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text(
+              'Request Submitted',
+              style: TextStyle(
+                fontSize: 18.sp,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            content: Text(
+              'Thank you for your request. Our support team will get back to you within 24-48 hours.',
+              style: TextStyle(fontSize: 14.sp),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  // Clear form
+                  _nameController.clear();
+                  _emailController.clear();
+                  _subjectController.clear();
+                  _messageController.clear();
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        );
+      });
+    }
   }
 
   @override
@@ -30,18 +92,86 @@ class _ContactState extends ConsumerState<Contact> {
     return ScreenUtilInit(
       builder: (BuildContext context, child) => Scaffold(
         backgroundColor: colorScheme.surface,
-        appBar: AppBar(
-          backgroundColor: colorScheme.surface,
-          elevation: 0,
-          title: Text(
-            'Support',
-            style: TextStyle(
-              color: colorScheme.onSurface,
-              fontSize: 24.sp,
-              fontWeight: FontWeight.bold,
+        appBar: PreferredSize(
+          preferredSize: Size.fromHeight(context.height * 0.18),
+          child: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  colorScheme.primary,
+                  colorScheme.primary.withAlpha(150),
+                ],
+              ),
+              borderRadius: const BorderRadius.only(
+                bottomLeft: Radius.circular(20),
+                bottomRight: Radius.circular(20),
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: colorScheme.shadow.withAlpha(50),
+                  blurRadius: 10,
+                  offset: const Offset(0, 5),
+                ),
+              ],
+            ),
+            child: Stack(
+              children: [
+                // Abstract pattern elements
+                Positioned(
+                  right: -50,
+                  top: -30,
+                  child: Container(
+                    height: 150,
+                    width: 150,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: colorScheme.onPrimary.withAlpha(10),
+                    ),
+                  ),
+                ),
+                Positioned(
+                  left: -30,
+                  bottom: -20,
+                  child: Container(
+                    height: 100,
+                    width: 100,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: colorScheme.onPrimary.withAlpha(15),
+                    ),
+                  ),
+                ),
+                // AppBar content
+                SafeArea(
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Support',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 22.sp,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(height: 8.h),
+                        Text(
+                          'How can we help you today?',
+                          style: TextStyle(
+                            color: Colors.white.withOpacity(0.8),
+                            fontSize: 14.sp,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
-          centerTitle: true,
         ),
         body: SingleChildScrollView(
           child: Column(
@@ -91,33 +221,42 @@ class _ContactState extends ConsumerState<Contact> {
                 ),
               ),
               SizedBox(height: 12.h),
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
+              Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16.r),
-                child: Row(
+                child: GridView.count(
+                  physics: const NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  crossAxisCount: 2,
+                  childAspectRatio: 1.2,
+                  crossAxisSpacing: 12.w,
+                  mainAxisSpacing: 12.h,
                   children: [
                     _buildQuickHelpCard(
                       context,
-                      icon: Icons.confirmation_number,
+                      icon: Icons.confirmation_number_outlined,
                       title: 'Tickets',
+                      description: 'Issues with booking or tickets',
                       color: Colors.blue,
                     ),
                     _buildQuickHelpCard(
                       context,
-                      icon: Icons.payment,
+                      icon: Icons.payment_outlined,
                       title: 'Payments',
+                      description: 'Payment methods and refunds',
                       color: Colors.green,
                     ),
                     _buildQuickHelpCard(
                       context,
-                      icon: Icons.event,
+                      icon: Icons.event_available_outlined,
                       title: 'Events',
+                      description: 'Questions about events or venues',
                       color: Colors.purple,
                     ),
                     _buildQuickHelpCard(
                       context,
-                      icon: Icons.account_circle,
+                      icon: Icons.account_circle_outlined,
                       title: 'Account',
+                      description: 'Profile and account settings',
                       color: Colors.orange,
                     ),
                   ],
@@ -160,11 +299,11 @@ class _ContactState extends ConsumerState<Contact> {
 
               SizedBox(height: 24.h),
 
-              // Contact Options
+              // Support Request Form
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16.r),
                 child: Text(
-                  'Contact Us',
+                  'Raise a Support Request',
                   style: TextStyle(
                     fontSize: 18.sp,
                     fontWeight: FontWeight.bold,
@@ -173,33 +312,8 @@ class _ContactState extends ConsumerState<Contact> {
                 ),
               ),
               SizedBox(height: 12.h),
-              _buildContactOption(
-                context,
-                icon: Icons.email,
-                title: 'Email Support',
-                subtitle: 'Get help via email',
-                onTap: () {
-                  // Handle email support
-                },
-              ),
-              _buildContactOption(
-                context,
-                icon: Icons.chat,
-                title: 'Live Chat',
-                subtitle: 'Chat with our support team',
-                onTap: () {
-                  // Handle live chat
-                },
-              ),
-              _buildContactOption(
-                context,
-                icon: Icons.phone,
-                title: 'Phone Support',
-                subtitle: 'Call our support team',
-                onTap: () {
-                  // Handle phone support
-                },
-              ),
+              _buildSupportRequestForm(context),
+
               SizedBox(height: 24.h),
             ],
           ),
@@ -209,37 +323,248 @@ class _ContactState extends ConsumerState<Contact> {
     );
   }
 
+  Widget _buildSupportRequestForm(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 16.r),
+      padding: EdgeInsets.all(16.r),
+      decoration: BoxDecoration(
+        color: context.colorScheme.surface,
+        borderRadius: BorderRadius.circular(12.r),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Form(
+        key: _formKey,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Submit your request and our team will get back to you within 24-48 hours.',
+              style: TextStyle(
+                fontSize: 14.sp,
+                color: context.colorScheme.onSurface.withOpacity(0.7),
+              ),
+            ),
+            SizedBox(height: 16.h),
+            TextFormField(
+              controller: _nameController,
+              decoration: InputDecoration(
+                labelText: 'Your Name',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8.r),
+                ),
+                prefixIcon:
+                    Icon(Icons.person, color: context.colorScheme.primary),
+              ),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter your name';
+                }
+                return null;
+              },
+            ),
+            SizedBox(height: 12.h),
+            TextFormField(
+              controller: _emailController,
+              decoration: InputDecoration(
+                labelText: 'Email Address',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8.r),
+                ),
+                prefixIcon:
+                    Icon(Icons.email, color: context.colorScheme.primary),
+              ),
+              keyboardType: TextInputType.emailAddress,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter your email';
+                }
+                if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
+                    .hasMatch(value)) {
+                  return 'Please enter a valid email';
+                }
+                return null;
+              },
+            ),
+            SizedBox(height: 12.h),
+            TextFormField(
+              controller: _subjectController,
+              decoration: InputDecoration(
+                labelText: 'Subject',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8.r),
+                ),
+                prefixIcon:
+                    Icon(Icons.subject, color: context.colorScheme.primary),
+              ),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter a subject';
+                }
+                return null;
+              },
+            ),
+            SizedBox(height: 12.h),
+            TextFormField(
+              controller: _messageController,
+              decoration: InputDecoration(
+                labelText: 'Message',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8.r),
+                ),
+                alignLabelWithHint: true,
+                prefixIcon:
+                    Icon(Icons.message, color: context.colorScheme.primary),
+              ),
+              maxLines: 5,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter your message';
+                }
+                return null;
+              },
+            ),
+            SizedBox(height: 16.h),
+            SizedBox(
+              width: double.infinity,
+              height: 45.h,
+              child: ElevatedButton(
+                onPressed: _isSubmitting ? null : _submitForm,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: context.colorScheme.primary,
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.r),
+                  ),
+                ),
+                child: _isSubmitting
+                    ? Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                            width: 20.r,
+                            height: 20.r,
+                            child: const CircularProgressIndicator(
+                              color: Colors.white,
+                              strokeWidth: 2,
+                            ),
+                          ),
+                          SizedBox(width: 8.w),
+                          Text(
+                            'Submitting...',
+                            style: TextStyle(
+                              fontSize: 16.sp,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      )
+                    : Text(
+                        'Submit Request',
+                        style: TextStyle(
+                          fontSize: 16.sp,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _buildQuickHelpCard(
     BuildContext context, {
     required IconData icon,
     required String title,
+    required String description,
     required Color color,
   }) {
-    return Container(
-      width: 100.w,
-      margin: EdgeInsets.only(right: 12.r),
-      decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: () {
+          // Handle category tap
+        },
         borderRadius: BorderRadius.circular(12.r),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            icon,
-            color: color,
-            size: 32.r,
+        child: Ink(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                color.withOpacity(0.1),
+                color.withOpacity(0.2),
+              ],
+            ),
+            borderRadius: BorderRadius.circular(12.r),
+            boxShadow: [
+              BoxShadow(
+                color: color.withOpacity(0.1),
+                blurRadius: 5,
+                offset: const Offset(0, 2),
+              ),
+            ],
           ),
-          SizedBox(height: 8.h),
-          Text(
-            title,
-            style: TextStyle(
-              color: color,
-              fontSize: 14.sp,
-              fontWeight: FontWeight.w500,
+          child: Padding(
+            padding: EdgeInsets.all(12.r),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Container(
+                      padding: EdgeInsets.all(6.r),
+                      decoration: BoxDecoration(
+                        color: color.withOpacity(0.2),
+                        borderRadius: BorderRadius.circular(8.r),
+                      ),
+                      child: Icon(
+                        icon,
+                        color: color,
+                        size: 22.r,
+                      ),
+                    ),
+                    const Spacer(),
+                    Icon(
+                      Icons.arrow_forward_ios,
+                      color: color.withOpacity(0.7),
+                      size: 14.r,
+                    ),
+                  ],
+                ),
+                SizedBox(height: 8.h),
+                Text(
+                  title,
+                  style: TextStyle(
+                    color: color.withOpacity(0.8),
+                    fontSize: 15.sp,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                SizedBox(height: 4.h),
+                Expanded(
+                  child: Text(
+                    description,
+                    style: TextStyle(
+                      color: context.colorScheme.onSurface.withOpacity(0.6),
+                      fontSize: 11.sp,
+                      height: 1.2,
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ],
             ),
           ),
-        ],
+        ),
       ),
     );
   }
@@ -283,63 +608,6 @@ class _ContactState extends ConsumerState<Contact> {
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildContactOption(
-    BuildContext context, {
-    required IconData icon,
-    required String title,
-    required String subtitle,
-    required VoidCallback onTap,
-  }) {
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: 16.r, vertical: 8.h),
-      decoration: BoxDecoration(
-        color: context.colorScheme.surface,
-        borderRadius: BorderRadius.circular(12.r),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: ListTile(
-        leading: Container(
-          padding: EdgeInsets.all(8.r),
-          decoration: BoxDecoration(
-            color: context.colorScheme.primary.withOpacity(0.1),
-            borderRadius: BorderRadius.circular(8.r),
-          ),
-          child: Icon(
-            icon,
-            color: context.colorScheme.primary,
-          ),
-        ),
-        title: Text(
-          title,
-          style: TextStyle(
-            fontSize: 16.sp,
-            fontWeight: FontWeight.w500,
-            color: context.colorScheme.onSurface,
-          ),
-        ),
-        subtitle: Text(
-          subtitle,
-          style: TextStyle(
-            fontSize: 14.sp,
-            color: context.colorScheme.onSurface.withOpacity(0.7),
-          ),
-        ),
-        trailing: Icon(
-          Icons.arrow_forward_ios,
-          size: 16.r,
-          color: context.colorScheme.onSurface.withOpacity(0.5),
-        ),
-        onTap: onTap,
       ),
     );
   }

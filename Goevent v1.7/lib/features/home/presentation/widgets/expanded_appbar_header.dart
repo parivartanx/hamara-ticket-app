@@ -79,7 +79,8 @@ class ExpandedAppBarHeader extends ConsumerWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: themeState.primaryColor,
+        color: Colors
+            .transparent, // Make background transparent since parent has gradient
         borderRadius: const BorderRadius.only(
           bottomRight: Radius.circular(30),
           bottomLeft: Radius.circular(30),
