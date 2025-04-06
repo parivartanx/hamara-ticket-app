@@ -1,18 +1,20 @@
 import 'dart:io';
 import 'dart:typed_data';
+import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:image_gallery_saver/image_gallery_saver.dart';
+// import 'package:image_gallery_saver/image_gallery_saver.dart'; // Comment out the problematic package
+import 'package:permission_handler/permission_handler.dart';
 import '../../../../extensions/media_query_ext.dart';
 import '../../data/models/booking_model.dart';
 import 'dart:math' as math;
-import 'package:permission_handler/permission_handler.dart';
 
 class QRTicketDialog extends StatefulWidget {
   final BookingModel booking;
@@ -41,9 +43,8 @@ class _QRTicketDialogState extends State<QRTicketDialog> {
     try {
       // Request storage permission first
       if (Platform.isAndroid) {
-        // For Android 10 and above, we need to request MANAGE_EXTERNAL_STORAGE instead
         if (await _requestPermission()) {
-          await _captureAndSave();
+          await _saveImageAlternative();
         } else {
           if (mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
@@ -57,7 +58,7 @@ class _QRTicketDialogState extends State<QRTicketDialog> {
         }
       } else {
         // For iOS or other platforms
-        await _captureAndSave();
+        await _saveImageAlternative();
       }
     } catch (e) {
       if (!mounted) return;
@@ -98,43 +99,49 @@ class _QRTicketDialogState extends State<QRTicketDialog> {
     return false;
   }
 
-  Future<void> _captureAndSave() async {
+  Future<void> _saveImageAlternative() async {
     final Uint8List? image = await _screenshotController.capture(
       delay: const Duration(milliseconds: 10),
     );
-
+    
     if (image == null || image.isEmpty) {
       throw Exception("Failed to capture screenshot");
     }
-
-    // Save image with error handling
-    final result = await ImageGallerySaver.saveImage(
-      image,
-      quality: 100,
-      name:
-          'ticket_${widget.booking.eventId}_${DateTime.now().millisecondsSinceEpoch}',
-    );
-
-    // Log the result for debugging
-    print("Save result: $result");
-
+    
+    // Get temporary directory
+    final tempDir = await getTemporaryDirectory();
+    final String fileName = 'ticket_${widget.booking.eventId}_${DateTime.now().millisecondsSinceEpoch}.png';
+    final File imgFile = File('${tempDir.path}/$fileName');
+    
+    // Write bytes to file
+    await imgFile.writeAsBytes(image);
+    
     if (!mounted) return;
-
-    // Check for success in result
-    final bool isSuccess = result is Map &&
-        (result['isSuccess'] == true || result.containsKey('filePath'));
-
-    if (isSuccess) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Ticket saved to gallery'),
-          backgroundColor: context.colorScheme.primary,
-          behavior: SnackBarBehavior.floating,
+    
+    // Show success message with share option
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Ticket image created successfully'),
+        backgroundColor: context.colorScheme.primary,
+        behavior: SnackBarBehavior.floating,
+        action: SnackBarAction(
+          label: 'SHARE',
+          textColor: Colors.white,
+          onPressed: () => _shareImage(imgFile),
         ),
-      );
-    } else {
-      throw Exception("Failed to save image: $result");
-    }
+      ),
+    );
+    
+    // Automatically show share dialog
+    await _shareImage(imgFile);
+  }
+  
+  Future<void> _shareImage(File imgFile) async {
+    await Share.shareXFiles(
+      [XFile(imgFile.path)],
+      text: 'My ${widget.booking.category.displayName} ticket for ${widget.booking.eventName}',
+      subject: 'My ${widget.booking.eventName} Ticket',
+    );
   }
 
   Future<void> _shareTicket() async {

@@ -381,31 +381,72 @@ class _LoginState extends ConsumerState<Login>
                                         child: InkWell(
                                           borderRadius:
                                               BorderRadius.circular(16),
-                                          onTap: state.isLoading
+                                          onTap: state.isLoading || isLoading
                                               ? null
                                               : () async {
+                                                  setState(() {
+                                                    isLoading = true;
+                                                  });
+
                                                   try {
+                                                    log("Login: Starting Google Sign-in process");
                                                     final googleUser =
                                                         await _googleSignInAuth
                                                             .signInWithGoogle();
-                                                    if (googleUser != null) {
-                                                      ref
-                                                          .read(loginProvider
-                                                              .notifier)
-                                                          .loginWithGoogle(
-                                                            email: googleUser
-                                                                .email,
-                                                            name: googleUser
-                                                                    .displayName ??
-                                                                "Unknown",
-                                                          );
+
+                                                    if (googleUser == null) {
+                                                      if (mounted) {
+                                                        setState(() {
+                                                          isLoading = false;
+                                                        });
+                                                        _showMessage(
+                                                          context,
+                                                          'Sign-in cancelled',
+                                                          type:
+                                                              MessageType.info,
+                                                        );
+                                                      }
+                                                      return;
+                                                    }
+
+                                                    log("Login: Google Sign-in successful, proceeding to backend verification");
+                                                    log("Login: User info - email: ${googleUser['email']}, userId: ${googleUser['userId']}");
+
+                                                    // Start provider login
+                                                    await ref
+                                                        .read(loginProvider
+                                                            .notifier)
+                                                        .loginWithGoogle(
+                                                          email: googleUser[
+                                                              'email'],
+                                                          name: googleUser[
+                                                              'name'],
+                                                          firebaseToken:
+                                                              googleUser[
+                                                                  'firebaseToken'],
+                                                          userId: googleUser[
+                                                              'userId'],
+                                                        );
+
+                                                    if (mounted) {
+                                                      log("Login: User successfully authenticated, navigating to home");
+                                                      context.go('/home');
                                                     }
                                                   } catch (e) {
-                                                    _showMessage(
-                                                      context,
-                                                      'Failed to sign in with Google: ${e.toString()}',
-                                                      type: MessageType.error,
-                                                    );
+                                                    log("Login: Error during Google sign-in: $e");
+                                                    if (mounted) {
+                                                      _showMessage(
+                                                        context,
+                                                        'Failed to sign in: ${e.toString()}',
+                                                        type: MessageType.error,
+                                                      );
+                                                    }
+                                                  } finally {
+                                                    if (mounted) {
+                                                      setState(() {
+                                                        isLoading = false;
+                                                      });
+                                                    }
                                                   }
                                                 },
                                           child: Padding(

@@ -11,12 +11,27 @@ buildscript {
     }
 }
 
-
-
 allprojects {
     repositories {
         google()
         mavenCentral()
+    }
+    
+    // This fixes the namespace issue with older plugins
+    afterEvaluate {
+        if (plugins.hasPlugin('android') ||
+            plugins.hasPlugin('android-library')) {
+            android {
+                if (!android.hasProperty('namespace')) {
+                    android.namespace = android.defaultConfig.applicationId
+                    if (!android.hasProperty('namespace')) {
+                        if (project.plugins.hasPlugin('com.android.library')) {
+                            project.android.namespace = "io.flutter.plugins.${project.name}"
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 

@@ -438,11 +438,15 @@ class _BookingCardState extends State<BookingCard>
                                         color: Colors.grey.shade700,
                                       ),
                                       SizedBox(width: 8.w),
-                                      Text(
-                                        'Booking ID: ${widget.booking.eventId}',
-                                        style: TextStyle(
-                                          fontSize: 13.sp,
-                                          color: Colors.grey.shade700,
+                                      Expanded(
+                                        child: Text(
+                                          'Booking ID: ${widget.booking.eventId}',
+                                          style: TextStyle(
+                                            fontSize: 13.sp,
+                                            color: Colors.grey.shade700,
+                                          ),
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 1,
                                         ),
                                       ),
                                     ],
@@ -456,11 +460,15 @@ class _BookingCardState extends State<BookingCard>
                                         color: Colors.grey.shade700,
                                       ),
                                       SizedBox(width: 8.w),
-                                      Text(
-                                        'Date: ${dateFormat.format(widget.booking.eventDate)}',
-                                        style: TextStyle(
-                                          fontSize: 13.sp,
-                                          color: Colors.grey.shade700,
+                                      Expanded(
+                                        child: Text(
+                                          'Date: ${dateFormat.format(widget.booking.eventDate)}',
+                                          style: TextStyle(
+                                            fontSize: 13.sp,
+                                            color: Colors.grey.shade700,
+                                          ),
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 1,
                                         ),
                                       ),
                                     ],
@@ -474,11 +482,15 @@ class _BookingCardState extends State<BookingCard>
                                         color: Colors.grey.shade700,
                                       ),
                                       SizedBox(width: 8.w),
-                                      Text(
-                                        'Category: ${widget.booking.category.displayName}',
-                                        style: TextStyle(
-                                          fontSize: 13.sp,
-                                          color: Colors.grey.shade700,
+                                      Expanded(
+                                        child: Text(
+                                          'Category: ${widget.booking.category.displayName}',
+                                          style: TextStyle(
+                                            fontSize: 13.sp,
+                                            color: Colors.grey.shade700,
+                                          ),
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 1,
                                         ),
                                       ),
                                     ],
