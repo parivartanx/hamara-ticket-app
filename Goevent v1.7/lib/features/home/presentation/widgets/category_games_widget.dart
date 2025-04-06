@@ -30,29 +30,35 @@ class CategoryGamesWidget extends ConsumerWidget {
       const GameCategoryItem(
         name: "All",
         icon: Icons.confirmation_number,
-        color: Color(0xFFF2114D),
-        gradientColors: [Color(0xFFF2114D), Color(0xFFFF5D56)],
+        color: Color.fromARGB(255, 158, 30, 58),
+        gradientColors: [
+          Color.fromARGB(255, 177, 46, 81),
+          Color.fromARGB(255, 241, 98, 148)
+        ],
         categoryType: CategoryType.all,
       ),
       const GameCategoryItem(
         name: "Parks",
         icon: Icons.park,
         color: Color(0xFF4CAF50),
-        gradientColors: [Color(0xFF4CAF50), Color(0xFF81C784)],
+        gradientColors: [Color.fromARGB(255, 60, 88, 61), Color(0xFF81C784)],
         categoryType: CategoryType.parks,
       ),
       const GameCategoryItem(
         name: "Water\nPark",
         icon: Icons.water,
         color: Color(0xFF2196F3),
-        gradientColors: [Color(0xFF2196F3), Color(0xFF64B5F6)],
+        gradientColors: [
+          Color.fromARGB(255, 83, 143, 191),
+          Color.fromARGB(255, 141, 198, 245)
+        ],
         categoryType: CategoryType.waterParks,
       ),
       const GameCategoryItem(
         name: "Events",
         icon: Icons.event,
         color: Color(0xFF9C27B0),
-        gradientColors: [Color(0xFF9C27B0), Color(0xFFBA68C8)],
+        gradientColors: [Color.fromARGB(255, 135, 56, 138), Color(0xFFBA68C8)],
         categoryType: CategoryType.events,
       ),
     ];

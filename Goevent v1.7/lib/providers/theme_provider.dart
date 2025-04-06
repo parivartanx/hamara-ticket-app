@@ -78,9 +78,9 @@ final themeProvider = StateNotifierProvider<ThemeNotifier, ThemeState>((ref) {
 class ThemeNotifier extends StateNotifier<ThemeState> {
   ThemeNotifier()
       : super(ThemeState(
-          primaryColor: const Color(0xFFF2114D),
-          secondaryColor: const Color(0xFFFF5D56),
-          accentColor: const Color(0xFFF2114D),
+          primaryColor: const Color.fromARGB(255, 158, 30, 58),
+          secondaryColor: const Color.fromARGB(255, 225, 123, 159),
+          accentColor: const Color.fromARGB(255, 177, 46, 81),
           backgroundColor: Colors.white,
           surfaceColor: Colors.white,
           textColor: Colors.black87,

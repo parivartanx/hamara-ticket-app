@@ -37,6 +37,7 @@ class SearchBarWidget extends StatelessWidget {
           Expanded(
             child: TextField(
               textInputAction: TextInputAction.search,
+              cursorColor: Colors.white,
               style: TextStyle(
                 fontFamily: 'Gilroy Medium',
                 color: Colors.white,

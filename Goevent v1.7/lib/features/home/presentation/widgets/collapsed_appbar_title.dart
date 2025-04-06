@@ -1,21 +1,27 @@
 // Collapsed App Bar Title Widget
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '/notification/notification.dart';
 import 'package:page_transition/page_transition.dart';
 import '/extensions/media_query_ext.dart';
 import '/features/home/presentation/screens/home.dart';
+import '/features/home/presentation/widgets/expanded_appbar_header.dart';
 
-class CollapsedAppBarTitle extends StatelessWidget {
+class CollapsedAppBarTitle extends ConsumerWidget {
   final String greeting;
   final String userName;
 
-  const CollapsedAppBarTitle(
-      {Key? key, required this.greeting, required this.userName})
-      : super(key: key);
+  const CollapsedAppBarTitle({
+    Key? key,
+    required this.greeting,
+    required this.userName,
+  }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final currentLocation = ref.watch(locationProvider);
+
     return Row(
       children: [
         GestureDetector(
@@ -69,7 +75,7 @@ class CollapsedAppBarTitle extends StatelessWidget {
                   ),
                   const SizedBox(width: 2),
                   Text(
-                    "New York, USA",
+                    currentLocation,
                     style: TextStyle(
                       color: Colors.white.withOpacity(0.8),
                       fontSize: 14.sp,
@@ -93,8 +99,9 @@ class CollapsedAppBarTitle extends StatelessWidget {
             );
           },
           child: const Padding(
-              padding: EdgeInsets.only(right: 8.0),
-              child: Icon(Icons.notifications)),
+            padding: EdgeInsets.only(right: 8.0),
+            child: Icon(Icons.notifications),
+          ),
         ),
       ],
     );

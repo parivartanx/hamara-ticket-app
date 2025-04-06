@@ -14,7 +14,6 @@ class TopHeaderSection extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    
     return Stack(
       children: [
         Container(
@@ -49,7 +48,7 @@ class TopHeaderSection extends ConsumerWidget {
                         ),
                       ),
                     ),
-                    SizedBox(width: context.width *.2),
+                    SizedBox(width: context.width * .2),
                     Column(
                       children: [
                         Text(
@@ -96,7 +95,6 @@ class TopHeaderSection extends ConsumerWidget {
             ],
           ),
         ),
-        
       ],
     );
   }

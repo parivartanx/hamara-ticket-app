@@ -9,17 +9,73 @@ import '/providers/theme_provider.dart';
 import 'package:page_transition/page_transition.dart';
 import 'search_bar_widget.dart';
 
+final locationProvider = StateProvider<String>((ref) => "Patna, IND");
+
 class ExpandedAppBarHeader extends ConsumerWidget {
   final String greeting;
   final String userName;
 
-  const ExpandedAppBarHeader(
-      {Key? key, required this.greeting, required this.userName})
-      : super(key: key);
+  const ExpandedAppBarHeader({
+    Key? key,
+    required this.greeting,
+    required this.userName,
+  }) : super(key: key);
+
+  void _showLocationPicker(BuildContext context, WidgetRef ref) {
+    final popularCities = [
+      "Patna, IND",
+      "Delhi, IND",
+      "Mumbai, IND",
+      "Bangalore, IND",
+      "Kolkata, IND",
+      "Chennai, IND",
+      "Hyderabad, IND",
+      "Pune, IND",
+    ];
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(
+          'Select Location',
+          style: TextStyle(
+            fontSize: 18.sp,
+            fontFamily: 'Gilroy Medium',
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        content: Container(
+          width: double.maxFinite,
+          child: ListView.builder(
+            shrinkWrap: true,
+            itemCount: popularCities.length,
+            itemBuilder: (context, index) {
+              return ListTile(
+                leading: const Icon(Icons.location_on_outlined),
+                title: Text(
+                  popularCities[index],
+                  style: TextStyle(
+                    fontFamily: 'Gilroy Medium',
+                    fontSize: 14.sp,
+                  ),
+                ),
+                onTap: () {
+                  ref.read(locationProvider.notifier).state =
+                      popularCities[index];
+                  Navigator.pop(context);
+                },
+              );
+            },
+          ),
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final themeState = ref.watch(themeProvider);
+    final currentLocation = ref.watch(locationProvider);
 
     return Container(
       decoration: BoxDecoration(
@@ -82,24 +138,32 @@ class ExpandedAppBarHeader extends ConsumerWidget {
                           ),
                         ),
                         const SizedBox(height: 4),
-                        Row(
-                          children: [
-                            const Icon(
-                              Icons.location_on,
-                              color: Colors.white,
-                              size: 14,
-                            ),
-                            const SizedBox(width: 4),
-                            Text(
-                              "New York, USA",
-                              style: TextStyle(
+                        GestureDetector(
+                          onTap: () => _showLocationPicker(context, ref),
+                          child: Row(
+                            children: [
+                              const Icon(
+                                Icons.location_on,
                                 color: Colors.white,
-                                fontSize: 13.sp,
-                                fontFamily: 'Gilroy Medium',
-                                fontWeight: FontWeight.w400,
+                                size: 14,
                               ),
-                            ),
-                          ],
+                              const SizedBox(width: 4),
+                              Text(
+                                currentLocation,
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 13.sp,
+                                  fontFamily: 'Gilroy Medium',
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                              const Icon(
+                                Icons.keyboard_arrow_down,
+                                color: Colors.white,
+                                size: 14,
+                              ),
+                            ],
+                          ),
                         ),
                       ],
                     ),
