@@ -6,6 +6,7 @@ import '/utils/shared_prefs_manager.dart';
 import 'config/app_route.dart';
 import 'core/theme/app_theme.dart';
 import 'firebase_options.dart';
+import '/providers/theme_provider.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -13,30 +14,78 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  
+
   runApp(
     const ProviderScope(
-      child: ScreenUtilInit(
-        // Use a more common design size (iPhone 13 Pro dimensions as reference)
-        designSize: Size(390, 844),
-        minTextAdapt: true,
-        splitScreenMode: true,
-        child: App(),
-      ),
-    )
+      child: MyApp(),
+    ),
   );
 }
-class App extends StatelessWidget {
-  const App({super.key});
+
+class MyApp extends ConsumerWidget {
+  const MyApp({Key? key}) : super(key: key);
+
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp.router(
-      debugShowCheckedModeBanner: false,
-      title: 'Hamara Ticket',
-      theme: AppTheme.light,
-      darkTheme: AppTheme.dark,
-      themeMode: ThemeMode.system,
-      routerConfig: appRouter,
-    );   
+  Widget build(BuildContext context, WidgetRef ref) {
+    final themeState = ref.watch(themeProvider);
+
+    return ScreenUtilInit(
+      designSize: const Size(375, 812),
+      minTextAdapt: true,
+      splitScreenMode: true,
+      builder: (context, child) {
+        return MaterialApp.router(
+          title: 'Hamara Ticket',
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(
+            primaryColor: themeState.primaryColor,
+            colorScheme: ColorScheme.light(
+              primary: themeState.primaryColor,
+              secondary: themeState.secondaryColor,
+              surface: themeState.surfaceColor,
+              onSurface: themeState.textColor,
+            ),
+            scaffoldBackgroundColor: Colors.white,
+            appBarTheme: AppBarTheme(
+              backgroundColor: themeState.primaryColor,
+              elevation: 0,
+              centerTitle: true,
+              titleTextStyle: TextStyle(
+                color: Colors.white,
+                fontSize: 18.sp,
+                fontWeight: FontWeight.w600,
+                fontFamily: 'Gilroy',
+              ),
+            ),
+          ),
+          routerConfig: appRouter,
+          builder: (context, child) {
+            return Theme(
+              data: Theme.of(context).copyWith(
+                primaryColor: themeState.primaryColor,
+                colorScheme: ColorScheme.light(
+                  primary: themeState.primaryColor,
+                  secondary: themeState.secondaryColor,
+                  surface: themeState.surfaceColor,
+                  onSurface: themeState.textColor,
+                ),
+                appBarTheme: AppBarTheme(
+                  backgroundColor: themeState.primaryColor,
+                  elevation: 0,
+                  centerTitle: true,
+                  titleTextStyle: TextStyle(
+                    color: Colors.white,
+                    fontSize: 18.sp,
+                    fontWeight: FontWeight.w600,
+                    fontFamily: 'Gilroy',
+                  ),
+                ),
+              ),
+              child: child!,
+            );
+          },
+        );
+      },
+    );
   }
 }

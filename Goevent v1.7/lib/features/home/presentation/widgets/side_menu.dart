@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '/extensions/media_query_ext.dart';
-import '/providers/color_provider.dart';
+import '/providers/theme_provider.dart';
 
 import 'side_menu_header.dart';
 import 'side_menu_items.dart';
@@ -17,18 +17,11 @@ class Side extends ConsumerStatefulWidget {
 
 class _SideState extends ConsumerState<Side> {
   @override
-  void initState() {
-    super.initState();
-    ref.read(colorProvider.notifier).getdarkmodepreviousstate();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final buttonColor = ref.watch(colorProvider).buttonColor;
-    final proColor = ref.watch(colorProvider).proColor;
-    
+    final themeState = ref.watch(themeProvider);
+
     return Scaffold(
-      backgroundColor: buttonColor,
+      backgroundColor: themeState.primaryColor,
       body: SingleChildScrollView(
         child: ScreenUtilInit(
           designSize: Size(context.width, context.height),
@@ -36,19 +29,19 @@ class _SideState extends ConsumerState<Side> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(height: context.height / 15),
-              
+
               // Profile Header Section
               const SideMenuHeader(),
-              
+
               SizedBox(height: context.height / 30),
-              
+
               // Menu Items Section
               const SideMenuItems(),
-              
+
               SizedBox(height: context.height / 20),
-              
+
               // Upgrade Pro Button
-              UpgradeProButton(proColor: proColor),
+              UpgradeProButton(proColor: themeState.secondaryColor),
             ],
           ),
         ),

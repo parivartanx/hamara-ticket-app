@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../../../../providers/color_provider.dart';
+import '/providers/theme_provider.dart';
 import 'two_panels.dart';
 
 class HomeBody extends ConsumerStatefulWidget {
@@ -11,7 +10,8 @@ class HomeBody extends ConsumerStatefulWidget {
   ConsumerState<HomeBody> createState() => _HomeBodyState();
 }
 
-class _HomeBodyState extends ConsumerState<HomeBody> with SingleTickerProviderStateMixin {
+class _HomeBodyState extends ConsumerState<HomeBody>
+    with SingleTickerProviderStateMixin {
   late AnimationController controller = AnimationController(
     vsync: this,
     duration: const Duration(milliseconds: 100),
@@ -22,19 +22,18 @@ class _HomeBodyState extends ConsumerState<HomeBody> with SingleTickerProviderSt
     final AnimationStatus status = controller.status;
     return status == AnimationStatus.completed ||
         status == AnimationStatus.forward;
-  } 
+  }
 
   @override
   void initState() {
     super.initState();
-    ref.read(colorProvider.notifier).getdarkmodepreviousstate();
   }
 
   @override
   Widget build(BuildContext context) {
-    final primaryColor = ref.watch(colorProvider).primaryColor;
+    final themeState = ref.watch(themeProvider);
     return Scaffold(
-      backgroundColor: primaryColor,
+      backgroundColor: themeState.primaryColor,
       body: TwoPanels(
         controller: controller,
       ),

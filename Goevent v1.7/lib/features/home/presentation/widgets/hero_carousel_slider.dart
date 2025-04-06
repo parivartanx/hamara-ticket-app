@@ -14,10 +14,11 @@ class HeroCarouselSlider extends ConsumerStatefulWidget {
   ConsumerState<HeroCarouselSlider> createState() => _HeroCarouselSliderState();
 }
 
-class _HeroCarouselSliderState extends ConsumerState<HeroCarouselSlider> with SingleTickerProviderStateMixin {
+class _HeroCarouselSliderState extends ConsumerState<HeroCarouselSlider>
+    with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
-   
-  @override 
+
+  @override
   void initState() {
     super.initState();
     _animationController = AnimationController(
@@ -40,11 +41,13 @@ class _HeroCarouselSliderState extends ConsumerState<HeroCarouselSlider> with Si
     final carouselController = ref.watch(carouselControllerProvider);
 
     return Column(children: [
-      SizedBox(height: context.height*.02,),
+      SizedBox(
+        height: context.height * .02,
+      ),
       CarouselSlider(
         carouselController: carouselController,
         options: CarouselOptions(
-          height: context.height * 0.2,
+          height: context.height * 0.12,
           aspectRatio: 16 / 9,
           viewportFraction: 0.8,
           initialPage: 0,
@@ -79,12 +82,12 @@ class _HeroCarouselSliderState extends ConsumerState<HeroCarouselSlider> with Si
                   builder: (context, child) {
                     return Container(
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5.r)
-                      ),
+                          borderRadius: BorderRadius.circular(5.r)),
                       width: context.width,
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(10.r),
-                        child: Image.asset(category.imagePath, fit: BoxFit.cover),
+                        child:
+                            Image.asset(category.imagePath, fit: BoxFit.cover),
                       ),
                     );
                     // return Container(
@@ -216,5 +219,3 @@ class _HeroCarouselSliderState extends ConsumerState<HeroCarouselSlider> with Si
     ]);
   }
 }
-
-

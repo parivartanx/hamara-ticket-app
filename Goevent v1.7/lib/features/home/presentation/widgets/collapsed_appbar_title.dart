@@ -9,9 +9,11 @@ import '/features/home/presentation/screens/home.dart';
 class CollapsedAppBarTitle extends StatelessWidget {
   final String greeting;
   final String userName;
-  
-  const CollapsedAppBarTitle({Key? key, required this.greeting, required this.userName}) : super(key: key);
-  
+
+  const CollapsedAppBarTitle(
+      {Key? key, required this.greeting, required this.userName})
+      : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -21,7 +23,7 @@ class CollapsedAppBarTitle extends StatelessWidget {
             z.toggle!();
           },
           child: Container(
-            height: context.height*.1,
+            height: context.height * .1,
             color: Colors.transparent,
             child: const Padding(
               padding: EdgeInsets.all(5),
@@ -60,7 +62,7 @@ class CollapsedAppBarTitle extends StatelessWidget {
               ),
               Row(
                 children: [
-                   Icon(
+                  Icon(
                     Icons.location_on,
                     color: Colors.white,
                     size: 13.sp,
@@ -91,9 +93,8 @@ class CollapsedAppBarTitle extends StatelessWidget {
             );
           },
           child: const Padding(
-            padding: EdgeInsets.only(right: 8.0),
-            child: Icon(Icons.notifications)
-          ),
+              padding: EdgeInsets.only(right: 8.0),
+              child: Icon(Icons.notifications)),
         ),
       ],
     );

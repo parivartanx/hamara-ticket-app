@@ -1,23 +1,29 @@
 // Expanded App Bar Header Widget
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '/extensions/media_query_ext.dart';
 import '/features/home/presentation/screens/home.dart';
 import '/notification/notification.dart';
+import '/providers/theme_provider.dart';
 import 'package:page_transition/page_transition.dart';
 import 'search_bar_widget.dart';
 
-class ExpandedAppBarHeader extends StatelessWidget {
+class ExpandedAppBarHeader extends ConsumerWidget {
   final String greeting;
   final String userName;
-  
-  const ExpandedAppBarHeader({Key? key, required this.greeting, required this.userName}) : super(key: key);
-  
+
+  const ExpandedAppBarHeader(
+      {Key? key, required this.greeting, required this.userName})
+      : super(key: key);
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final themeState = ref.watch(themeProvider);
+
     return Container(
       decoration: BoxDecoration(
-        color: context.colorScheme.primary,
+        color: themeState.primaryColor,
         borderRadius: const BorderRadius.only(
           bottomRight: Radius.circular(30),
           bottomLeft: Radius.circular(30),
@@ -64,11 +70,13 @@ class ExpandedAppBarHeader extends StatelessWidget {
                             children: [
                               TextSpan(
                                 text: "$greeting, ",
-                                style: const TextStyle(fontWeight: FontWeight.w500),
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.w500),
                               ),
                               TextSpan(
                                 text: userName,
-                                style: const TextStyle(fontWeight: FontWeight.w700),
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.w700),
                               ),
                             ],
                           ),
@@ -106,7 +114,11 @@ class ExpandedAppBarHeader extends StatelessWidget {
                         ),
                       );
                     },
-                    child: const Icon(Icons.notifications , color: Colors.white,))
+                    child: const Icon(
+                      Icons.notifications,
+                      color: Colors.white,
+                    ),
+                  ),
                 ],
               ),
             ),

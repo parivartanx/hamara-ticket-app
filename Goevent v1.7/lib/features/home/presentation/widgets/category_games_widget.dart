@@ -1,132 +1,181 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../screens/see_all.dart';
 import '/extensions/media_query_ext.dart';
-import 'package:page_transition/page_transition.dart';
+import '../providers/recommended_categories_provider.dart';
+import '/providers/theme_provider.dart';
+
+class GameCategoryItem {
+  final String name;
+  final IconData icon;
+  final Color color;
+  final List<Color> gradientColors;
+  final CategoryType categoryType;
+
+  const GameCategoryItem({
+    required this.name,
+    required this.icon,
+    required this.color,
+    required this.gradientColors,
+    required this.categoryType,
+  });
+}
 
 class CategoryGamesWidget extends ConsumerWidget {
-
   const CategoryGamesWidget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SizedBox(
-          width: context.width,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Categories',
-                style: TextStyle(
-                  fontSize: context.height * 0.022,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: 'Gilroy Bold',
+    final categories = [
+      const GameCategoryItem(
+        name: "All",
+        icon: Icons.confirmation_number,
+        color: Color(0xFFF2114D),
+        gradientColors: [Color(0xFFF2114D), Color(0xFFFF5D56)],
+        categoryType: CategoryType.all,
+      ),
+      const GameCategoryItem(
+        name: "Parks",
+        icon: Icons.park,
+        color: Color(0xFF4CAF50),
+        gradientColors: [Color(0xFF4CAF50), Color(0xFF81C784)],
+        categoryType: CategoryType.parks,
+      ),
+      const GameCategoryItem(
+        name: "Water\nPark",
+        icon: Icons.water,
+        color: Color(0xFF2196F3),
+        gradientColors: [Color(0xFF2196F3), Color(0xFF64B5F6)],
+        categoryType: CategoryType.waterParks,
+      ),
+      const GameCategoryItem(
+        name: "Events",
+        icon: Icons.event,
+        color: Color(0xFF9C27B0),
+        gradientColors: [Color(0xFF9C27B0), Color(0xFFBA68C8)],
+        categoryType: CategoryType.events,
+      ),
+    ];
+
+    final selectedCategory =
+        ref.watch(recommendedCategoriesProvider).selectedCategory;
+
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        children: categories.map((category) {
+          final isSelected = selectedCategory == category.categoryType;
+          return GestureDetector(
+            onTap: () {
+              ref
+                  .read(recommendedCategoriesProvider.notifier)
+                  .selectCategory(category.categoryType);
+              // Update theme when category is selected
+              ref.read(themeProvider.notifier).updateTheme(
+                    category.gradientColors[0],
+                    category.gradientColors[1],
+                  );
+            },
+            child: Container(
+              width: 70.w,
+              height: 70.h,
+              margin: EdgeInsets.symmetric(horizontal: 7.w),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.bottomRight,
+                  end: Alignment.topLeft,
+                  colors: isSelected
+                      ? category.gradientColors
+                      : [
+                          Colors.grey.shade300,
+                          Colors.grey.shade200,
+                        ],
                 ),
+                borderRadius: BorderRadius.circular(13.r),
+                boxShadow: isSelected
+                    ? [
+                        BoxShadow(
+                          color: category.color.withOpacity(0.3),
+                          blurRadius: 8,
+                          offset: const Offset(0, 4),
+                        ),
+                      ]
+                    : [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.2),
+                          blurRadius: 4,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
               ),
-            ],
-          ),
-        ),
-      SizedBox(height: context.height * 0.01),
-      
-         SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-           child: Wrap(
-            spacing: 10.w,
-            children: const [
-              GameCategoryItem(
-                imagePath: "assets/image/park.webp",
-                name: "Parks",
-              ),
-              GameCategoryItem(
-                imagePath: "assets/image/water-park.webp",
-                name: "Water Parks",
-              ),
-              GameCategoryItem(
-                imagePath: "assets/image/events.webp",
-                name: "Events",
-              ),
-            ],
-                   ),
-         ),
-      ],
-    );
-  }
-}
-
-class GameCategoryItem extends StatelessWidget {
-  final String imagePath;
-  final String name;
-
-  const GameCategoryItem({
-    Key? key,
-    required this.imagePath,
-    required this.name,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        GestureDetector(
-          onTap: () {
-            Navigator.push(
-              context,
-              PageTransition(
-                type: PageTransitionType.fade,
-                child: const All(),
-              ),
-            );
-          },
-          child: SizedBox(
-            width: context.width / 3.4,
-            child: Card(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(15),
-              ),
-              color: context.colorScheme.surfaceContainerLow,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
+              child: Stack(
+                clipBehavior: Clip.none,
                 children: [
-                  SizedBox(height: context.height * 0.02),
-                  CircleAvatar(
-                    backgroundImage: AssetImage(
-                      imagePath,
-                    ),
-                    radius: context.height * 0.04,
-                  ),
-                  SizedBox(height: context.height * 0.01),
-                  Container(
-                    margin: EdgeInsets.symmetric(horizontal: context.width * 0.04),
-                    padding: EdgeInsets.symmetric(vertical: context.width * 0.015),
-                    decoration: BoxDecoration(
-                      color: context.colorScheme.primary,
-                      borderRadius: const BorderRadius.all(
-                        Radius.circular(20),
-                      ),
-                    ),
-                    child: Center(
-                      child: Text(
-                        name,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w500,
-                          fontSize: context.height / 70,
-                          fontFamily: 'Gilroy Normal',
+                  // Shine effect for selected category
+                  if (isSelected)
+                    Positioned.fill(
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(13.r),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.bottomRight,
+                              end: Alignment.topLeft,
+                              colors: [
+                                Colors.white.withOpacity(0.2),
+                                Colors.white.withOpacity(0.0),
+                              ],
+                            ),
+                          ),
                         ),
                       ),
                     ),
+                  // Main content
+                  Center(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          category.icon,
+                          color:
+                              isSelected ? Colors.white : Colors.grey.shade600,
+                          size: 21.r,
+                        ),
+                        SizedBox(height: 6.5.h),
+                        Text(
+                          category.name,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: isSelected
+                                ? Colors.white
+                                : Colors.grey.shade600,
+                            fontSize: 11.sp,
+                            fontWeight:
+                                isSelected ? FontWeight.w900 : FontWeight.w700,
+                            fontFamily: 'Gilroy',
+                            letterSpacing: 0.8,
+                            height: 1.1,
+                            shadows: isSelected
+                                ? [
+                                    Shadow(
+                                      color: Colors.black.withOpacity(0.3),
+                                      offset: const Offset(0, 1),
+                                      blurRadius: 2,
+                                    ),
+                                  ]
+                                : null,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                  SizedBox(height: context.height / 100),
                 ],
               ),
             ),
-          ),
-        ),
-      ],
+          );
+        }).toList(),
+      ),
     );
   }
 }
