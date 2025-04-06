@@ -46,11 +46,11 @@ class RecommendedCategoriesNotifier
         filteredItems = [...parks, ...events];
         break;
       case CategoryType.parks:
-        filteredItems = parks.where((park) => park.type == 'park').toList();
+        filteredItems = parks.where((park) => park.type == "Park").toList();
         break;
       case CategoryType.waterParks:
         filteredItems =
-            parks.where((park) => park.type == 'water_park').toList();
+            parks.where((park) => park.type == "Water Park").toList();
         break;
       case CategoryType.events:
         filteredItems = events;

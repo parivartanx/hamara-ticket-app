@@ -16,78 +16,248 @@ class BestRecommendationSection extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(recommendedCategoriesProvider);
+    final items = state.items;
 
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12),
-          child: Row(
-            children: [
-              Text(
-                "Best Recommendations",
-                style: TextStyle(
-                  fontFamily: 'Gilroy Medium',
-                  color: context.colorScheme.onSurface,
-                  fontSize: 16.sp,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              const Spacer(),
-              GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    PageTransition(
-                      type: PageTransitionType.fade,
-                      child: const All(),
-                    ),
-                  );
-                },
-                child: Row(
-                  children: [
-                    Text(
-                      "See All",
-                      style: TextStyle(
-                        fontFamily: 'Gilroy Medium',
-                        fontSize: 14.sp,
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ),
-                    const Icon(
-                      Icons.arrow_right,
+          padding: EdgeInsets.symmetric(horizontal: 20.w),
+          child: Text(
+            'Recommended',
+            style: TextStyle(
+              fontSize: 18.sp,
+              fontWeight: FontWeight.w700,
+              color: Colors.black,
+              fontFamily: 'Gilroy',
+            ),
+          ),
+        ),
+        SizedBox(height: 15.h),
+        SizedBox(
+          height: 175.h,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            padding: EdgeInsets.symmetric(horizontal: 15.w),
+            itemCount: items.length,
+            itemBuilder: (context, index) {
+              final item = items[index];
+              final isPark = item is Park;
+              final isWaterPark = isPark && item.type == "Water Park";
+
+              // Get the first image URL with fallback
+              final imageUrl = isPark
+                  ? (item.imageUrls.isNotEmpty ? item.imageUrls.first : '')
+                  : (item.imageUrls.isNotEmpty ? item.imageUrls.first : '');
+
+              // Get the price with fallback
+              final price = isPark
+                  ? (item.dynamicPricing.isNotEmpty
+                      ? item.dynamicPricing.first.basePrice
+                      : 299)
+                  : 299;
+
+              return Container(
+                width: 160.w,
+                margin: EdgeInsets.only(right: 15.w, bottom: 5.h),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(15.r),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.05),
+                      blurRadius: 10,
+                      offset: const Offset(0, 4),
                     ),
                   ],
                 ),
-              ),
-            ],
-          ),
-        ),
-        SizedBox(height: context.height / 60),
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Wrap(
-            spacing: 5.w,
-            children: [
-              SizedBox(width: 5.w),
-              ...List.generate(
-                  state.items.length,
-                  (index) => [
-                        SizedBox(
-                          width: context.width * .45,
-                          child: LayoutBuilder(builder: (context, constraints) {
-                            final item = state.items[index];
-                            if (item is Park) {
-                              return ParkCard(park: item);
-                            } else if (item is Event) {
-                              return EventCard(event: item);
-                            }
-                            return const SizedBox.shrink();
-                          }),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Image Section
+                    Stack(
+                      children: [
+                        ClipRRect(
+                          borderRadius:
+                              BorderRadius.vertical(top: Radius.circular(15.r)),
+                          child: imageUrl.isNotEmpty
+                              ? Image.network(
+                                  imageUrl,
+                                  height: 85.h,
+                                  width: double.infinity,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (context, error, stackTrace) {
+                                    return Container(
+                                      height: 85.h,
+                                      color: Colors.grey[200],
+                                      child: Icon(Icons.image_not_supported,
+                                          color: Colors.grey[400]),
+                                    );
+                                  },
+                                )
+                              : Container(
+                                  height: 85.h,
+                                  color: Colors.grey[200],
+                                  child: Icon(Icons.image_not_supported,
+                                      color: Colors.grey[400]),
+                                ),
                         ),
-                        if (index < state.items.length - 1)
-                          SizedBox(width: context.width * 0.04),
-                      ]).expand((widgets) => widgets),
-            ],
+                        // Category Badge
+                        Positioned(
+                          top: 8.h,
+                          left: 8.w,
+                          child: Container(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 8.w, vertical: 4.h),
+                            decoration: BoxDecoration(
+                              color: isWaterPark
+                                  ? const Color(0xFFFFE4E9)
+                                  : isPark
+                                      ? const Color(0xFFFFF0F3)
+                                      : const Color(0xFFFFF5F7),
+                              borderRadius: BorderRadius.circular(12.r),
+                            ),
+                            child: Text(
+                              isWaterPark
+                                  ? 'Water Park'
+                                  : isPark
+                                      ? 'Park'
+                                      : 'Event',
+                              style: TextStyle(
+                                color: isWaterPark
+                                    ? const Color(0xFFD32651)
+                                    : isPark
+                                        ? const Color(0xFFE64A6A)
+                                        : const Color(0xFFF0635A),
+                                fontSize: 10.sp,
+                                fontWeight: FontWeight.w600,
+                                fontFamily: 'Gilroy',
+                              ),
+                            ),
+                          ),
+                        ),
+                        // Rating Badge
+                        Positioned(
+                          top: 8.h,
+                          right: 8.w,
+                          child: Container(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 8.w, vertical: 4.h),
+                            decoration: BoxDecoration(
+                              color: Colors.black.withOpacity(0.6),
+                              borderRadius: BorderRadius.circular(12.r),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(
+                                  Icons.star,
+                                  color: Colors.amber,
+                                  size: 12.r,
+                                ),
+                                SizedBox(width: 4.w),
+                                Text(
+                                  '4.5',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 10.sp,
+                                    fontWeight: FontWeight.w600,
+                                    fontFamily: 'Gilroy',
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    // Content Section
+                    Expanded(
+                      child: Padding(
+                        padding: EdgeInsets.fromLTRB(8.w, 6.w, 8.w, 6.w),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  item.name,
+                                  style: TextStyle(
+                                    fontSize: 14.sp,
+                                    fontWeight: FontWeight.w700,
+                                    color: Colors.black,
+                                    fontFamily: 'Gilroy',
+                                  ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                SizedBox(height: 2.h),
+                                Row(
+                                  children: [
+                                    Icon(
+                                      Icons.location_on,
+                                      size: 12.r,
+                                      color: Colors.grey[600],
+                                    ),
+                                    SizedBox(width: 4.w),
+                                    Expanded(
+                                      child: Text(
+                                        isPark ? item.address : item.location,
+                                        style: TextStyle(
+                                          fontSize: 11.sp,
+                                          color: Colors.grey[600],
+                                          fontFamily: 'Gilroy',
+                                        ),
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  '₹$price',
+                                  style: TextStyle(
+                                    fontSize: 14.sp,
+                                    fontWeight: FontWeight.w700,
+                                    color: context.colorScheme.primary,
+                                    fontFamily: 'Gilroy',
+                                  ),
+                                ),
+                                Container(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 8.w, vertical: 4.h),
+                                  decoration: BoxDecoration(
+                                    color: context.colorScheme.primary
+                                        .withOpacity(0.1),
+                                    borderRadius: BorderRadius.circular(8.r),
+                                  ),
+                                  child: Text(
+                                    'Book Now',
+                                    style: TextStyle(
+                                      fontSize: 11.sp,
+                                      fontWeight: FontWeight.w600,
+                                      color: context.colorScheme.primary,
+                                      fontFamily: 'Gilroy',
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
           ),
         ),
       ],
