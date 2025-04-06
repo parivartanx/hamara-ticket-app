@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '/providers/theme_provider.dart';
 import 'two_panels.dart';
+import 'advanced_bottom_navigation.dart';
 
 class HomeBody extends ConsumerStatefulWidget {
   const HomeBody({Key? key}) : super(key: key);
@@ -37,6 +38,7 @@ class _HomeBodyState extends ConsumerState<HomeBody>
       body: TwoPanels(
         controller: controller,
       ),
+      bottomNavigationBar: const AdvancedBottomNavigation(),
     );
   }
 }

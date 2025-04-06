@@ -7,16 +7,16 @@ import '../features/login/presentation/screens/login.dart';
 import '../features/onboarding/presentation/screen/onboarding_screen.dart';
 import '../features/splash-screen/presentation/screen/splashscreen.dart';
 import '../features/home/presentation/screens/home.dart';
+import '../features/contact/presentation/screens/contact.dart';
 
 // GoRouter configuration
 final appRouter = GoRouter(
   initialLocation: Home.routePath,
   routes: [
     GoRoute(
-      path: Home.routePath
-      ,name: Home.routeName ,
-      builder: (context,state) => const Home()),
-    
+        path: Home.routePath,
+        name: Home.routeName,
+        builder: (context, state) => const Home()),
     GoRoute(
       path: Profile.routePath,
       name: Profile.routeName,
@@ -32,26 +32,27 @@ final appRouter = GoRouter(
       name: OnboardingScreen.routeName,
       builder: (context, state) => const OnboardingScreen(),
     ),
-
-
-    GoRoute(         
+    GoRoute(
         path: Splashscreen.routePath,
         name: Splashscreen.routeName,
         builder: (context, state) => const Splashscreen()),
-        
     GoRoute(
-      path: PrivacyPolicyScreen.routePath,
-      name: PrivacyPolicyScreen.routeName,
-    builder:(context,state) => const PrivacyPolicyScreen() ),
+        path: PrivacyPolicyScreen.routePath,
+        name: PrivacyPolicyScreen.routeName,
+        builder: (context, state) => const PrivacyPolicyScreen()),
     GoRoute(
-      path: TermsAndConditions.routePath, 
-      name: TermsAndConditions.routeName, 
-      builder: (context, state) => const TermsAndConditions()),
-      
+        path: TermsAndConditions.routePath,
+        name: TermsAndConditions.routeName,
+        builder: (context, state) => const TermsAndConditions()),
     GoRoute(
       path: Login.routePath,
       name: Login.routeName,
       builder: (context, state) => const Login(),
+    ),
+    GoRoute(
+      path: Contact.routePath,
+      name: Contact.routeName,
+      builder: (context, state) => const Contact(),
     ),
   ],
 );

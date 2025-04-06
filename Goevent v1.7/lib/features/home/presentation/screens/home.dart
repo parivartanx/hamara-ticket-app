@@ -33,7 +33,6 @@ class _HomeState extends ConsumerState<Home> {
     ref.read(colorProvider.notifier).setDarkMode(previousState ?? false);
   }
 
-
   @override
   Widget build(BuildContext context) {
     return ZoomDrawer(

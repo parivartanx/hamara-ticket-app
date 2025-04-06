@@ -4,6 +4,11 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '/extensions/media_query_ext.dart';
 import '/models/user_model.dart';
+import '/features/home/presentation/widgets/advanced_bottom_navigation.dart';
+import '/features/login/presentation/screens/login.dart';
+import '/features/login/data/data_sources/local_datasource.dart';
+import '/config/auth/google_signin_auth.dart';
+import 'package:go_router/go_router.dart';
 
 // A provider to store the current user
 final userProvider = StateProvider<User>((ref) {
@@ -25,7 +30,8 @@ class Profile extends ConsumerStatefulWidget {
   ConsumerState<ConsumerStatefulWidget> createState() => _ProfileState();
 }
 
-class _ProfileState extends ConsumerState<Profile> with SingleTickerProviderStateMixin {
+class _ProfileState extends ConsumerState<Profile>
+    with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
   late Animation<Offset> _slideAnimation;
@@ -37,14 +43,14 @@ class _ProfileState extends ConsumerState<Profile> with SingleTickerProviderStat
       vsync: this,
       duration: const Duration(milliseconds: 800),
     );
-    
+
     _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(
         parent: _animationController,
         curve: Curves.easeInOut,
       ),
     );
-    
+
     _slideAnimation = Tween<Offset>(
       begin: const Offset(0, 0.1),
       end: Offset.zero,
@@ -54,7 +60,7 @@ class _ProfileState extends ConsumerState<Profile> with SingleTickerProviderStat
         curve: Curves.easeOutQuint,
       ),
     );
-    
+
     _animationController.forward();
   }
 
@@ -163,7 +169,8 @@ class _ProfileState extends ConsumerState<Profile> with SingleTickerProviderStat
                             style: GoogleFonts.poppins(
                               fontSize: 13,
                               fontWeight: FontWeight.w400,
-                              color: context.colorScheme.onPrimary.withAlpha(200),
+                              color:
+                                  context.colorScheme.onPrimary.withAlpha(200),
                               letterSpacing: 0.3,
                             ),
                           ),
@@ -202,13 +209,14 @@ class _ProfileState extends ConsumerState<Profile> with SingleTickerProviderStat
           ],
         ),
       ),
+      bottomNavigationBar: const AdvancedBottomNavigation(),
     );
   }
 }
 
 class ProfileAvatar extends StatelessWidget {
   final User user;
-  
+
   const ProfileAvatar({
     super.key,
     required this.user,
@@ -240,8 +248,8 @@ class ProfileAvatar extends StatelessWidget {
           child: ClipOval(
             child: Image.asset(
               'assets/images/default_profile.png',
-              errorBuilder: (context, error, stackTrace) => 
-                Icon(Icons.person, size: 40, color: context.colorScheme.outline),
+              errorBuilder: (context, error, stackTrace) => Icon(Icons.person,
+                  size: 40, color: context.colorScheme.outline),
               fit: BoxFit.cover,
               width: 80,
               height: 80,
@@ -256,10 +264,10 @@ class ProfileAvatar extends StatelessWidget {
 class GreetingWidget extends StatelessWidget {
   final String greeting;
   final String userName;
-  
+
   const GreetingWidget({
-    super.key, 
-    required this.greeting, 
+    super.key,
+    required this.greeting,
     required this.userName,
   });
 
@@ -280,7 +288,7 @@ class GreetingWidget extends StatelessWidget {
 
 class SectionHeader extends StatelessWidget {
   final String title;
-  
+
   const SectionHeader({
     super.key,
     required this.title,
@@ -302,7 +310,7 @@ class SectionHeader extends StatelessWidget {
 
 class UserInfoSection extends StatelessWidget {
   final User user;
-  
+
   const UserInfoSection({
     super.key,
     required this.user,
@@ -331,7 +339,7 @@ class InfoCard extends StatelessWidget {
   final IconData icon;
   final String title;
   final String subtitle;
-  
+
   const InfoCard({
     super.key,
     required this.icon,
@@ -439,7 +447,7 @@ class ActionButton extends StatelessWidget {
   final String title;
   final IconData icon;
   final VoidCallback onTap;
-  
+
   const ActionButton({
     super.key,
     required this.title,
@@ -506,15 +514,14 @@ class ActionButton extends StatelessWidget {
   }
 }
 
-class LogoutButton extends StatelessWidget {
+class LogoutButton extends ConsumerWidget {
   const LogoutButton({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Center(
       child: TextButton.icon(
         onPressed: () {
-          // Sign out logic
           showDialog(
             context: context,
             builder: (context) => AlertDialog(
@@ -547,9 +554,18 @@ class LogoutButton extends StatelessWidget {
                   ),
                 ),
                 TextButton(
-                  onPressed: () {
-                    // Sign out logic here
-                    Navigator.pop(context);
+                  onPressed: () async {
+                    // Clear auth data
+                    await ref.read(localDataSourceProvider).clearAuthData();
+                    // Sign out from Google if using Google Sign-in
+                    await GoogleSignInAuth().signOut();
+
+                    if (context.mounted) {
+                      // Close the dialog
+                      Navigator.pop(context);
+                      // Navigate to login screen
+                      context.goNamed(Login.routeName);
+                    }
                   },
                   child: Text(
                     'Log Out',
@@ -563,7 +579,7 @@ class LogoutButton extends StatelessWidget {
           );
         },
         icon: Icon(
-          Icons.logout_rounded, 
+          Icons.logout_rounded,
           size: 18,
           color: context.colorScheme.primary,
         ),

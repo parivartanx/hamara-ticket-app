@@ -11,6 +11,7 @@ import 'collapsed_appbar_title.dart';
 import 'expanded_appbar_header.dart';
 import 'nearby_events_section.dart';
 import 'best_recommendation_section.dart';
+import 'advanced_bottom_navigation.dart';
 
 class TwoPanels extends ConsumerStatefulWidget {
   final AnimationController controller;

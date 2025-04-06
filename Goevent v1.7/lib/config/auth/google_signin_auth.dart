@@ -8,14 +8,16 @@ class GoogleSignInAuth {
       'email',
       'https://www.googleapis.com/auth/userinfo.profile',
     ],
-    serverClientId: '731582399542-c8ruqv5no25e4hevuojf7puns5sff3ar.apps.googleusercontent.com', // Add your web client ID here
+    serverClientId:
+        '731582399542-c8ruqv5no25e4hevuojf7puns5sff3ar.apps.googleusercontent.com', // Add your web client ID here
   );
 
   Future<GoogleSignInAccount?> signInWithGoogle() async {
     try {
       final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
       log("User signed in with Google: ${googleUser?.email}");
-      final GoogleSignInAuthentication googleAuth = await googleUser!.authentication;
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser!.authentication;
       final idToken = googleAuth.idToken;
       log("idToken: $idToken");
       return googleUser;

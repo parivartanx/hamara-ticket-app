@@ -23,7 +23,7 @@ class MenuListItem extends StatelessWidget {
           children: [
             Icon(
               icon,
-              size: context.height *.025,
+              size: context.height * .025,
             ),
             // Image.asset(
             //   icon,
