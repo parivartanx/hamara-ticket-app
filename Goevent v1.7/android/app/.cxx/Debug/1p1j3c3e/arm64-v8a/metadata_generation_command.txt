@@ -1,0 +1,20 @@
+                        -H/home/viku/flutter/packages/flutter_tools/gradle/src/main/groovy
+-DCMAKE_SYSTEM_NAME=Android
+-DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+-DCMAKE_SYSTEM_VERSION=23
+-DANDROID_PLATFORM=android-23
+-DANDROID_ABI=arm64-v8a
+-DCMAKE_ANDROID_ARCH_ABI=arm64-v8a
+-DANDROID_NDK=/home/viku/Android/Sdk/ndk/25.1.8937393
+-DCMAKE_ANDROID_NDK=/home/viku/Android/Sdk/ndk/25.1.8937393
+-DCMAKE_TOOLCHAIN_FILE=/home/viku/Android/Sdk/ndk/25.1.8937393/build/cmake/android.toolchain.cmake
+-DCMAKE_MAKE_PROGRAM=/home/viku/Android/Sdk/cmake/3.22.1/bin/ninja
+-DCMAKE_LIBRARY_OUTPUT_DIRECTORY=/home/viku/client-projects/hamara-ticket-app/Goevent v1.7/build/app/intermediates/cxx/Debug/1p1j3c3e/obj/arm64-v8a
+-DCMAKE_RUNTIME_OUTPUT_DIRECTORY=/home/viku/client-projects/hamara-ticket-app/Goevent v1.7/build/app/intermediates/cxx/Debug/1p1j3c3e/obj/arm64-v8a
+-DCMAKE_BUILD_TYPE=Debug
+-B/home/viku/client-projects/hamara-ticket-app/Goevent v1.7/android/app/.cxx/Debug/1p1j3c3e/arm64-v8a
+-GNinja
+-Wno-dev
+--no-warn-unused-cli
+                        Build command args: []
+                        Version: 2

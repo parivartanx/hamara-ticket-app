@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:io' show Platform;
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
+import 'package:firebase_core/firebase_core.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class GoogleSignInAuth {
@@ -41,7 +42,7 @@ class GoogleSignInAuth {
     log("Initialized GoogleSignIn for platform: ${Platform.operatingSystem}");
   }
 
-  Future<Map<String, dynamic>?> signInWithGoogle() async {
+  Future<GoogleSignInAccount?> signInWithGoogle() async {
     try {
       // IMPORTANT: Only sign out if we're sure there's a signed in user
       // This was signing out users right after sign-in
@@ -51,88 +52,22 @@ class GoogleSignInAuth {
         await _googleSignIn.signOut();
         log("Signed out existing user to start fresh");
       }
-
-      log("Starting Google Sign-in flow on ${Platform.operatingSystem}...");
-
-      // Handle silent sign-in first (might work if user previously signed in)
-      GoogleSignInAccount? googleUser;
-
-      try {
-        googleUser = await _googleSignIn.signInSilently();
-        if (googleUser != null) {
-          log("Successfully signed in silently with Google");
-        }
-      } catch (e) {
-        log("Silent sign-in failed, will try interactive: $e");
-      }
-
-      // If silent sign-in didn't work, try interactive
+      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
       if (googleUser == null) {
-        // Trigger the Google Sign-in flow
-        googleUser = await _googleSignIn.signIn();
-      }
-
-      if (googleUser == null) {
-        log("User cancelled Google Sign-in");
-        return null;
+        log("Google sign-in was canceled by the user");
+        throw FirebaseException(
+            plugin: "login-cancelled",
+            message: "Login cancelled by User",
+            code: "CANCELLED"
+            ); // User canceled the sign-in
       }
 
       log("User signed in with Google: ${googleUser.email}");
-
-      // Get the authentication details from the request
       final GoogleSignInAuthentication googleAuth =
           await googleUser.authentication;
-
-      if (googleAuth.idToken == null) {
-        log("Error: Google Auth idToken is null");
-        throw Exception("Failed to get idToken from Google");
-      }
-
-      log("Obtained Google ID token, length: ${googleAuth.idToken!.length}");
-      log("Obtained Google access token, length: ${googleAuth.accessToken?.length ?? 'null'}");
-
-      // Create a new credential for Firebase
-      final firebase_auth.AuthCredential credential =
-          firebase_auth.GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
-        idToken: googleAuth.idToken,
-      );
-
-      log("Created Firebase credential, attempting to sign in...");
-
-      // Sign in to Firebase with the Google credential
-      final firebase_auth.UserCredential userCredential =
-          await _auth.signInWithCredential(credential);
-
-      final firebase_auth.User? firebaseUser = userCredential.user;
-
-      if (firebaseUser == null) {
-        log("Error: Firebase user is null after sign in");
-        throw Exception("Failed to sign in with Firebase");
-      }
-
-      log("Successfully signed in with Firebase: ${firebaseUser.uid}");
-
-      // Get the token for backend verification
-      final String? idToken = await firebaseUser.getIdToken(true);
-
-      if (idToken == null || idToken.isEmpty) {
-        log("Error: Firebase token is null or empty");
-        throw Exception("Failed to get Firebase token");
-      }
-
-      final String firebaseToken = idToken;
-
-      log("Got Firebase token for backend verification, length: ${firebaseToken.length}");
-
-      // Return user data and token for backend
-      return {
-        'email': firebaseUser.email ?? googleUser.email,
-        'name': firebaseUser.displayName ?? googleUser.displayName ?? 'Unknown',
-        'firebaseToken': firebaseToken,
-        'userId': firebaseUser.uid,
-        'photoUrl': firebaseUser.photoURL ?? googleUser.photoUrl,
-      };
+      final idToken = googleAuth.idToken;
+      log("idToken: $idToken");
+      return googleUser;
     } catch (error) {
       log("Error signing in with Google: $error");
       // Print detailed stack trace for debugging

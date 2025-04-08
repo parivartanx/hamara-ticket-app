@@ -18,8 +18,7 @@ class LoginRemoteDataSource {
   Future<User> loginWithGoogle({
     required String email,
     required String name,
-    required String firebaseToken,
-    required String userId,
+ 
   }) async {
     try {
       log("RemoteDataSource: Sending Google sign-in request to backend");
@@ -29,8 +28,7 @@ class LoginRemoteDataSource {
           await _dioClient.post(url: EndPoints.loginWithGoogle, body: {
         "email": email,
         "name": name,
-        "firebaseToken": firebaseToken,
-        "firebaseUserId": userId,
+      
       });
 
       log("RemoteDataSource: Google sign-in response status: ${response.statusCode}");

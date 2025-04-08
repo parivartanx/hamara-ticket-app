@@ -12,16 +12,14 @@ class LoginProvider extends AsyncNotifier<User?> {
   Future<void> loginWithGoogle(
       {required String email,
       required String name,
-      required String firebaseToken,
-      required String userId}) async {
+      }) async {
     try {
-      log("Login with google email: $email, name: $name, userId: $userId");
+      log("Login with google email: $email, name: $name");
       state = const AsyncLoading();
       final user = await ref.read(loginRepoProvider).loginWithGoogle(
             email: email,
             name: name,
-            firebaseToken: firebaseToken,
-            userId: userId,
+         
           );
       state = AsyncData(user);
     } catch (e, st) {

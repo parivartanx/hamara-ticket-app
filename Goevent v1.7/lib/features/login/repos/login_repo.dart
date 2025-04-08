@@ -15,16 +15,14 @@ class LoginRepo {
   Future<User> loginWithGoogle({
     required String email,
     required String name,
-    required String firebaseToken,
-    required String userId,
+ 
   }) async {
-    log("LoginRepo: Attempting to login with Google - email: $email, userId: $userId");
+    log("LoginRepo: Attempting to login with Google - email: $email");
     try {
       final user = await _loginRemoteDataSource.loginWithGoogle(
         email: email,
         name: name,
-        firebaseToken: firebaseToken,
-        userId: userId,
+      
       );
       log("LoginRepo: Google login successful for user: ${user.email}");
       return user;

@@ -410,27 +410,30 @@ class _LoginState extends ConsumerState<Login>
                                                     }
 
                                                     log("Login: Google Sign-in successful, proceeding to backend verification");
-                                                    log("Login: User info - email: ${googleUser['email']}, userId: ${googleUser['userId']}");
+                                                    log("Login: User info - email: ${googleUser.email}, name: ${googleUser.displayName}");
 
                                                     // Start provider login
                                                     await ref
                                                         .read(loginProvider
                                                             .notifier)
                                                         .loginWithGoogle(
-                                                          email: googleUser[
-                                                              'email'],
-                                                          name: googleUser[
-                                                              'name'],
-                                                          firebaseToken:
-                                                              googleUser[
-                                                                  'firebaseToken'],
-                                                          userId: googleUser[
-                                                              'userId'],
+                                                          email: googleUser.email,
+                                                          name: 
+                                                              googleUser.displayName ?? "Guest",
+                                                        
                                                         );
 
                                                     if (mounted) {
                                                       log("Login: User successfully authenticated, navigating to home");
-                                                      context.go('/home');
+                                                      context
+                                                          .pushReplacementNamed(
+                                                              Home.routeName);
+                                                      _showMessage(
+                                                        context,
+                                                        'Login successful',
+                                                        type: MessageType
+                                                            .success,
+                                                      );
                                                     }
                                                   } catch (e) {
                                                     log("Login: Error during Google sign-in: $e");
