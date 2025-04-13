@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:hamaraticket/extensions/media_query_ext.dart';
 import '../../data/models/booking_model.dart';
 import '../../data/providers/booking_provider.dart';
 import 'booking_card.dart';
@@ -60,7 +61,7 @@ class _BookingListContent extends StatelessWidget {
         Divider(
           height: 1.h,
           thickness: 1.h,
-          color: Colors.grey.withOpacity(0.1),
+          color: context.colorScheme.outlineVariant,
           indent: 20.w,
           endIndent: 20.w,
         ),
@@ -72,7 +73,7 @@ class _BookingListContent extends StatelessWidget {
               top: 8.h,
               bottom: 16.h,
             ),
-            physics: const BouncingScrollPhysics(),
+            physics: const ScrollPhysics(),
             itemCount: bookings.length,
             itemBuilder: (context, index) {
               final booking = bookings[index];

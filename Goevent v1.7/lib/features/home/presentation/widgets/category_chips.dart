@@ -12,7 +12,6 @@ class CategoryChips extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(nearbyEventsProvider);
     final notifier = ref.watch(nearbyEventsProvider.notifier);
-    final themeState = ref.watch(themeProvider);
 
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
@@ -27,7 +26,7 @@ class CategoryChips extends ConsumerWidget {
                     style: TextStyle(
                       color: state.selectedType == type
                           ? Colors.white
-                          : themeState.textColor,
+                          : context.colorScheme.onSurface,
                       fontFamily: 'Gilroy Medium',
                       fontSize: 13.sp,
                     ),
@@ -41,8 +40,8 @@ class CategoryChips extends ConsumerWidget {
                           ));
                     }
                   },
-                  backgroundColor: themeState.surfaceColor,
-                  selectedColor: themeState.primaryColor,
+                  backgroundColor: context.colorScheme.surfaceContainerLow,
+                  selectedColor: context.colorScheme.primary,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(15),
                   ),

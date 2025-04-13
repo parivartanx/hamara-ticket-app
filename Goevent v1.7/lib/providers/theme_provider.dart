@@ -47,11 +47,9 @@ class ThemeState {
         primary: primaryColor,
         secondary: secondaryColor,
         surface: surfaceColor,
-        background: backgroundColor,
         onPrimary: Colors.white,
         onSecondary: Colors.white,
         onSurface: textColor,
-        onBackground: textColor,
       ),
       scaffoldBackgroundColor: backgroundColor,
       appBarTheme: AppBarTheme(
@@ -93,6 +91,7 @@ class ThemeNotifier extends StateNotifier<ThemeState> {
       primaryColor: primary,
       secondaryColor: secondary,
       accentColor: primary,
+      
     );
   }
 

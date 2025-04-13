@@ -78,9 +78,9 @@ class _BookingCardState extends State<BookingCard>
         case BookingCategory.event:
           return colorScheme.primary;
         case BookingCategory.park:
-          return Colors.green.shade700;
+          return Colors.green;
         case BookingCategory.waterPark:
-          return Colors.blue.shade700;
+          return Colors.blue;
       }
     }
 
@@ -101,11 +101,11 @@ class _BookingCardState extends State<BookingCard>
               color: Colors.transparent,
               child: Container(
                 decoration: BoxDecoration(
-                  color: colorScheme.surface,
+                  color: context.colorScheme.surfaceContainerLowest,
                   borderRadius: BorderRadius.circular(16.r),
                   boxShadow: [
                     BoxShadow(
-                      color: getCategoryColor().withOpacity(0.1),
+                      color: context.colorScheme.outlineVariant.withAlpha(80),
                       blurRadius: 12,
                       offset: const Offset(0, 4),
                     ),
@@ -130,40 +130,16 @@ class _BookingCardState extends State<BookingCard>
                                 begin: Alignment.topLeft,
                                 end: Alignment.bottomRight,
                                 colors: [
-                                  getCategoryColor(),
-                                  getCategoryColor().withOpacity(0.7),
+                                  getCategoryColor().withAlpha(30),
+                                  getCategoryColor().withAlpha(30),
                                 ],
                               ),
                             ),
                           ),
 
                           // Decorative circles for ticket appearance
-                          Positioned(
-                            right: -20,
-                            top: -20,
-                            child: Container(
-                              height: 60.h,
-                              width: 60.w,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: Colors.white.withOpacity(0.1),
-                              ),
-                            ),
-                          ),
-
-                          Positioned(
-                            left: -10,
-                            bottom: -15,
-                            child: Container(
-                              height: 40.h,
-                              width: 40.w,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: Colors.white.withOpacity(0.1),
-                              ),
-                            ),
-                          ),
-
+                          
+                         
                           // Ticket content
                           Padding(
                             padding: EdgeInsets.all(16.r),
@@ -176,14 +152,14 @@ class _BookingCardState extends State<BookingCard>
                                   height: 48.h,
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
-                                    color: Colors.white,
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.black.withOpacity(0.1),
-                                        blurRadius: 4,
-                                        offset: const Offset(0, 2),
-                                      ),
-                                    ],
+                                    color: context.colorScheme.surfaceContainerLowest,
+                                    // boxShadow: [
+                                    //   BoxShadow(
+                                    //     color: Colors.black.withOpacity(0.1),
+                                    //     blurRadius: 4,
+                                    //     offset: const Offset(0, 2),
+                                    //   ),
+                                    // ],
                                   ),
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
@@ -193,7 +169,6 @@ class _BookingCardState extends State<BookingCard>
                                         style: TextStyle(
                                           fontSize: 16.sp,
                                           fontWeight: FontWeight.bold,
-                                          color: getCategoryColor(),
                                         ),
                                       ),
                                       Text(
@@ -203,7 +178,7 @@ class _BookingCardState extends State<BookingCard>
                                         style: TextStyle(
                                           fontSize: 10.sp,
                                           fontWeight: FontWeight.w500,
-                                          color: getCategoryColor(),
+                                          // color: getCategoryColor(),
                                         ),
                                       ),
                                     ],
@@ -224,7 +199,6 @@ class _BookingCardState extends State<BookingCard>
                                         style: TextStyle(
                                           fontSize: 16.sp,
                                           fontWeight: FontWeight.bold,
-                                          color: Colors.white,
                                         ),
                                       ),
                                       SizedBox(height: 4.h),
@@ -233,9 +207,7 @@ class _BookingCardState extends State<BookingCard>
                                           Icon(
                                             Icons.access_time_rounded,
                                             size: 14.sp,
-                                            color:
-                                                Colors.white.withOpacity(0.8),
-                                          ),
+                                            ),
                                           SizedBox(width: 4.w),
                                           Text(
                                             timeFormat.format(
@@ -243,9 +215,7 @@ class _BookingCardState extends State<BookingCard>
                                             style: TextStyle(
                                               fontSize: 12.sp,
                                               fontWeight: FontWeight.w400,
-                                              color:
-                                                  Colors.white.withOpacity(0.8),
-                                            ),
+                                                 ),
                                           ),
                                         ],
                                       ),
@@ -256,18 +226,18 @@ class _BookingCardState extends State<BookingCard>
                                 // Status badge
                                 if (widget.booking.isUsed)
                                   Transform.rotate(
-                                    angle: -math.pi / 12,
+                                    angle: 0,
                                     child: Container(
                                       padding: EdgeInsets.symmetric(
                                           horizontal: 8.w, vertical: 4.h),
                                       decoration: BoxDecoration(
-                                        color: Colors.white,
+                                        color: context.colorScheme.surfaceContainerLowest,
                                         borderRadius:
                                             BorderRadius.circular(4.r),
                                         boxShadow: [
                                           BoxShadow(
                                             color:
-                                                Colors.black.withOpacity(0.1),
+                                                context.colorScheme.outlineVariant,
                                             blurRadius: 4,
                                             offset: const Offset(0, 2),
                                           ),
@@ -278,7 +248,7 @@ class _BookingCardState extends State<BookingCard>
                                         style: TextStyle(
                                           fontSize: 10.sp,
                                           fontWeight: FontWeight.bold,
-                                          color: Colors.grey.shade700,
+                                          color: context.colorScheme.outline,
                                         ),
                                       ),
                                     ),
@@ -290,13 +260,7 @@ class _BookingCardState extends State<BookingCard>
                       ),
                     ),
 
-                    // Ticket divider
-                    Container(
-                      height: 1,
-                      color: Colors.grey.withOpacity(0.2),
-                      margin: EdgeInsets.symmetric(horizontal: 16.w),
-                    ),
-
+                    
                     // Dashed line and punched circles for ticket effect
                     Stack(
                       children: [
@@ -309,42 +273,13 @@ class _BookingCardState extends State<BookingCard>
                                 child: Container(
                                   height: 1,
                                   margin: EdgeInsets.symmetric(horizontal: 2.w),
-                                  color: Colors.grey.withOpacity(0.3),
+                                  color: context.colorScheme.outlineVariant.withAlpha(120),
                                 ),
                               ),
                             ),
                           ),
                         ),
-                        Positioned(
-                          left: -8,
-                          top: 0,
-                          bottom: 0,
-                          child: Center(
-                            child: Container(
-                              width: 16.w,
-                              height: 16.h,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: context.colorScheme.background,
-                              ),
-                            ),
-                          ),
-                        ),
-                        Positioned(
-                          right: -8,
-                          top: 0,
-                          bottom: 0,
-                          child: Center(
-                            child: Container(
-                              width: 16.w,
-                              height: 16.h,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: context.colorScheme.background,
-                              ),
-                            ),
-                          ),
-                        ),
+                        
                       ],
                     ),
 
@@ -367,7 +302,7 @@ class _BookingCardState extends State<BookingCard>
                                       'Ticket Type',
                                       style: TextStyle(
                                         fontSize: 12.sp,
-                                        color: Colors.grey,
+                                        color: context.colorScheme.outline,
                                       ),
                                     ),
                                     SizedBox(height: 4.h),
@@ -388,7 +323,7 @@ class _BookingCardState extends State<BookingCard>
                                       'Quantity',
                                       style: TextStyle(
                                         fontSize: 12.sp,
-                                        color: Colors.grey,
+                                        color: context.colorScheme.outline,
                                       ),
                                     ),
                                     SizedBox(height: 4.h),
@@ -397,7 +332,7 @@ class _BookingCardState extends State<BookingCard>
                                           horizontal: 8.w, vertical: 2.h),
                                       decoration: BoxDecoration(
                                         color:
-                                            getCategoryColor().withOpacity(0.1),
+                                            getCategoryColor().withAlpha(20),
                                         borderRadius:
                                             BorderRadius.circular(4.r),
                                       ),
@@ -424,7 +359,7 @@ class _BookingCardState extends State<BookingCard>
                               padding: EdgeInsets.all(12.r),
                               decoration: BoxDecoration(
                                 color:
-                                    colorScheme.surfaceVariant.withOpacity(0.3),
+                                    colorScheme.secondaryContainer.withAlpha(50),
                                 borderRadius: BorderRadius.circular(8.r),
                               ),
                               child: Column(
@@ -435,7 +370,7 @@ class _BookingCardState extends State<BookingCard>
                                       Icon(
                                         Icons.confirmation_number_outlined,
                                         size: 16.sp,
-                                        color: Colors.grey.shade700,
+                                        color:context.colorScheme.outline,
                                       ),
                                       SizedBox(width: 8.w),
                                       Expanded(
@@ -443,7 +378,7 @@ class _BookingCardState extends State<BookingCard>
                                           'Booking ID: ${widget.booking.eventId}',
                                           style: TextStyle(
                                             fontSize: 13.sp,
-                                            color: Colors.grey.shade700,
+                                            color: context.colorScheme.outline,
                                           ),
                                           overflow: TextOverflow.ellipsis,
                                           maxLines: 1,
@@ -457,7 +392,7 @@ class _BookingCardState extends State<BookingCard>
                                       Icon(
                                         Icons.calendar_today_outlined,
                                         size: 16.sp,
-                                        color: Colors.grey.shade700,
+                                        color: context.colorScheme.outline,
                                       ),
                                       SizedBox(width: 8.w),
                                       Expanded(
@@ -465,7 +400,7 @@ class _BookingCardState extends State<BookingCard>
                                           'Date: ${dateFormat.format(widget.booking.eventDate)}',
                                           style: TextStyle(
                                             fontSize: 13.sp,
-                                            color: Colors.grey.shade700,
+                                            color: context.colorScheme.outline,
                                           ),
                                           overflow: TextOverflow.ellipsis,
                                           maxLines: 1,
@@ -479,7 +414,7 @@ class _BookingCardState extends State<BookingCard>
                                       Icon(
                                         Icons.category_outlined,
                                         size: 16.sp,
-                                        color: Colors.grey.shade700,
+                                        color:context.colorScheme.outline,
                                       ),
                                       SizedBox(width: 8.w),
                                       Expanded(
@@ -487,7 +422,7 @@ class _BookingCardState extends State<BookingCard>
                                           'Category: ${widget.booking.category.displayName}',
                                           style: TextStyle(
                                             fontSize: 13.sp,
-                                            color: Colors.grey.shade700,
+                                            color: context.colorScheme.outline,
                                           ),
                                           overflow: TextOverflow.ellipsis,
                                           maxLines: 1,
@@ -523,6 +458,7 @@ class _BookingCardState extends State<BookingCard>
                                       icon: Icon(
                                         Icons.qr_code_scanner,
                                         size: 18.sp,
+                                        color: context.colorScheme.secondary,
                                       ),
                                       label: Text(
                                         'Show QR',
@@ -558,6 +494,7 @@ class _BookingCardState extends State<BookingCard>
                                       icon: Icon(
                                         Icons.share_outlined,
                                         size: 18.sp,
+                                        color: colorScheme.surface,
                                       ),
                                       label: Text(
                                         'Share',

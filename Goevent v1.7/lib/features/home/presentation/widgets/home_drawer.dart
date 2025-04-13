@@ -24,7 +24,7 @@ class HomeDrawer extends StatelessWidget {
       disableDragGesture: true,
       mainScreenTapClose: true,
       menuScreenTapClose: true,
-      drawerShadowsBackgroundColor: Colors.black12,
+      // drawerShadowsBackgroundColor: Colors.black12,
       slideWidth: context.width * 0.70,
       duration: const Duration(milliseconds: 500),
       menuBackgroundColor: Colors.white24,

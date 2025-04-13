@@ -36,7 +36,7 @@ class CollapsedAppBarTitle extends ConsumerWidget {
               child: ImageIcon(
                 AssetImage("assets/image/draw.png"),
                 size: 18,
-                color: Colors.white,
+              
               ),
             ),
           ),
@@ -50,7 +50,7 @@ class CollapsedAppBarTitle extends ConsumerWidget {
               RichText(
                 text: TextSpan(
                   style: TextStyle(
-                    color: Colors.white,
+                    color: context.colorScheme.onSurface,
                     fontSize: 18.sp,
                     fontFamily: 'Gilroy Medium',
                   ),
@@ -70,14 +70,14 @@ class CollapsedAppBarTitle extends ConsumerWidget {
                 children: [
                   Icon(
                     Icons.location_on,
-                    color: Colors.white,
+                    
                     size: 13.sp,
                   ),
                   const SizedBox(width: 2),
                   Text(
                     currentLocation,
                     style: TextStyle(
-                      color: Colors.white.withOpacity(0.8),
+                    
                       fontSize: 14.sp,
                       fontFamily: 'Gilroy Medium',
                       fontWeight: FontWeight.w400,

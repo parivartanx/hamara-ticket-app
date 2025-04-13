@@ -74,18 +74,17 @@ class ExpandedAppBarHeader extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final themeState = ref.watch(themeProvider);
     final currentLocation = ref.watch(locationProvider);
 
     return Container(
-      decoration: BoxDecoration(
-        color: Colors
-            .transparent, // Make background transparent since parent has gradient
-        borderRadius: const BorderRadius.only(
-          bottomRight: Radius.circular(30),
-          bottomLeft: Radius.circular(30),
-        ),
-      ),
+      // decoration: BoxDecoration(
+      //   color: Colors
+      //       .transparent, // Make background transparent since parent has gradient
+      //   borderRadius: const BorderRadius.only(
+      //     bottomRight: Radius.circular(30),
+      //     bottomLeft: Radius.circular(30),
+      //   ),
+      // ),
       child: SafeArea(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -107,7 +106,7 @@ class ExpandedAppBarHeader extends ConsumerWidget {
                         padding: EdgeInsets.all(7),
                         child: ImageIcon(
                           AssetImage("assets/image/draw.png"),
-                          color: Colors.white,
+                          
                         ),
                       ),
                     ),
@@ -120,7 +119,7 @@ class ExpandedAppBarHeader extends ConsumerWidget {
                         RichText(
                           text: TextSpan(
                             style: TextStyle(
-                              color: Colors.white,
+                              color: context.colorScheme.onSurface,
                               fontSize: 18.sp,
                               fontFamily: 'Gilroy Medium',
                             ),
@@ -145,14 +144,14 @@ class ExpandedAppBarHeader extends ConsumerWidget {
                             children: [
                               const Icon(
                                 Icons.location_on,
-                                color: Colors.white,
+                                
                                 size: 14,
                               ),
                               const SizedBox(width: 4),
                               Text(
                                 currentLocation,
                                 style: TextStyle(
-                                  color: Colors.white,
+                                  
                                   fontSize: 13.sp,
                                   fontFamily: 'Gilroy Medium',
                                   fontWeight: FontWeight.w400,
@@ -160,7 +159,7 @@ class ExpandedAppBarHeader extends ConsumerWidget {
                               ),
                               const Icon(
                                 Icons.keyboard_arrow_down,
-                                color: Colors.white,
+                              
                                 size: 14,
                               ),
                             ],
@@ -181,7 +180,7 @@ class ExpandedAppBarHeader extends ConsumerWidget {
                     },
                     child: const Icon(
                       Icons.notifications,
-                      color: Colors.white,
+                      
                     ),
                   ),
                 ],

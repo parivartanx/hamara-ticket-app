@@ -85,94 +85,48 @@ class _ContactState extends ConsumerState<Contact> {
 
   @override
   Widget build(BuildContext context) {
-    final height = context.height;
-    final width = context.width;
     final colorScheme = context.colorScheme;
 
-    return ScreenUtilInit(
-      builder: (BuildContext context, child) => Scaffold(
+    return Scaffold(
         backgroundColor: colorScheme.surface,
         appBar: PreferredSize(
-          preferredSize: Size.fromHeight(context.height * 0.18),
-          child: Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  colorScheme.primary,
-                  colorScheme.primary.withAlpha(150),
+        preferredSize: Size.fromHeight(context.height * 0.08),
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          context.colorScheme.primaryContainer.withAlpha(200),
+                          context.colorScheme.primaryContainer.withAlpha(100),
+                          context.colorScheme.surface
+                        ],
+                      ),
+          ),
+          child: SafeArea(
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20.w),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Support',
+                    style: TextStyle(
+                      color: colorScheme.onSurface,
+                      fontSize: 24.sp,
+                      fontWeight: FontWeight.w600,
+                      letterSpacing: -0.5,
+                    ),
+                  ),
+                  const Text("How can we help today?")
+                  
                 ],
               ),
-              borderRadius: const BorderRadius.only(
-                bottomLeft: Radius.circular(20),
-                bottomRight: Radius.circular(20),
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: colorScheme.shadow.withAlpha(50),
-                  blurRadius: 10,
-                  offset: const Offset(0, 5),
-                ),
-              ],
-            ),
-            child: Stack(
-              children: [
-                // Abstract pattern elements
-                Positioned(
-                  right: -50,
-                  top: -30,
-                  child: Container(
-                    height: 150,
-                    width: 150,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: colorScheme.onPrimary.withAlpha(10),
-                    ),
-                  ),
-                ),
-                Positioned(
-                  left: -30,
-                  bottom: -20,
-                  child: Container(
-                    height: 100,
-                    width: 100,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: colorScheme.onPrimary.withAlpha(15),
-                    ),
-                  ),
-                ),
-                // AppBar content
-                SafeArea(
-                  child: Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          'Support',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 22.sp,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        SizedBox(height: 8.h),
-                        Text(
-                          'How can we help you today?',
-                          style: TextStyle(
-                            color: Colors.white.withOpacity(0.8),
-                            fontSize: 14.sp,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
             ),
           ),
         ),
+      ),
         body: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -319,8 +273,8 @@ class _ContactState extends ConsumerState<Contact> {
           ),
         ),
         bottomNavigationBar: const AdvancedBottomNavigation(),
-      ),
-    );
+      );
+    
   }
 
   Widget _buildSupportRequestForm(BuildContext context) {

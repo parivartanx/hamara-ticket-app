@@ -18,17 +18,16 @@ class AdvancedBottomNavigation extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final currentIndex = ref.watch(bottomNavigationIndexProvider);
 
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, -5),
-          ),
-        ],
-      ),
+    return SizedBox(
+      // decoration: BoxDecoration(
+      //   boxShadow: [
+      //     BoxShadow(
+      //       color: Colors.black.withOpacity(0.05),
+      //       blurRadius: 10,
+      //       offset: const Offset(0, -5),
+      //     ),
+      //   ],
+      // ),
       child: BottomNavigationBar(
         currentIndex: currentIndex,
         onTap: (index) {
@@ -51,9 +50,9 @@ class AdvancedBottomNavigation extends ConsumerWidget {
           }
         },
         type: BottomNavigationBarType.fixed,
-        backgroundColor: Colors.white,
+        backgroundColor: context.colorScheme.surface,
         selectedItemColor: context.colorScheme.primary,
-        unselectedItemColor: Colors.grey.shade400,
+        unselectedItemColor: context.colorScheme.outline,
         selectedLabelStyle: TextStyle(
           fontFamily: 'Gilroy',
           fontWeight: FontWeight.w600,

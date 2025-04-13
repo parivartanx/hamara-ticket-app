@@ -7,11 +7,12 @@ class AppTheme {
         useMaterial3: true,
         colorScheme: AppColorScheme.light,
         extensions: const [CustomThemeExtension.light],
+        scaffoldBackgroundColor: Colors.grey.shade50,
         // Additional theme configurations
-        appBarTheme: AppBarTheme(
-          backgroundColor: AppColorScheme.light.primary,
-          foregroundColor: AppColorScheme.light.onPrimary,
-        ),
+        // appBarTheme: AppBarTheme(
+        //   backgroundColor: AppColorScheme.light.primary,
+        //   foregroundColor: AppColorScheme.light.onPrimary,
+        // ),
         cardTheme: CardTheme(
           color: CustomThemeExtension.light.cardBackground,
           elevation: 2,
@@ -24,10 +25,10 @@ class AppTheme {
         colorScheme: AppColorScheme.dark,
         extensions: const [CustomThemeExtension.dark],
         // Additional theme configurations
-        appBarTheme: AppBarTheme(
-          backgroundColor: AppColorScheme.dark.primary,
-          foregroundColor: AppColorScheme.dark.onPrimary,
-        ),
+        // appBarTheme: AppBarTheme(
+        //   backgroundColor: AppColorScheme.dark.primary,
+        //   foregroundColor: AppColorScheme.dark.onPrimary,
+        // ),
         cardTheme: CardTheme(
           color: CustomThemeExtension.dark.cardBackground,
           elevation: 2,
