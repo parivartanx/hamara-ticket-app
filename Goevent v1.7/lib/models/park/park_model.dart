@@ -4,48 +4,50 @@ part 'park_model.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class Park {
-  String id;
-  String name;
-  String type;
-  String adminId;
-  String city;
-  String address;
-  double latitude;
-  double longitude;
-  String status;
-  bool isDeleted;
-  List<String> imageUrls;
-  List<String> videoUrls;
-  List<String> tags;
-  int maxCapacity;
-  List<OperatingHour> operatingHours;
-  List<DynamicPricing> dynamicPricing;
-  List<PeakHourPricing> peakHourPricing;
-  List<Attraction> attractions;
-  DateTime createdAt;
-  DateTime updatedAt;
+  final String id;
+  final String name;
+  final String city;
+  final String address;
+  final double latitude;
+  final double longitude;
+  final List<String> imageUrls;
+  final List<String> tags;
+  final int maxCapacity;
+  final List<Attraction> attractions;
+
+  // Optional fields (not returned by backend)
+  final String? type;
+  final String? adminId;
+  final String? status;
+  final bool? isDeleted;
+  final List<String>? videoUrls;
+  final List<OperatingHour>? operatingHours;
+  final List<DynamicPricing>? dynamicPricing;
+  final List<PeakHourPricing>? peakHourPricing;
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
 
   Park({
     required this.id,
     required this.name,
-    required this.type,
-    required this.adminId,
     required this.city,
     required this.address,
     required this.latitude,
     required this.longitude,
-    this.status = "active",
-    this.isDeleted = false,
     required this.imageUrls,
-    required this.videoUrls,
     required this.tags,
     required this.maxCapacity,
-    required this.operatingHours,
-    required this.dynamicPricing,
-    required this.peakHourPricing,
     required this.attractions,
-    required this.createdAt,
-    required this.updatedAt,
+    this.type,
+    this.adminId,
+    this.status,
+    this.isDeleted,
+    this.videoUrls,
+    this.operatingHours,
+    this.dynamicPricing,
+    this.peakHourPricing,
+    this.createdAt,
+    this.updatedAt,
   });
 
   factory Park.fromJson(Map<String, dynamic> json) => _$ParkFromJson(json);
@@ -53,11 +55,31 @@ class Park {
 }
 
 @JsonSerializable()
+class Attraction {
+  final String id;
+  final String name;
+  final String type;
+  final int? heightRestriction;
+  final String status;
+
+  Attraction({
+    required this.id,
+    required this.name,
+    required this.type,
+    this.heightRestriction,
+    required this.status,
+  });
+
+  factory Attraction.fromJson(Map<String, dynamic> json) => _$AttractionFromJson(json);
+  Map<String, dynamic> toJson() => _$AttractionToJson(this);
+}
+
+@JsonSerializable()
 class OperatingHour {
-  String id;
-  String day;
-  String openTime;
-  String closeTime;
+  final String id;
+  final String day;
+  final String openTime;
+  final String closeTime;
 
   OperatingHour({
     required this.id,
@@ -72,9 +94,9 @@ class OperatingHour {
 
 @JsonSerializable()
 class DynamicPricing {
-  String id;
-  String dayType;
-  int basePrice;
+  final String id;
+  final String dayType;
+  final int basePrice;
 
   DynamicPricing({
     required this.id,
@@ -88,11 +110,11 @@ class DynamicPricing {
 
 @JsonSerializable()
 class PeakHourPricing {
-  String id;
-  String dayType;
-  String startTime;
-  String endTime;
-  int price;
+  final String id;
+  final String dayType;
+  final String startTime;
+  final String endTime;
+  final int price;
 
   PeakHourPricing({
     required this.id,
@@ -104,24 +126,4 @@ class PeakHourPricing {
 
   factory PeakHourPricing.fromJson(Map<String, dynamic> json) => _$PeakHourPricingFromJson(json);
   Map<String, dynamic> toJson() => _$PeakHourPricingToJson(this);
-}
-
-@JsonSerializable()
-class Attraction {
-  String id;
-  String name;
-  String type;
-  int? heightRestriction;
-  String status;
-
-  Attraction({
-    required this.id,
-    required this.name,
-    required this.type,
-    this.heightRestriction,
-    required this.status,
-  });
-
-  factory Attraction.fromJson(Map<String, dynamic> json) => _$AttractionFromJson(json);
-  Map<String, dynamic> toJson() => _$AttractionToJson(this);
 }

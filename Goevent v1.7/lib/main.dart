@@ -6,7 +6,6 @@ import '/utils/shared_prefs_manager.dart';
 import 'config/app_route.dart';
 import 'core/theme/app_theme.dart';
 import 'firebase_options.dart';
-import '/providers/theme_provider.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

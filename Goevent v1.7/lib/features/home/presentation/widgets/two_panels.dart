@@ -2,13 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '/extensions/media_query_ext.dart';
-import '/features/home/presentation/widgets/hero_carousel_slider.dart';
 import 'category_games_widget.dart';
 import 'collapsed_appbar_title.dart';
-// import 'event_month_section.dart';
 import 'expanded_appbar_header.dart';
 import 'nearby_events_section.dart';
-import 'best_recommendation_section.dart';
+import 'recommended_parks_section.dart';
+import 'recommended_events_section.dart';
 
 class TwoPanels extends ConsumerStatefulWidget {
   final AnimationController controller;
@@ -135,21 +134,28 @@ class _TwoPanelsState extends ConsumerState<TwoPanels>
               child: const CategoryGamesWidget(),
             ),
           ),
-          const SliverToBoxAdapter(
-            child: HeroCarouselSlider(),
-          ),
+          // const SliverToBoxAdapter(
+          //   child: HeroCarouselSlider(),
+          // ),
 
           const SliverToBoxAdapter(
             child: Padding(
-              padding: EdgeInsets.only(top: 4.0),
-              child: BestRecommendationSection(),
+              padding: EdgeInsets.only(top: 16.0),
+              child: RecommendedParksSection(),
             ),
           ),
 
-          SliverToBoxAdapter(
+          const SliverToBoxAdapter(
             child: Padding(
-              padding: EdgeInsets.only(top: 12.h),
-              child: const NearbyEventsSection(),
+              padding: EdgeInsets.only(top: 16.0),
+              child: RecommendedEventsSection(),
+            ),
+          ),
+
+          const SliverToBoxAdapter(
+            child: Padding(
+              padding: EdgeInsets.only(top: 16.0),
+              child: NearbyEventsSection(),
             ),
           ),
 

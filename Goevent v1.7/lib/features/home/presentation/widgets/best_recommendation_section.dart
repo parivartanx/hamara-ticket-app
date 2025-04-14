@@ -50,8 +50,8 @@ class BestRecommendationSection extends ConsumerWidget {
 
               // Get the price with fallback
               final price = isPark
-                  ? (item.dynamicPricing.isNotEmpty
-                      ? item.dynamicPricing.first.basePrice
+                  ? (item.dynamicPricing!.isNotEmpty
+                      ? item.dynamicPricing?.first.basePrice
                       : 299)
                   : 299;
 

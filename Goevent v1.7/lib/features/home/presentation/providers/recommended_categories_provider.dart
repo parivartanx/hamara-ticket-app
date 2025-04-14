@@ -1,8 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '/features/home/data/event_data.dart';
 import '/features/home/data/park_data.dart';
-import '/models/park/park_model.dart';
-import '/models/event/event_model.dart';
+
 
 enum CategoryType { all, parks, waterParks, events }
 

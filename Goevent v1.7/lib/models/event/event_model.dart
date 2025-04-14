@@ -10,22 +10,23 @@ class Event {
   final String location;
   final String city;
   final String address;
-  final List<String> imageUrls;
-  final List<String> videoUrls;
-  final List<String> tags;
   final double latitude;
   final double longitude;
   final String startDate;
   final String endDate;
-  final String startTime;
-  final String endTime;
+  final List<String> imageUrls;
+  final List<String> tags;
   final int maxCapacity;
-  final String adminId;
-  final String status; // "Scheduled", "Ongoing", "Completed", "Cancelled"
-  final DateTime createdAt;
-  final DateTime updatedAt;
+  final String status;
 
-  final List<Vendor>? vendors; // Made optional
+  // Optional fields (not returned by backend)
+  final List<String>? videoUrls;
+  final String? adminId;
+  final String? startTime;
+  final String? endTime;
+  final List<Vendor>? vendors;
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
 
   Event({
     required this.id,
@@ -34,21 +35,21 @@ class Event {
     required this.location,
     required this.city,
     required this.address,
-    required this.imageUrls,
-    required this.videoUrls,
-    required this.tags,
     required this.latitude,
     required this.longitude,
     required this.startDate,
     required this.endDate,
-    required this.startTime,
-    required this.endTime,
+    required this.imageUrls,
+    required this.tags,
     required this.maxCapacity,
-    required this.adminId,
     required this.status,
-    required this.createdAt,
-    required this.updatedAt,
-    this.vendors, // Optional field
+    this.videoUrls,
+    this.adminId,
+    this.startTime,
+    this.endTime,
+    this.vendors,
+    this.createdAt,
+    this.updatedAt,
   });
 
   factory Event.fromJson(Map<String, dynamic> json) => _$EventFromJson(json);
@@ -60,7 +61,7 @@ class Vendor {
   final String id;
   final String eventId;
   final String name;
-  final String type; // "Food", "Merchandise", "Sponsor"
+  final String type;
   final String contact;
   final DateTime createdAt;
 

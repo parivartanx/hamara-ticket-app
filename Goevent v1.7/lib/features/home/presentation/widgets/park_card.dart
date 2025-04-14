@@ -54,7 +54,7 @@ class ParkCard extends ConsumerWidget {
                   ],
                 ),
               ),
-              DateOverlay(date: park.createdAt),
+              DateOverlay(date: park.createdAt!),
             ],
           ),
         ),
