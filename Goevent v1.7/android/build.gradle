@@ -17,6 +17,12 @@ allprojects {
         mavenCentral()
     }
     
+    configurations.all {
+        resolutionStrategy {
+            force 'com.google.android.play:core:1.10.3'
+        }
+    }
+
     // This fixes the namespace issue with older plugins
     afterEvaluate {
         if (plugins.hasPlugin('android') ||

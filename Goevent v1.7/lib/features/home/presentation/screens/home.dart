@@ -42,7 +42,7 @@ class _HomeState extends ConsumerState<Home> {
 
       // Fetch dashboard insights
       await ref.read(homeInsightsProvider.notifier).getDashboardInsights();
-      log("HomeState: Dashboard Insights fetched");
+      // log("HomeState: Dashboard Insights fetched");
     } catch (e) {
       log("Error initializing home data: $e");
       // Handle error appropriately

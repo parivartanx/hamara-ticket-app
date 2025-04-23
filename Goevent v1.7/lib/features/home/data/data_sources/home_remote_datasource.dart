@@ -17,9 +17,9 @@ class HomeRemoteDataSource {
       
       
       if(response.statusCode == 200) {
-        log("Response: ${response.data}");
+        // log("Response: ${response.data}");
         final homePageModel = HomePageModel.fromJson(response.data);
-        log("HomePageModel: ${homePageModel.recommendedParks}");
+        // log("HomePageModel: ${homePageModel.recommendedParks}");
         return homePageModel;
       }
 
