@@ -1,9 +1,13 @@
 import 'package:go_router/go_router.dart';
-import 'package:hamaraticket/features/privacy-policy/privacy_policy.dart';
-import 'package:hamaraticket/features/profile/presentation/screens/profile.dart';
-import 'package:hamaraticket/features/terms-and-conditions/screens/terms_and_conditions.dart';
+import '/features/occasion-details/presentation/screens/event_details_screen.dart';
+import '/models/event/event_model.dart';
+import '/features/privacy-policy/privacy_policy.dart';
+import '/features/profile/presentation/screens/profile.dart';
+import '/features/terms-and-conditions/screens/terms_and_conditions.dart';
+import '/models/park/park_model.dart';
 import '../features/booking/presentation/screens/booking.dart';
 import '../features/login/presentation/screens/login.dart';
+import '../features/occasion-details/presentation/screens/park_details_screen.dart';
 import '../features/onboarding/presentation/screen/onboarding_screen.dart';
 import '../features/splash-screen/presentation/screen/splashscreen.dart';
 import '../features/home/presentation/screens/home.dart';
@@ -54,5 +58,20 @@ final appRouter = GoRouter(
       name: Contact.routeName,
       builder: (context, state) => const Contact(),
     ),
+    GoRoute(
+      path: ParkDetailsScreen.routePath,
+      name: ParkDetailsScreen.routeName,
+      builder: (context, state) => ParkDetailsScreen(
+        park: state.extra as Park,
+      ),
+    ),
+    GoRoute(
+      path: EventDetailsScreen.routePath,
+      name: EventDetailsScreen.routeName,
+      builder: (context, state) => EventDetailsScreen(
+        event: state.extra as Event,
+      ),
+    ),
+    
   ],
 );

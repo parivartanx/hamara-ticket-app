@@ -8,13 +8,15 @@ class AppColorScheme {
     brightness: Brightness.light,
     primary: const Color(0xFFD32651),
     onPrimary: Colors.white,
+    surface: Colors.grey.shade50
   );
 
   static final dark = ColorScheme.fromSeed(
-    seedColor: seed,
+    seedColor: const Color.fromARGB(255, 228, 83, 119),
     brightness: Brightness.dark,
-    primary: const Color(0xFFD32651),
+    primary: const Color.fromARGB(255, 228, 83, 119),
     onPrimary: Colors.grey.shade50,
+    surface: Colors.black54
   );
 
   // Custom colors that aren't part of the material color scheme

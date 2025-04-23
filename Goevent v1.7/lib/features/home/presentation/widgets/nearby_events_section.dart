@@ -259,7 +259,7 @@ class ParkCard extends StatelessWidget {
                           ],
                         ),
                         Text(
-                          "${park.operatingHours[0].openTime} - ${park.operatingHours[0].closeTime}",
+                          "${park.operatingHours?.first.openTime} - ${park.operatingHours?.first.closeTime}",
                           style: TextStyle(
                             fontFamily: 'Gilroy Medium',
                             fontSize: 12.sp,

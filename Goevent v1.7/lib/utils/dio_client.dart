@@ -62,7 +62,19 @@ class DioClient {
       catch(e){
         rethrow;
       }
-    
+    }
+
+    Future<Response> getWithParams({required String url,Map<String,dynamic>? params})async{
+      try{
+        final response = await _dio.get(url,queryParameters: params);
+        return response;
+      }
+      on DioException catch(e){
+        throw handleDioError(e);
+      }
+      catch(e){
+        rethrow;
+      }
     }
 
     Future<Response> patch({required String url,Map<String,dynamic>? body})async{

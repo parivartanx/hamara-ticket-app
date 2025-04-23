@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '/extensions/media_query_ext.dart';
@@ -102,55 +103,22 @@ class _ProfileState extends ConsumerState<Profile>
             // Fixed header section (non-collapsible)
             Container(
               height: context.height * 0.25,
-              width: double.infinity,
+              width: context.width,
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
                   colors: [
-                    context.colorScheme.primary,
-                    context.colorScheme.primary.withAlpha(150),
+                    context.colorScheme.secondaryContainer.withAlpha(230),
+                    context.colorScheme.secondaryContainer.withAlpha(200),
+                    context.colorScheme.surface
                   ],
                 ),
-                borderRadius: const BorderRadius.only(
-                  bottomLeft: Radius.circular(20),
-                  bottomRight: Radius.circular(20),
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: context.colorScheme.shadow.withAlpha(10),
-                    blurRadius: 10,
-                    offset: const Offset(0, 5),
-                  ),
-                ],
+                
               ),
               child: Stack(
                 children: [
-                  // Abstract pattern for visual interest (subtle)
-                  Positioned(
-                    right: -50,
-                    top: -30,
-                    child: Container(
-                      height: 150,
-                      width: 150,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: context.colorScheme.onPrimary.withAlpha(10),
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                    left: -30,
-                    bottom: -20,
-                    child: Container(
-                      height: 100,
-                      width: 100,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: context.colorScheme.onPrimary.withAlpha(15),
-                      ),
-                    ),
-                  ),
+                  
                   // Profile content
                   SafeArea(
                     child: Center(
@@ -167,10 +135,10 @@ class _ProfileState extends ConsumerState<Profile>
                           Text(
                             user.email,
                             style: GoogleFonts.poppins(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w400,
+                              fontSize: 13.sp,
+                              fontWeight: FontWeight.w500,
                               color:
-                                  context.colorScheme.onPrimary.withAlpha(200),
+                                  context.colorScheme.outline,
                               letterSpacing: 0.3,
                             ),
                           ),
@@ -278,7 +246,7 @@ class GreetingWidget extends StatelessWidget {
       style: GoogleFonts.poppins(
         fontSize: 20,
         fontWeight: FontWeight.w600,
-        color: context.colorScheme.onPrimary,
+        color: context.colorScheme.onSurface,
         letterSpacing: 0.3,
         height: 1.1,
       ),
@@ -299,7 +267,7 @@ class SectionHeader extends StatelessWidget {
     return Text(
       title,
       style: GoogleFonts.poppins(
-        fontSize: 18,
+        fontSize: 16.sp,
         fontWeight: FontWeight.w600,
         color: context.colorScheme.onSurface,
         letterSpacing: 0.2,
@@ -373,7 +341,7 @@ class InfoCard extends StatelessWidget {
               child: Icon(
                 icon,
                 color: context.colorScheme.primary,
-                size: 20,
+                size: 18.sp,
               ),
             ),
             const SizedBox(width: 16),
@@ -384,7 +352,7 @@ class InfoCard extends StatelessWidget {
                   Text(
                     title,
                     style: GoogleFonts.poppins(
-                      fontSize: 13,
+                      fontSize: 12.sp,
                       color: context.colorScheme.outline,
                       fontWeight: FontWeight.w500,
                     ),
@@ -393,7 +361,7 @@ class InfoCard extends StatelessWidget {
                   Text(
                     subtitle,
                     style: GoogleFonts.poppins(
-                      fontSize: 15,
+                      fontSize: 14.sp,
                       fontWeight: FontWeight.w500,
                       color: context.colorScheme.onSurface,
                     ),
@@ -487,14 +455,14 @@ class ActionButton extends StatelessWidget {
                   child: FaIcon(
                     icon,
                     color: context.colorScheme.primary,
-                    size: 16,
+                    size: 14.sp,
                   ),
                 ),
                 const SizedBox(width: 16),
                 Text(
                   title,
                   style: GoogleFonts.poppins(
-                    fontSize: 15,
+                    fontSize: 14.sp,
                     fontWeight: FontWeight.w500,
                     color: context.colorScheme.onSurface,
                   ),

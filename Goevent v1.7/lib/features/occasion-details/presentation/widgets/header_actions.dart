@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:hamaraticket/extensions/media_query_ext.dart';
-import '/models/event/event_model.dart';
-
-import '../screens/event_details_screen.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '/extensions/media_query_ext.dart';
 
 class HeaderActions extends StatelessWidget {
-  final Event event;
+  final String title;
+  final bool showSaveButton;
 
   const HeaderActions({
     super.key,
-    required this.event,
+    required this.title,
+    this.showSaveButton = false,
   });
 
   @override
@@ -19,10 +19,31 @@ class HeaderActions extends StatelessWidget {
         SizedBox(width: context.width / 20),
         const BackButton(color: Colors.white),
         SizedBox(width: context.width / 80),
-        EventTitle(event: event),
-        const Spacer(),
-        const SaveButton(),
-        const SizedBox(width: 20),
+        Text(
+          title,
+          style: TextStyle(
+            fontSize: 18.sp,
+            fontWeight: FontWeight.w900,
+            fontFamily: 'Gilroy Medium',
+            color: Colors.white,
+          ),
+        ),
+        if (showSaveButton) ...[
+          const Spacer(),
+          Container(
+            height: 35.h,
+            width: 35.h,
+            margin: EdgeInsets.only(right: 20.w),
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.2),
+              borderRadius: BorderRadius.circular(8.r),
+            ),
+            child: const Icon(
+              Icons.bookmark_border,
+              color: Colors.white,
+            ),
+          ),
+        ],
       ],
     );
   }

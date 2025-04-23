@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:hamaraticket/utils/dio_client.dart';
+import '/utils/dio_client.dart';
 
 import '../../../../models/user_model.dart';
 import '../../../../utils/endPoints.dart';

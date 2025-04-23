@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../screens/see_all.dart';
-import '/features/home/presentation/widgets/park_card.dart';
-import '/features/home/data/park_data.dart';
 import '/extensions/media_query_ext.dart';
 import 'package:page_transition/page_transition.dart';
 import '../providers/recommended_categories_provider.dart';
@@ -28,8 +25,8 @@ class BestRecommendationSection extends ConsumerWidget {
             'Recommended',
             style: TextStyle(
               fontSize: 18.sp,
-              fontWeight: FontWeight.w700,
-              color: Colors.black,
+              fontWeight: FontWeight.w500,
+            
               fontFamily: 'Gilroy',
             ),
           ),
@@ -53,8 +50,8 @@ class BestRecommendationSection extends ConsumerWidget {
 
               // Get the price with fallback
               final price = isPark
-                  ? (item.dynamicPricing.isNotEmpty
-                      ? item.dynamicPricing.first.basePrice
+                  ? (item.dynamicPricing!.isNotEmpty
+                      ? item.dynamicPricing?.first.basePrice
                       : 299)
                   : 299;
 
@@ -108,11 +105,11 @@ class BestRecommendationSection extends ConsumerWidget {
                   width: 160.w,
                   margin: EdgeInsets.only(right: 15.w, bottom: 5.h),
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: context.colorScheme.surfaceContainerLowest,
                     borderRadius: BorderRadius.circular(15.r),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.05),
+                        color: Colors.black.withAlpha(10),
                         blurRadius: 10,
                         offset: const Offset(0, 4),
                       ),
@@ -234,7 +231,7 @@ class BestRecommendationSection extends ConsumerWidget {
                                     style: TextStyle(
                                       fontSize: 14.sp,
                                       fontWeight: FontWeight.w700,
-                                      color: Colors.black,
+                                      
                                       fontFamily: 'Gilroy',
                                     ),
                                     maxLines: 1,
@@ -246,7 +243,7 @@ class BestRecommendationSection extends ConsumerWidget {
                                       Icon(
                                         Icons.location_on,
                                         size: 12.r,
-                                        color: Colors.grey[600],
+                                        color: context.colorScheme.outline,
                                       ),
                                       SizedBox(width: 4.w),
                                       Expanded(
@@ -254,7 +251,7 @@ class BestRecommendationSection extends ConsumerWidget {
                                           isPark ? item.address : item.location,
                                           style: TextStyle(
                                             fontSize: 11.sp,
-                                            color: Colors.grey[600],
+                                            color: context.colorScheme.outline,
                                             fontFamily: 'Gilroy',
                                           ),
                                           maxLines: 1,

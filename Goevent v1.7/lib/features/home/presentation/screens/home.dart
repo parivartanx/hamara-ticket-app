@@ -1,8 +1,11 @@
 // ignore_for_file: constant_identifier_names
 
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
+import '/features/home/presentation/providers/home-insights_provider.dart';
 import '/extensions/media_query_ext.dart';
 import '/features/home/presentation/widgets/home_body.dart';
 import '/features/home/presentation/widgets/side_menu.dart';
@@ -24,13 +27,26 @@ class _HomeState extends ConsumerState<Home> {
   @override
   void initState() {
     super.initState();
-    _initDarkMode();
+    // Using addPostFrameCallback to ensure widget is built before modifying state
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _initializeData();
+    });
   }
 
-  Future<void> _initDarkMode() async {
-    final prefs = await SharedPreferences.getInstance();
-    final previousState = prefs.getBool("setIsDark");
-    ref.read(colorProvider.notifier).setDarkMode(previousState ?? false);
+  Future<void> _initializeData() async {
+    try {
+      // Initialize dark mode
+      final prefs = await SharedPreferences.getInstance();
+      final previousState = prefs.getBool("setIsDark");
+      ref.read(colorProvider.notifier).setDarkMode(previousState ?? false);
+
+      // Fetch dashboard insights
+      await ref.read(homeInsightsProvider.notifier).getDashboardInsights();
+      log("HomeState: Dashboard Insights fetched");
+    } catch (e) {
+      log("Error initializing home data: $e");
+      // Handle error appropriately
+    }
   }
 
   @override
@@ -38,15 +54,13 @@ class _HomeState extends ConsumerState<Home> {
     return ZoomDrawer(
       controller: z,
       borderRadius: 24,
-      style: DrawerStyle.style2,
+      style: DrawerStyle.style1,
       openCurve: Curves.bounceInOut,
       disableDragGesture: true,
       mainScreenTapClose: true,
       menuScreenTapClose: true,
-      drawerShadowsBackgroundColor: Colors.black12,
       slideWidth: context.width * 0.70,
       duration: const Duration(milliseconds: 500),
-      menuBackgroundColor: Colors.white24,
       showShadow: true,
       angle: 0.0,
       clipMainScreen: true,

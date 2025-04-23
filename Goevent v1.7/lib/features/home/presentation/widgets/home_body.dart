@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hamaraticket/extensions/media_query_ext.dart';
 import '/providers/theme_provider.dart';
 import 'two_panels.dart';
 import 'advanced_bottom_navigation.dart';
@@ -32,9 +33,8 @@ class _HomeBodyState extends ConsumerState<HomeBody>
 
   @override
   Widget build(BuildContext context) {
-    final themeState = ref.watch(themeProvider);
     return Scaffold(
-      backgroundColor: themeState.primaryColor,
+      backgroundColor: context.colorScheme.surface,
       body: TwoPanels(
         controller: controller,
       ),
