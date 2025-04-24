@@ -6,5 +6,6 @@
         "seeall",
         "splashscreen",
         "webp"
-    ]
+    ],
+    "java.configuration.updateBuildConfiguration": "interactive"
 }
