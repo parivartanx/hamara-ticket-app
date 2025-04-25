@@ -10,7 +10,7 @@ class Customtextfild2 {
         //width: 350.w,
         child: TextField(
           obscureText: txt,
-          style: TextStyle(color: textcolor),
+          style: TextStyle(color:textcolor),
           decoration: InputDecoration(
             disabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10.sp),
