@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '/extensions/media_query_ext.dart';
+import 'package:go_router/go_router.dart';
+import '/features/home/presentation/screens/all_parks_page.dart';
 import '../providers/recommended_categories_provider.dart';
-import '/providers/theme_provider.dart';
 
 class GameCategoryItem {
   final String name;
@@ -33,30 +33,19 @@ class CategoryGamesWidget extends ConsumerWidget {
 
    const  categories =   [
       GameCategoryItem(
-        name: "All",
-        icon: Icons.confirmation_number,
-        lightModeColor: const Color.fromARGB(255, 158, 30, 58),
-        darkModeColor: const Color.fromARGB(255, 223, 131, 155),
-        lightGradientColors: const [
-          Color.fromARGB(255, 223, 131, 155),
-          Color.fromARGB(255, 241, 98, 148)
-        ],
-        categoryType: CategoryType.all,
-      ),
-      GameCategoryItem(
         name: "Parks",
         icon: Icons.park,
-        lightModeColor: const Color(0xFF4CAF50),
-        darkModeColor: const Color(0xFF81C784),
-        lightGradientColors: const [Color.fromARGB(255, 176, 223, 179), Color(0xFF81C784)],
+        lightModeColor:  Color(0xFF4CAF50),
+        darkModeColor:  Color(0xFF81C784),
+        lightGradientColors:  [Color.fromARGB(255, 176, 223, 179), Color(0xFF81C784)],
         categoryType: CategoryType.parks,
       ),
       GameCategoryItem(
         name: "Water\nPark",
         icon: Icons.water,
-        lightModeColor: const Color(0xFF2196F3),
-        darkModeColor: const Color(0xFF64B5F6),
-        lightGradientColors: const [
+        lightModeColor:  Color(0xFF2196F3),
+        darkModeColor:  Color(0xFF64B5F6),
+        lightGradientColors:  [
           Color.fromARGB(255, 144, 179, 214),
           Color(0xFF64B5F6)
         ],
@@ -65,9 +54,9 @@ class CategoryGamesWidget extends ConsumerWidget {
       GameCategoryItem(
         name: "Events",
         icon: Icons.event,
-        lightModeColor: const Color(0xFF9C27B0),
-        darkModeColor: const Color(0xFFBA68C8),
-        lightGradientColors: const [Color.fromARGB(255, 207, 154, 229), Color(0xFFBA68C8)],
+        lightModeColor:  Color(0xFF9C27B0),
+        darkModeColor:  Color(0xFFBA68C8),
+        lightGradientColors:  [Color.fromARGB(255, 207, 154, 229), Color(0xFFBA68C8)],
         categoryType: CategoryType.events,
       ),
     ];
@@ -82,9 +71,8 @@ class CategoryGamesWidget extends ConsumerWidget {
           return GestureDetector(
             onTap: () {
               ref.read(recommendedCategoriesProvider.notifier).selectCategory(category.categoryType);
-              // ref.read(themeProvider.notifier).updateTheme(
-              //       isDarkMode ? category.darkGradientColors[1] : category.lightGradientColors[1],
-              //     );
+              context.pushNamed(AllParksPage.routeName);
+
             },
             child: Container(
               width: 70.w,
@@ -164,7 +152,7 @@ class CategoryGamesWidget extends ConsumerWidget {
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             color: isSelected
-                                ? Colors.white
+                                ? colorScheme.surface
                                 : isDarkMode
                                     ? Colors.grey.shade400
                                     : Colors.grey.shade600,

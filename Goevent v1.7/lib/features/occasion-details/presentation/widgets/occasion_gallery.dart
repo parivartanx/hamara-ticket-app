@@ -32,53 +32,50 @@ class OccasionGallery extends StatelessWidget {
               color: context.colorScheme.onSurface,
             ),
           ),
-          SizedBox(height: 12.h),
-          AspectRatio(
-            aspectRatio: 16 / 9,
-            child: CarouselSlider(
-              options: CarouselOptions(
-                height: 200.h,
-                viewportFraction: 0.8,
-                enlargeCenterPage: true,
-                autoPlay: autoPlay,
-                autoPlayInterval: autoPlayInterval,
-              ),
-              items: imageUrls.map((url) {
-                return Builder(
-                  builder: (BuildContext context) {
-                    return Container(
-                      width: MediaQuery.of(context).size.width,
-                      margin: EdgeInsets.symmetric(horizontal: 5.w),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(15.r),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.1),
-                            blurRadius: 10,
-                            offset: const Offset(0, 5),
-                          ),
-                        ],
-                      ),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(15.r),
-                        child: Image.network(
-                          url,
-                          fit: BoxFit.cover,
-                          loadingBuilder: (context, child, loadingProgress) {
-                            if (loadingProgress == null) return child;
-                            return Shimmer.fromColors(
-                              baseColor: Colors.grey[300]!,
-                              highlightColor: Colors.grey[100]!,
-                              child: Container(color: Colors.white),
-                            );
-                          },
-                        ),
-                      ),
-                    );
-                  },
-                );
-              }).toList(),
+          SizedBox(height: 8.h),
+          CarouselSlider(
+            options: CarouselOptions(
+              height: 120.h,
+              viewportFraction: 0.8,
+              enlargeCenterPage: true,
+              autoPlay: autoPlay,
+              autoPlayInterval: autoPlayInterval,
             ),
+            items: imageUrls.map((url) {
+              return Builder(
+                builder: (BuildContext context) {
+                  return Container(
+                    width: MediaQuery.of(context).size.width,
+                    margin: EdgeInsets.symmetric(horizontal: 5.w),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(15.r),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.1),
+                          blurRadius: 10,
+                          offset: const Offset(0, 5),
+                        ),
+                      ],
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(15.r),
+                      child: Image.network(
+                        url,
+                        fit: BoxFit.cover,
+                        loadingBuilder: (context, child, loadingProgress) {
+                          if (loadingProgress == null) return child;
+                          return Shimmer.fromColors(
+                            baseColor: Colors.grey[300]!,
+                            highlightColor: Colors.grey[100]!,
+                            child: Container(color: Colors.white),
+                          );
+                        },
+                      ),
+                    ),
+                  );
+                },
+              );
+            }).toList(),
           ),
         ],
       ),

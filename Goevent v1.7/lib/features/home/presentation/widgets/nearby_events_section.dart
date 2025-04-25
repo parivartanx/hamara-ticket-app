@@ -119,13 +119,13 @@ class EventCard extends ConsumerWidget {
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       child: GestureDetector(
         onTap: () {
-          Navigator.push(
-            context,
-            PageTransition(
-              type: PageTransitionType.fade,
-              child:  EventDetailsScreen(event:event ,),
-            ),
-          );
+          // Navigator.push(
+          //   context,
+          //   PageTransition(
+          //     type: PageTransitionType.fade,
+          //     child:  EventDetailsScreen(event:event ,),
+          //   ),
+          // );
         },
         child: Card(
           elevation: 0,

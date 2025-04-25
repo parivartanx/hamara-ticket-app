@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import '../ticket/ticket_model.dart';
 
 part 'park_model.g.dart';
 
@@ -14,6 +15,7 @@ class Park {
   final List<String> tags;
   final int maxCapacity;
   final List<Attraction> attractions;
+  final List<TicketModel> tickets;
 
   // Optional fields (not returned by backend)
   final String? type;
@@ -38,6 +40,7 @@ class Park {
     required this.tags,
     required this.maxCapacity,
     required this.attractions,
+    required this.tickets,
     this.type,
     this.adminId,
     this.status,

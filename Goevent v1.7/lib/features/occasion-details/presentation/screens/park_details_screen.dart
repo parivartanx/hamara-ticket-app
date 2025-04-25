@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../provider/occasion_provider.dart';
 import '/extensions/media_query_ext.dart';
 import '/providers/color_provider.dart';
 import '/models/park/park_model.dart';
@@ -10,14 +11,43 @@ import '../widgets/occasion_title_section.dart';
 import '../widgets/buy_ticket_button.dart';
 import '../widgets/occasion_header.dart';
 
+enum OccasionType {
+  park,
+  waterpark,
+  event;
+
+  String get displayName {
+    switch (this) {
+      case OccasionType.park:
+        return 'Park';
+      case OccasionType.waterpark:
+        return 'Waterpark';
+      case OccasionType.event:
+        return 'Event';
+    }
+  }
+
+  static OccasionType fromString(String? type) {
+    if (type == null) return OccasionType.park;
+    switch (type.toLowerCase()) {
+      case 'waterpark':
+        return OccasionType.waterpark;
+      case 'event':
+        return OccasionType.event;
+      default:
+        return OccasionType.park;
+    }
+  }
+}
+
 class ParkDetailsScreen extends ConsumerStatefulWidget {
   static const routePath = '/park-details';
   static const routeName = 'park-details';
-  final Park park;
+  final String parkId;
 
   const ParkDetailsScreen({
     super.key,
-    required this.park,
+    required this.parkId,
   });
 
   @override
@@ -41,32 +71,41 @@ class _ParkDetailsScreenState extends ConsumerState<ParkDetailsScreen> {
   }
   @override
   Widget build(BuildContext context) {
-    final park = widget.park;
+    final parkAsync = ref.watch(parkByIdProvider(widget.parkId));
     
     return Scaffold(
       backgroundColor: context.colorScheme.surface,
-      floatingActionButton: BuyTicketButton(
-        occasionType: 'Park',
-        occasionId: '1',
-        occasionName: park.name,
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            OccasionHeader(
-              title: park.name,
-              imageUrls: park.imageUrls,
-              maxCapacity: park.maxCapacity,
-              isOpen: park.operatingHours?.isNotEmpty == true,
-              useCarousel: true,
-            ),
-            SizedBox(height: context.height / 30),
-            ParkBody(park: park),
-            SizedBox(height: context.height * 0.1),
-          ],
+      body: parkAsync.when(
+        data: (park) => SingleChildScrollView(
+          child: Column(
+            children: [
+              OccasionHeader(
+                title: park.name,
+                imageUrls: park.imageUrls,
+                maxCapacity: park.maxCapacity,
+                isOpen: park.operatingHours?.isNotEmpty == true,
+                useCarousel: true,
+              ),
+              SizedBox(height: context.height / 30),
+              ParkBody(park: park),
+              SizedBox(height: context.height * 0.1),
+            ],
+          ),
+        ),
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (error, stack) => Center(
+          child: Text('Error loading park details: $error'),
         ),
       ),
+      floatingActionButton: parkAsync.maybeWhen(
+        data: (park) => BuyTicketButton(
+          occasionType: OccasionType.fromString(park.type).displayName,
+          occasionId: park.id,
+          occasionName: park.name,
+        ),
+        orElse: () => null,
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }
@@ -81,6 +120,10 @@ class ParkBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Separate pricing into regular and peak hours
+    final regularPricing = park.dynamicPricing?.where((p) => p.dayType != "Peak Hours").toList() ?? [];
+    final peakPricing = park.dynamicPricing?.where((p) => p.dayType == "Peak Hours").toList() ?? [];
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -91,20 +134,51 @@ class ParkBody extends StatelessWidget {
           tags: park.tags,
         ),
         SizedBox(height: context.height * 0.02),
-        // Operating Hours and Pricing Cards
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 8.w),
-          child: Wrap(
-            spacing: 8.w,
-            runSpacing: 8.h,
-            children: [
-              if (park.operatingHours?.isNotEmpty == true)
-                OperatingHoursCard(operatingHours: park.operatingHours!),
-              if (park.dynamicPricing?.isNotEmpty == true)
-                PricingCard(pricing: park.dynamicPricing!),
-            ],
+        // Pricing Information Section
+        if (park.dynamicPricing?.isNotEmpty == true)
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20.w),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Pricing Information",
+                  style: TextStyle(
+                    fontSize: 17.sp,
+                    fontWeight: FontWeight.w700,
+                    fontFamily: 'Gilroy Medium',
+                    color: context.colorScheme.onSurface,
+                  ),
+                ),
+                SizedBox(height: 12.h),
+                if (regularPricing.isNotEmpty)
+                  PricingInfoCard(
+                    title: "Regular Pricing",
+                    pricing: regularPricing,
+                  ),
+                if (regularPricing.isNotEmpty && peakPricing.isNotEmpty)
+                  SizedBox(height: 12.h),
+                if (peakPricing.isNotEmpty)
+                  PricingInfoCard(
+                    title: "Peak Hour Pricing",
+                    pricing: peakPricing,
+                  ),
+              ],
+            ),
           ),
-        ),
+        SizedBox(height: context.height * 0.02),
+        // Operating Hours Section
+        if (park.operatingHours?.isNotEmpty == true)
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20.w),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: 5.h),
+                OperatingHoursCard(operatingHours: park.operatingHours!),
+              ],
+            ),
+          ),
         SizedBox(height: context.height * 0.02),
         // Attractions Section
         if (park.attractions.isNotEmpty)
@@ -135,13 +209,13 @@ class ParkBody extends StatelessWidget {
                 icon: Icons.location_on,
                 hasBorder: true,
               ),
-              if (park.type != null)
-                OccasionInfoCard(
-                  title: "Type",
-                  subtitle: park.type!,
-                  icon: Icons.category,
-                  hasBorder: true,
-                ),
+              // if (park.type != null)
+              //   OccasionInfoCard(
+              //     title: "Type",
+              //     subtitle: park.type!,
+              //     icon: Icons.category,
+              //     hasBorder: true,
+              //   ),
               OccasionInfoCard(
                 title: "Tags",
                 subtitle: park.tags.join(", "),
@@ -164,132 +238,229 @@ class OperatingHoursCard extends StatelessWidget {
     required this.operatingHours,
   });
 
+  List<List<OperatingHour>> _groupSimilarTimings(List<OperatingHour> hours) {
+    Map<String, List<OperatingHour>> timeGroups = {};
+    
+    for (var hour in hours) {
+      String timeKey = '${hour.openTime}-${hour.closeTime}';
+      timeGroups.putIfAbsent(timeKey, () => []);
+      timeGroups[timeKey]!.add(hour);
+    }
+    
+    return timeGroups.values.toList();
+  }
+
+  String _formatDays(List<OperatingHour> sameTimeHours) {
+    if (sameTimeHours.length == 1) {
+      return sameTimeHours.first.day;
+    }
+    
+    if (sameTimeHours.length == 7) {
+      return "All Days";
+    }
+
+    List<String> weekDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+    List<String> days = sameTimeHours.map((h) => h.day).toList();
+    
+    if (days.length >= 2 && 
+        weekDays.any((day) => days.contains(day)) && 
+        days.every((day) => weekDays.contains(day))) {
+      return "Weekdays";
+    }
+    
+    if (days.length == 2 && 
+        days.contains('Saturday') && 
+        days.contains('Sunday')) {
+      return "Weekends";
+    }
+    
+    if (sameTimeHours.length <= 3) {
+      return days.join(', ');
+    }
+    
+    return "${days.first} - ${days.last}";
+  }
+
   @override
   Widget build(BuildContext context) {
+    final groupedHours = _groupSimilarTimings(operatingHours);
+
     return Container(
-      width: context.width * 0.45,
-      padding: EdgeInsets.all(12.w),
+      width: double.infinity,
+      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
       decoration: BoxDecoration(
         color: context.colorScheme.surface,
-        borderRadius: BorderRadius.circular(15.r),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withAlpha(15),
-            blurRadius: 10,
-            offset: const Offset(0, 5),
-          ),
-        ],
+        borderRadius: BorderRadius.circular(12.r),
+        border: Border.all(
+          color: context.colorScheme.outline.withOpacity(0.1),
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              Icon(Icons.access_time, size: 16.sp),
-              SizedBox(width: 4.w),
+              Icon(
+                Icons.access_time_rounded,
+                size: 16.sp,
+                color: context.colorScheme.primary,
+              ),
+              SizedBox(width: 6.w),
               Text(
                 "Operating Hours",
                 style: TextStyle(
-                  fontSize: 14.sp,
+                  fontSize: 15.sp,
                   fontWeight: FontWeight.w600,
                   fontFamily: 'Gilroy Medium',
+                  color: context.colorScheme.onSurface,
                 ),
               ),
             ],
           ),
           SizedBox(height: 8.h),
-          ...operatingHours.map((hour) => Padding(
-                padding: EdgeInsets.only(bottom: 4.h),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      hour.day,
-                      style: TextStyle(
-                        fontSize: 12.sp,
-                        color: Colors.grey,
-                      ),
+          ...groupedHours.map((sameTimeHours) {
+            final firstHour = sameTimeHours.first;
+            return Padding(
+              padding: EdgeInsets.only(bottom: 6.h),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    _formatDays(sameTimeHours),
+                    style: TextStyle(
+                      fontSize: 13.sp,
+                      color: context.colorScheme.onSurface.withOpacity(0.7),
+                      fontWeight: FontWeight.w500,
                     ),
-                    Text(
-                      "${hour.openTime} - ${hour.closeTime}",
-                      style: TextStyle(
-                        fontSize: 12.sp,
-                        fontWeight: FontWeight.w500,
-                      ),
+                  ),
+                  Text.rich(
+                    TextSpan(
+                      children: [
+                        TextSpan(
+                          text: "${firstHour.openTime}",
+                          style: TextStyle(
+                            fontSize: 13.sp,
+                            fontWeight: FontWeight.w600,
+                            color: context.colorScheme.primary,
+                          ),
+                        ),
+                        TextSpan(
+                          text: " - ",
+                          style: TextStyle(
+                            fontSize: 13.sp,
+                            color: context.colorScheme.onSurface.withOpacity(0.6),
+                          ),
+                        ),
+                        TextSpan(
+                          text: firstHour.closeTime,
+                          style: TextStyle(
+                            fontSize: 13.sp,
+                            fontWeight: FontWeight.w600,
+                            color: context.colorScheme.primary,
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-              )),
+                  ),
+                ],
+              ),
+            );
+          }).toList(),
         ],
       ),
     );
   }
 }
 
-class PricingCard extends StatelessWidget {
+class PricingInfoCard extends StatelessWidget {
+  final String title;
   final List<DynamicPricing> pricing;
 
-  const PricingCard({
+  const PricingInfoCard({
     super.key,
+    required this.title,
     required this.pricing,
   });
+
+  String _formatDayType(String dayType) {
+    if (dayType == "Peak Hours") return "Peak Hours";
+    if (dayType.toLowerCase().contains("weekend")) return "Weekends";
+    if (dayType.toLowerCase().contains("weekday")) return "Weekdays";
+    return dayType;
+  }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: context.width * 0.45,
-      padding: EdgeInsets.all(12.w),
+      width: double.infinity,
+      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
       decoration: BoxDecoration(
         color: context.colorScheme.surface,
-        borderRadius: BorderRadius.circular(15.r),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withAlpha(15),
-            blurRadius: 10,
-            offset: const Offset(0, 5),
-          ),
-        ],
+        borderRadius: BorderRadius.circular(12.r),
+        border: Border.all(
+          color: context.colorScheme.outline.withOpacity(0.1),
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              Icon(Icons.currency_rupee, size: 16.sp),
-              SizedBox(width: 4.w),
+              Icon(
+                Icons.currency_rupee,
+                size: 16.sp,
+                color: context.colorScheme.primary,
+              ),
+              SizedBox(width: 6.w),
               Text(
-                "Pricing",
+                title,
                 style: TextStyle(
-                  fontSize: 14.sp,
+                  fontSize: 15.sp,
                   fontWeight: FontWeight.w600,
                   fontFamily: 'Gilroy Medium',
+                  color: context.colorScheme.onSurface,
                 ),
               ),
             ],
           ),
           SizedBox(height: 8.h),
           ...pricing.map((price) => Padding(
-                padding: EdgeInsets.only(bottom: 4.h),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      price.dayType,
-                      style: TextStyle(
-                        fontSize: 12.sp,
-                        color: Colors.grey,
-                      ),
-                    ),
-                    Text(
-                      "₹${price.basePrice}",
-                      style: TextStyle(
-                        fontSize: 12.sp,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ],
+            padding: EdgeInsets.only(bottom: 6.h),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  _formatDayType(price.dayType),
+                  style: TextStyle(
+                    fontSize: 13.sp,
+                    color: context.colorScheme.onSurface.withOpacity(0.7),
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
-              )),
+                Text.rich(
+                  TextSpan(
+                    children: [
+                      TextSpan(
+                        text: "Ticket Price ",
+                        style: TextStyle(
+                          fontSize: 13.sp,
+                          color: context.colorScheme.onSurface.withOpacity(0.6),
+                        ),
+                      ),
+                      TextSpan(
+                        text: "+ ₹${price.basePrice}",
+                        style: TextStyle(
+                          fontSize: 13.sp,
+                          fontWeight: FontWeight.w600,
+                          color: context.colorScheme.primary,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          )).toList(),
         ],
       ),
     );
@@ -320,8 +491,9 @@ class AttractionsSection extends StatelessWidget {
               color: context.colorScheme.onSurface,
             ),
           ),
-          SizedBox(height: 12.h),
+          SizedBox(height: 5.h),
           ListView.builder(
+            padding: EdgeInsets.zero,
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             itemCount: attractions.length,
@@ -414,3 +586,4 @@ class AttractionsSection extends StatelessWidget {
     );
   }
 }
+

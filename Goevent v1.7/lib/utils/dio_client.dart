@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../features/login/data/data_sources/local_datasource.dart';
@@ -66,6 +68,8 @@ class DioClient {
 
     Future<Response> getWithParams({required String url,Map<String,dynamic>? params})async{
       try{
+        log("URL: $url");
+        log("Params: $params");
         final response = await _dio.get(url,queryParameters: params);
         return response;
       }

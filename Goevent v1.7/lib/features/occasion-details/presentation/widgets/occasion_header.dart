@@ -30,22 +30,23 @@ class OccasionHeader extends StatelessWidget {
     return Stack(
       children: [
         // Header Image
-        SizedBox(
-          height: context.height / (useCarousel ? 3 : 4),
-          width: context.width,
+        AspectRatio(
+          aspectRatio: 16 / 9,
           child: Image.network(
             imageUrls.first,
             fit: BoxFit.cover,
           ),
         ),
         // Gradient Overlay
-        Container(
-          height: context.height / (useCarousel ? 3 : 4),
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [Colors.transparent, Colors.black87],
+        AspectRatio(
+          aspectRatio: 16 / 9,
+          child: Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [Colors.transparent, Colors.black87],
+              ),
             ),
           ),
         ),

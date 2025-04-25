@@ -1,8 +1,8 @@
 // lib/features/home/presentation/providers/nearby_events_provider.dart
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '/features/home/data/event_data.dart';
-import '/features/home/data/park_data.dart';
+// import '/features/home/data/event_data.dart';
+// import '/features/home/data/park_data.dart';
 
 enum OccasionType { events, waterPark, park }
 
@@ -30,17 +30,17 @@ final nearbyEventsProvider = StateProvider<NearbyEventsState>((ref) {
   // Initialize with events data
   return NearbyEventsState(
     selectedType: OccasionType.events,
-    filteredItems: events,
+    filteredItems: [],
   );
 });
 
 List<dynamic> getFilteredItems(OccasionType type) {
   switch (type) {
     case OccasionType.events:
-      return events;
+      return [];
     case OccasionType.waterPark:
-      return parks.where((park) => park.type == "Water Park").toList();
+      return [];
     case OccasionType.park:
-      return parks.where((park) => park.type == "Park").toList();
+      return [];
   }
 }

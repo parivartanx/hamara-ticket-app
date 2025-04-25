@@ -22,6 +22,9 @@ Event _$EventFromJson(Map<String, dynamic> json) => Event(
       tags: (json['tags'] as List<dynamic>).map((e) => e as String).toList(),
       maxCapacity: (json['maxCapacity'] as num).toInt(),
       status: json['status'] as String,
+      tickets: (json['tickets'] as List<dynamic>)
+          .map((e) => TicketModel.fromJson(e as Map<String, dynamic>))
+          .toList(),
       videoUrls: (json['videoUrls'] as List<dynamic>?)
           ?.map((e) => e as String)
           .toList(),
@@ -54,6 +57,7 @@ Map<String, dynamic> _$EventToJson(Event instance) => <String, dynamic>{
       'tags': instance.tags,
       'maxCapacity': instance.maxCapacity,
       'status': instance.status,
+      'tickets': instance.tickets.map((e) => e.toJson()).toList(),
       'videoUrls': instance.videoUrls,
       'adminId': instance.adminId,
       'startTime': instance.startTime,

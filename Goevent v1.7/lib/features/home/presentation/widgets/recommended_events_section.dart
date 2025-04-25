@@ -64,7 +64,7 @@ class RecommendedEventsSection extends ConsumerWidget {
                   final event = events[index];
                   return GestureDetector(
                     onTap: () {
-                      context.push(EventDetailsScreen.routePath, extra: event);
+                      context.push(EventDetailsScreen.routePath, extra: event.id);
                     },
                     child: _EventCard(event: event),
                   );
@@ -264,7 +264,9 @@ class _EventCard extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'Free Entry',
+                        event.tickets.isNotEmpty
+                            ? '₹${event.tickets.first.price}'
+                            : "N/A",
                         style: TextStyle(
                           fontSize: 14.sp,
                           fontWeight: FontWeight.w700,

@@ -38,7 +38,7 @@ class MyApp extends ConsumerWidget {
           debugShowCheckedModeBanner: false,
           darkTheme: AppTheme.dark,
           themeMode: ThemeMode.light,
-          theme:AppTheme.light
+          theme:AppTheme.light,
         );
       },
     );

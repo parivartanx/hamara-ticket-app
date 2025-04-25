@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '/features/home/data/event_data.dart';
-import '/features/home/data/park_data.dart';
+// import '/featsures/home/data/event_data.dart';
+// import '/features/home/data/park_data.dart';
 
 
 enum CategoryType { all, parks, waterParks, events }
@@ -35,24 +35,23 @@ class RecommendedCategoriesNotifier
   RecommendedCategoriesNotifier()
       : super(RecommendedCategoriesState(
           selectedCategory: CategoryType.all,
-          items: [...parks, ...events],
+          items: [...[], ...[]],
         ));
 
   void selectCategory(CategoryType category) {
     List<dynamic> filteredItems;
     switch (category) {
       case CategoryType.all:
-        filteredItems = [...parks, ...events];
+        filteredItems = [...[], ...[]];
         break;
       case CategoryType.parks:
-        filteredItems = parks.where((park) => park.type == "Park").toList();
+        filteredItems = [];
         break;
       case CategoryType.waterParks:
-        filteredItems =
-            parks.where((park) => park.type == "Water Park").toList();
+        filteredItems = [];
         break;
       case CategoryType.events:
-        filteredItems = events;
+        filteredItems = [];
         break;
     }
 

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
-import '../providers/ticket_providers.dart';
+import '../providers/ticket_state.dart';
 
 class DateSelectionStep extends ConsumerWidget {
   const DateSelectionStep({Key? key}) : super(key: key);
@@ -65,7 +65,7 @@ class DateSelectionStep extends ConsumerWidget {
             return selectedDate != null && isSameDay(selectedDate, day);
           },
           onDaySelected: (selectedDay, focusedDay) {
-            ref.read(selectedDateProvider.notifier).state = selectedDay;
+            ref.read(ticketBookingProvider.notifier).selectDate(selectedDay);
           },
           headerStyle: HeaderStyle(
             formatButtonVisible: false,
@@ -123,7 +123,7 @@ class DateSelectionStep extends ConsumerWidget {
             padding: const EdgeInsets.only(right: 12.0),
             child: GestureDetector(
               onTap: () {
-                ref.read(selectedDateProvider.notifier).state = date;
+                ref.read(ticketBookingProvider.notifier).selectDate(date);
               },
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 300),

@@ -26,7 +26,8 @@ class BuyTicketButton extends StatelessWidget {
         height: 45.h,
         width: 410.w,
         child: ElevatedButton(
-          onPressed: () => Navigator.push(
+          onPressed: () => {
+            Navigator.push(
             context,
             PageTransition(
               type: PageTransitionType.fade,
@@ -35,8 +36,8 @@ class BuyTicketButton extends StatelessWidget {
                 occasionId: occasionId,
                 occasionName: occasionName,
               ),
-            ),
-          ),
+            )
+          ),},
           style: ElevatedButton.styleFrom(
             backgroundColor: context.colorScheme.primary,
             shape: RoundedRectangleBorder(

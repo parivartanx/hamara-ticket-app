@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../provider/occasion_provider.dart';
 import '/extensions/media_query_ext.dart';
 import '/providers/color_provider.dart';
 import '/models/event/event_model.dart';
@@ -14,11 +15,11 @@ import 'package:intl/intl.dart';
 class EventDetailsScreen extends ConsumerStatefulWidget {
   static const routePath = '/event-details';
   static const routeName = 'event-details';
-  final Event event;
+  final String eventId;
 
   const EventDetailsScreen({
     super.key,
-    required this.event,
+    required this.eventId,
   });
 
   @override
@@ -43,33 +44,42 @@ class _EventDetailsScreenState extends ConsumerState<EventDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final event = widget.event;
+    final eventAsync = ref.watch(eventByIdProvider(widget.eventId));
     
     return Scaffold(
       backgroundColor: context.colorScheme.surface,
-      floatingActionButton: BuyTicketButton(
-        occasionType: 'Event',
-        occasionId: '1',
-        occasionName: event.name,
-        buttonText: "Buy Ticket",
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            OccasionHeader(
-              title: event.name,
-              imageUrls: event.imageUrls,
-              status: event.status,
-              maxCapacity: event.maxCapacity,
-              showSaveButton: true,
-            ),
-            SizedBox(height: context.height / 30),
-            EventBody(event: event),
-            SizedBox(height: context.height * 0.1),
-          ],
+      body: eventAsync.when(
+        data: (event) => SingleChildScrollView(
+          child: Column(
+            children: [
+              OccasionHeader(
+                title: event.name,
+                imageUrls: event.imageUrls,
+                status: event.status,
+                maxCapacity: event.maxCapacity,
+                showSaveButton: true,
+              ),
+              SizedBox(height: context.height / 30),
+              EventBody(event: event),
+              SizedBox(height: context.height * 0.1),
+            ],
+          ),
+        ),
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (error, stack) => Center(
+          child: Text('Error loading event details: $error'),
         ),
       ),
+      floatingActionButton: eventAsync.maybeWhen(
+        data: (event) => BuyTicketButton(
+          occasionType:  'Event',
+          occasionId: event.id,
+          occasionName: event.name,
+          buttonText: "Buy Ticket",
+        ),
+        orElse: () => null,
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }

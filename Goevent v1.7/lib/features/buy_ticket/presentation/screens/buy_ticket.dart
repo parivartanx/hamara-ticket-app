@@ -1,13 +1,17 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../providers/ticket_providers.dart';
+import '../../../../core/enums/occasion_type.dart';
+import '../../../../extensions/media_query_ext.dart';
+import '../providers/ticket_state.dart';
 import '../widgets/date_selection_step.dart';
 import '../widgets/details_step.dart';
 import '../widgets/ticket_selection_step.dart';
 
 class BuyTicketS extends ConsumerStatefulWidget {
-  final String occasionType; // 'park' or 'event'
+  final String occasionType;
   final String occasionId;
   final String occasionName;
 
@@ -23,20 +27,16 @@ class BuyTicketS extends ConsumerStatefulWidget {
 }
 
 class _BuyTicketSState extends ConsumerState<BuyTicketS> with SingleTickerProviderStateMixin {
-  late AnimationController _animationController;
-  late Animation<double> _fadeAnimation;
-  String? userName = "Vinita"; // This would come from user profile in a real app
+  late final AnimationController _animationController;
+  late final Animation<double> _fadeAnimation;
+  late final OccasionType _occasionType;
+  String? userName = "Vinita";
 
   @override
   void initState() {
     super.initState();
+    _occasionType = OccasionType.fromString(widget.occasionType);
     
-    // Set the occasion type in the provider
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(occasionTypeProvider.notifier).state = widget.occasionType;
-    });
-    
-    // Setup animations
     _animationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 300),
@@ -49,269 +49,296 @@ class _BuyTicketSState extends ConsumerState<BuyTicketS> with SingleTickerProvid
       ),
     );
     
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(ticketBookingProvider.notifier).setOccasionType(widget.occasionType);
+    });
+    
     _animationController.forward();
   }
 
   @override
   void dispose() {
     _animationController.dispose();
+    ref.read(ticketBookingProvider.notifier).reset();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final currentStep = ref.watch(currentStepProvider);
-    final occasionType = ref.watch(occasionTypeProvider);
-    final totalSteps = occasionType == 'park' ? 3 : 2;
-    final subtotal = ref.watch(subtotalProvider);
-    final colorScheme = Theme.of(context).colorScheme;
+    final bookingState = ref.watch(ticketBookingProvider);
+    final colorScheme = context.colorScheme;
+    final canContinue = ref.read(ticketBookingProvider.notifier).canProceedToNextStep();
+    final totalSteps = _occasionType.requiresDateSelection ? 3 : 2;
     
-    // Determine if the continue button should be enabled
-    bool canContinue = true;
-    if (occasionType == 'park' && currentStep == 0) {
-      // For park type, date selection is required
-      canContinue = ref.watch(selectedDateProvider) != null;
-    } else if (currentStep == (occasionType == 'park' ? 1 : 0)) {
-      // Ticket selection step - at least one ticket must be selected
-      canContinue = subtotal > 0;
-    }
-
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          widget.occasionName,
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            color: colorScheme.onPrimary,
+    return WillPopScope(
+      onWillPop: () async {
+        ref.read(ticketBookingProvider.notifier).reset();
+        return true;
+      },
+      child: Scaffold(
+        backgroundColor: colorScheme.surface,
+        appBar: AppBar(
+          title: Text(
+            widget.occasionName,
+            style: context.textTheme.titleLarge?.copyWith(
+              fontWeight: FontWeight.w600,
+              color: colorScheme.onSurface,
+            ),
+          ),
+          centerTitle: true,
+          elevation: 0,
+          backgroundColor: colorScheme.surface,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back_ios, color: colorScheme.onSurface, size: 20),
+            onPressed: () {
+              ref.read(ticketBookingProvider.notifier).reset();
+              Navigator.pop(context);
+            },
           ),
         ),
-        centerTitle: true,
-        elevation: 0,
-        backgroundColor: colorScheme.surface,
-      ),
-      body: Column(
-        children: [
-          // Stepper header
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-            color: colorScheme.surface,
-            child: Row(
-              children: List.generate(totalSteps, (index) {
-                // For park type: Date Selection, Tickets, Details
-                // For event type: Tickets, Details
-                String stepTitle = '';
-                
-                if (occasionType == 'park') {
-                  if (index == 0) {
-                    stepTitle = 'Date';
-                  } else if (index == 1) {
-                    stepTitle = 'Tickets';
-                  } else {
-                    stepTitle = 'Details';
-                  }
-                } else {
-                  if (index == 0) {
-                    stepTitle = 'Tickets';
-                  } else {
-                    stepTitle = 'Details';
-                  }
-                }
-                
-                final isActive = index == currentStep;
-                final isPast = index < currentStep;
-                
-                return Expanded(
-                  child: Row(
+        body: Column(
+          children: [
+            // Progress Steps
+            Container(
+              padding: EdgeInsets.symmetric(vertical: 12.h),
+              decoration: BoxDecoration(
+                color: colorScheme.surface,
+                border: Border(
+                  bottom: BorderSide(
+                    color: colorScheme.outline.withOpacity(0.1),
+                  ),
+                ),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: List.generate(totalSteps, (index) {
+                  final isActive = index == bookingState.currentStep;
+                  final isPast = index < bookingState.currentStep;
+                  
+                  return Row(
                     children: [
-                      // Step number or check icon
-                      Container(
-                        width: 32.w,
-                        height: 32.w,
-                        decoration: BoxDecoration(
+                      if (index > 0)
+                        Container(
+                          width: 32,
+                          height: 1,
                           color: isPast
                               ? colorScheme.primary
-                              : isActive
+                              : colorScheme.outline.withOpacity(0.2),
+                        ),
+                      Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Container(
+                            width: 28,
+                            height: 28,
+                            decoration: BoxDecoration(
+                              color: isPast || isActive
                                   ? colorScheme.primary
                                   : colorScheme.surfaceVariant,
-                          shape: BoxShape.circle,
-                        ),
-                        child: Center(
-                          child: isPast
-                              ? Icon(
-                                  Icons.check,
-                                  color: colorScheme.onPrimary,
-                                  size: 16.w,
-                                )
-                              : Text(
-                                  '${index + 1}',
-                                  style: TextStyle(
-                                    color: isActive ? colorScheme.onPrimary : colorScheme.onSurfaceVariant,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                        ),
+                              shape: BoxShape.circle,
+                            ),
+                            child: Center(
+                              child: isPast
+                                  ? Icon(
+                                      Icons.check_rounded,
+                                      color: colorScheme.onPrimary,
+                                      size: 16,
+                                    )
+                                  : Text(
+                                      '${index + 1}',
+                                      style: TextStyle(
+                                        color: isActive
+                                            ? colorScheme.onPrimary
+                                            : colorScheme.onSurfaceVariant,
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 14,
+                                      ),
+                                    ),
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            _getStepLabel(index),
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: isActive || isPast
+                                  ? colorScheme.primary
+                                  : colorScheme.onSurfaceVariant,
+                              fontWeight: isActive || isPast ? FontWeight.w600 : FontWeight.normal,
+                            ),
+                          ),
+                        ],
                       ),
-                      
-                      // Step text
-                      SizedBox(width: 8.w),
-                      Text(
-                        stepTitle,
-                        style: TextStyle(
-                          color: isActive || isPast
-                              ? colorScheme.primary
-                              : colorScheme.onSurfaceVariant,
-                          fontWeight: isActive || isPast
-                              ? FontWeight.bold
-                              : FontWeight.normal,
-                        ),
+                    ],
+                  );
+                }),
+              ),
+            ),
+
+            // Welcome Message
+            if (userName != null && bookingState.currentStep == 0)
+              Container(
+                width: double.infinity,
+                margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+                decoration: BoxDecoration(
+                  color: colorScheme.primary.withOpacity(0.05),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.waving_hand_rounded,
+                      color: colorScheme.primary,
+                      size: 18,
+                    ),
+                    SizedBox(width: 8.w),
+                    Text(
+                      'Good ${_getTimeOfDay()}, $userName!',
+                      style: context.textTheme.titleSmall?.copyWith(
+                        color: colorScheme.primary,
+                        fontWeight: FontWeight.w600,
                       ),
-                      
-                      // Connector line
-                      if (index < totalSteps - 1)
-                        Expanded(
-                          child: Container(
-                            margin: EdgeInsets.symmetric(horizontal: 8.w),
-                            height: 1,
-                            color: isPast
-                                ? colorScheme.primary
-                                : colorScheme.outline,
+                    ),
+                  ],
+                ),
+              ),
+
+            // Content
+            Expanded(
+              child: FadeTransition(
+                opacity: _fadeAnimation,
+                child: SingleChildScrollView(
+                  padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+                  child: _buildStepContent(bookingState.currentStep,occasionId: widget.occasionId,occasionType: widget.occasionType),
+                ),
+              ),
+            ),
+
+            // Bottom Navigation
+            Container(
+              padding: EdgeInsets.all(16.w),
+              decoration: BoxDecoration(
+                color: colorScheme.surface,
+                border: Border(
+                  top: BorderSide(
+                    color: colorScheme.outline.withOpacity(0.1),
+                  ),
+                ),
+              ),
+              child: Row(
+                children: [
+                  if (bookingState.currentStep > 0)
+                    Expanded(
+                      child: OutlinedButton(
+                        onPressed: () {
+                          _animationController.reverse().then((_) {
+                            ref.read(ticketBookingProvider.notifier).previousStep();
+                            _animationController.forward();
+                          });
+                        },
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: colorScheme.onSurface,
+                          side: BorderSide(color: colorScheme.outline.withOpacity(0.3)),
+                          padding: EdgeInsets.symmetric(vertical: 12.h),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
                           ),
                         ),
-                    ],
-                  ),
-                );
-              }),
-            ),
-          ),
-          
-          // Welcome message with personalization
-          if (userName != null && currentStep == 0)
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-              color: colorScheme.primary.withOpacity(0.1),
-              child: Text(
-                'Good ${_getTimeOfDay()}, $userName!',
-                style: TextStyle(
-                  color: colorScheme.primary,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16.sp,
-                ),
-              ),
-            ),
-          
-          // Step content
-          Expanded(
-            child: FadeTransition(
-              opacity: _fadeAnimation,
-              child: SingleChildScrollView(
-                child: _buildStepContent(currentStep, occasionType),
-              ),
-            ),
-          ),
-          
-          // Bottom navigation
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: colorScheme.surface,
-              boxShadow: [
-                BoxShadow(
-                  color: colorScheme.shadow.withOpacity(0.3),
-                  spreadRadius: 1,
-                  blurRadius: 5,
-                  offset: const Offset(0, -3),
-                ),
-              ],
-            ),
-            child: Row(
-              children: [
-                // Back button
-                if (currentStep > 0)
+                        child: Text(
+                          'Back',
+                          style: TextStyle(fontWeight: FontWeight.w600),
+                        ),
+                      ),
+                    ),
+                  
+                  if (bookingState.currentStep > 0) SizedBox(width: 12.w),
+                  
                   Expanded(
-                    child: OutlinedButton(
-                      onPressed: () {
-                        _animationController.reverse().then((_) {
-                          ref.read(currentStepProvider.notifier).state--;
-                          _animationController.forward();
-                        });
-                      },
-                      style: OutlinedButton.styleFrom(
-                        foregroundColor: colorScheme.onSurface,
-                        side: BorderSide(color: colorScheme.outline),
-                        padding: const EdgeInsets.symmetric(vertical: 16),
+                    flex: bookingState.currentStep > 0 ? 2 : 1,
+                    child: ElevatedButton(
+                      onPressed: canContinue
+                          ? () {
+                              if (bookingState.currentStep < totalSteps - 1) {
+                                _animationController.reverse().then((_) {
+                                  ref.read(ticketBookingProvider.notifier).nextStep();
+                                  _animationController.forward();
+                                });
+                              } else {
+                                _handleSubmission();
+                              }
+                            }
+                          : null,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: colorScheme.primary,
+                        foregroundColor: colorScheme.onPrimary,
+                        disabledBackgroundColor: colorScheme.primary.withOpacity(0.3),
+                        disabledForegroundColor: colorScheme.onPrimary.withOpacity(0.6),
+                        elevation: 0,
+                        padding: EdgeInsets.symmetric(vertical: 12.h),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),
                       ),
-                      child: const Text('Back'),
-                    ),
-                  ),
-                
-                // Spacer
-                if (currentStep > 0) const SizedBox(width: 16),
-                
-                // Continue/Submit button
-                Expanded(
-                  flex: currentStep > 0 ? 2 : 1,
-                  child: ElevatedButton(
-                    onPressed: canContinue
-                        ? () {
-                            if (currentStep < totalSteps - 1) {
-                              _animationController.reverse().then((_) {
-                                ref.read(currentStepProvider.notifier).state++;
-                                _animationController.forward();
-                              });
-                            } else {
-                              // Handle final submission
-                              _handleSubmission();
-                            }
-                          }
-                        : null,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: colorScheme.primary,
-                      foregroundColor: colorScheme.onPrimary,
-                      disabledBackgroundColor: colorScheme.primary.withOpacity(0.3),
-                      disabledForegroundColor: colorScheme.onPrimary.withOpacity(0.6),
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
-                    child: Text(
-                      currentStep < totalSteps - 1 ? 'Continue' : 'Pay Now',
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
+                    
+                      child: Text(
+                        bookingState.currentStep < totalSteps - 1 ? 'Continue' : 'Pay Now',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 15,
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 
-  Widget _buildStepContent(int step, String occasionType) {
-    if (occasionType == 'park') {
+  String _getStepLabel(int step) {
+    if (_occasionType.requiresDateSelection) {
+      switch (step) {
+        case 0:
+          return 'Date';
+        case 1:
+          return 'Tickets';
+        case 2:
+          return 'Details';
+        default:
+          return '';
+      }
+    } else {
+      switch (step) {
+        case 0:
+          return 'Tickets';
+        case 1:
+          return 'Details';
+        default:
+          return '';
+      }
+    }
+  }
+
+  Widget _buildStepContent(int step,{required String occasionId,required String occasionType}) {
+    if (_occasionType.requiresDateSelection) {
       switch (step) {
         case 0:
           return const DateSelectionStep();
         case 1:
-          return const TicketSelectionStep();
+          return TicketSelectionStep(occasionId: occasionId, occasionType: occasionType);
         case 2:
           return const DetailsStep();
         default:
           return const SizedBox.shrink();
       }
     } else {
-      // Event flow skips date selection
       switch (step) {
         case 0:
-          return const TicketSelectionStep();
+          return TicketSelectionStep(occasionId: widget.occasionId, occasionType: widget.occasionType);
         case 1:
           return const DetailsStep();
         default:
@@ -332,8 +359,6 @@ class _BuyTicketSState extends ConsumerState<BuyTicketS> with SingleTickerProvid
   }
 
   void _handleSubmission() {
-    // Here you would implement the payment processing
-    // For now, we'll just show a snackbar
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(

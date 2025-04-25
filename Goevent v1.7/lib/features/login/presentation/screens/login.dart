@@ -16,6 +16,7 @@ import '../widgets/custom_button.dart';
 import '../widgets/custom_text_field.dart';
 import '../widgets/otp_input_field.dart';
 import '../widgets/social_button.dart';
+import '../widgets/otp_section.dart';
 
 class Login extends ConsumerStatefulWidget {
   static const routeName = 'Login';
@@ -125,559 +126,377 @@ class _LoginState extends ConsumerState<Login>
   Widget build(BuildContext context) {
     final isOTPSent = ref.watch(otpStateProvider);
     return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              context.colorScheme.primary,
-              context.colorScheme.primary.withOpacity(0.8),
-              context.colorScheme.primary.withOpacity(0.6),
-            ],
-          ),
-        ),
-        child: SafeArea(
-          child: AnimatedBuilder(
-            animation: _animationController,
-            builder: (context, child) {
-              return FadeTransition(
-                opacity: _fadeAnimation,
-                child: SlideTransition(
-                  position: _slideAnimation,
-                  child: child,
-                ),
-              );
-            },
-            child: LayoutBuilder(
-              builder: (context, constraints) {
-                return SingleChildScrollView(
-                  child: ConstrainedBox(
-                    constraints: BoxConstraints(
-                      minHeight: constraints.maxHeight,
-                    ),
-                    child: IntrinsicHeight(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 24),
-                        child: Form(
-                          key: _formKey,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              // Skip Button
-                              Align(
-                                alignment: Alignment.topRight,
-                                child: TextButton(
-                                  onPressed: () {
-                                    context
-                                        .pushReplacementNamed(Home.routeName);
-                                  },
-                                  style: TextButton.styleFrom(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 16, vertical: 8),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(20),
+      body: SafeArea(
+        child: AnimatedBuilder(
+          animation: _animationController,
+          builder: (context, child) {
+            return FadeTransition(
+              opacity: _fadeAnimation,
+              child: SlideTransition(
+                position: _slideAnimation,
+                child: child,
+              ),
+            );
+          },
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              return SingleChildScrollView(
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    minHeight: constraints.maxHeight,
+                  ),
+                  child: IntrinsicHeight(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 24.w),
+                      child: Form(
+                        key: _formKey,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // Skip Button
+                            Align(
+                              alignment: Alignment.topRight,
+                              child: TextButton(
+                                onPressed: () {
+                                  context.pushReplacementNamed(Home.routeName);
+                                },
+                                style: TextButton.styleFrom(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 16, vertical: 8),
+                                ),
+                                child: Text(
+                                  "Skip",
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 16.sp,
+                                    fontWeight: FontWeight.w500,
+                                    color: context.colorScheme.onSurfaceVariant,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(height: context.height * 0.05),
+                            // Logo and App Name
+                            Center(
+                              child: Hero(
+                                tag: 'app-logo',
+                                child: Container(
+                                  padding: const EdgeInsets.all(16),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(30),
+                                    child: Image.asset(
+                                      "assets/image/hamara-ticket-logo.png",
+                                      height: context.height * 0.12,
                                     ),
                                   ),
-                                  child: Text(
-                                    "Skip",
-                                    style: GoogleFonts.poppins(
-                                      fontSize: 16.sp,
-                                      fontWeight: FontWeight.w500,
-                                      color: context.colorScheme.surface,
-                                    ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(height: context.height * 0.02),
+                            Center(
+                              child: Text(
+                                "Hamara Ticket",
+                                style: GoogleFonts.poppins(
+                                  fontSize: 28.sp,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.black87,
+                                  letterSpacing: 0.5,
+                                ),
+                              ),
+                            ),
+                            SizedBox(height: context.height * 0.01),
+                            Center(
+                              child: Text(
+                                "Welcome Back",
+                                style: GoogleFonts.poppins(
+                                  fontSize: 16.sp,
+                                  color: Colors.black54,
+                                  letterSpacing: 0.2,
+                                ),
+                              ),
+                            ),
+                            SizedBox(height: context.height * 0.06),
+                            if (!isOTPSent) ...[
+                              // Email Input
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: context.colorScheme.surfaceVariant.withOpacity(0.1),
+                                  borderRadius: BorderRadius.circular(12),
+                                  border: Border.all(
+                                    color: context.colorScheme.outline.withOpacity(0.2),
+                                    width: 1,
                                   ),
+                                ),
+                                child: CustomTextField(
+                                  controller: _emailController,
+                                  hint: "Email",
+                                  prefixIcon: Icons.email_outlined,
+                                  validator: _validateEmail,
+                                  keyboardType: TextInputType.emailAddress,
+                                  textInputAction: TextInputAction.done,
+                                  onFieldSubmitted: (_) => _handleSendOtp(),
                                 ),
                               ),
                               SizedBox(height: context.height * 0.03),
-                              // Logo and App Name
-                              Center(
-                                child: Hero(
-                                  tag: 'app-logo',
-                                  child: Container(
-                                    padding: const EdgeInsets.all(16),
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: context.colorScheme.surface
-                                          .withOpacity(0.2),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: context.colorScheme.shadow
-                                              .withOpacity(0.1),
-                                          blurRadius: 20,
-                                          spreadRadius: 5,
+                              // Send OTP Button
+                              Consumer(
+                                builder: (context, ref, child) {
+                                  final state = ref.watch(loginWithEmailProvider);
+                                  return SizedBox(
+                                    width: double.infinity,
+                                    height: 52,
+                                    child: ElevatedButton(
+                                      onPressed: state.isLoading
+                                          ? null
+                                          : _handleSendOtp,
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: context.colorScheme.primary,
+                                        foregroundColor: context.colorScheme.onPrimary,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(12),
                                         ),
-                                      ],
-                                    ),
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(30),
-                                      child: Image.asset(
-                                        "assets/image/hamara-ticket-logo.png",
-                                        height: context.height * 0.12,
+                                        elevation: 0,
                                       ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              SizedBox(height: context.height * 0.02),
-                              Center(
-                                child: Text(
-                                  "Hamara Ticket",
-                                  style: GoogleFonts.poppins(
-                                    fontSize: 28.sp,
-                                    fontWeight: FontWeight.w700,
-                                    color: context.colorScheme.surface,
-                                    letterSpacing: 0.5,
-                                  ),
-                                ),
-                              ),
-                              SizedBox(height: context.height * 0.02),
-                              Center(
-                                child: Text(
-                                  "Welcome Back",
-                                  style: GoogleFonts.poppins(
-                                    fontSize: 16.sp,
-                                    color: context.colorScheme.surface
-                                        .withOpacity(0.8),
-                                    letterSpacing: 0.2,
-                                  ),
-                                ),
-                              ),
-                              SizedBox(height: context.height * 0.06),
-                              if (!isOTPSent) ...[
-                                // Email Input
-                                Container(
-                                  decoration: BoxDecoration(
-                                    color: context.colorScheme.surface
-                                        .withOpacity(0.1),
-                                    borderRadius: BorderRadius.circular(16),
-                                    border: Border.all(
-                                      color: context.colorScheme.surface
-                                          .withOpacity(0.2),
-                                    ),
-                                  ),
-                                  child: CustomTextField(
-                                    controller: _emailController,
-                                    hint: "Email",
-                                    prefixIcon: Icons.email_outlined,
-                                    validator: _validateEmail,
-                                    keyboardType: TextInputType.emailAddress,
-                                    textInputAction: TextInputAction.done,
-                                    onFieldSubmitted: (_) => _handleSendOtp(),
-                                  ),
-                                ),
-                                SizedBox(height: context.height * 0.03),
-                                // Send OTP Button
-                                Consumer(
-                                  builder: (context, ref, child) {
-                                    final state =
-                                        ref.watch(loginWithEmailProvider);
-                                    return Container(
-                                      width: double.infinity,
-                                      height: 56,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(16),
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: context.colorScheme.shadow
-                                                .withOpacity(0.2),
-                                            blurRadius: 10,
-                                            offset: const Offset(0, 4),
-                                          ),
-                                        ],
-                                      ),
-                                      child: ElevatedButton(
-                                        onPressed: state.isLoading
-                                            ? null
-                                            : _handleSendOtp,
-                                        style: ElevatedButton.styleFrom(
-                                          backgroundColor:
-                                              context.colorScheme.surface,
-                                          foregroundColor:
-                                              context.colorScheme.primary,
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(16),
-                                          ),
-                                          elevation: 0,
-                                        ),
-                                        child: state.isLoading
-                                            ? const SizedBox(
-                                                height: 20,
-                                                width: 20,
-                                                child:
-                                                    CircularProgressIndicator(
-                                                  strokeWidth: 2,
-                                                  valueColor:
-                                                      AlwaysStoppedAnimation<
-                                                          Color>(Colors.white),
-                                                ),
-                                              )
-                                            : Text(
-                                                "Send OTP",
-                                                style: GoogleFonts.poppins(
-                                                  fontSize: 16.sp,
-                                                  fontWeight: FontWeight.w600,
-                                                ),
+                                      child: state.isLoading
+                                          ? SizedBox(
+                                              height: 20,
+                                              width: 20,
+                                              child: CircularProgressIndicator(
+                                                strokeWidth: 2,
+                                                valueColor:
+                                                    AlwaysStoppedAnimation<Color>(
+                                                        context.colorScheme.onPrimary),
                                               ),
-                                      ),
-                                    );
-                                  },
-                                ),
-                                SizedBox(height: context.height * 0.03),
-                                // Divider
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      child: Divider(
-                                        color: context.colorScheme.surface
-                                            .withOpacity(0.2),
-                                        thickness: 1,
+                                            )
+                                          : Text(
+                                              "Continue with Email",
+                                              style: GoogleFonts.poppins(
+                                                fontSize: 16.sp,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                    ),
+                                  );
+                                },
+                              ),
+                              SizedBox(height: context.height * 0.03),
+                              // Divider
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: Divider(
+                                      color: Colors.grey[300],
+                                      thickness: 1,
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 16),
+                                    child: Text(
+                                      "OR",
+                                      style: GoogleFonts.poppins(
+                                        color: Colors.grey[600],
+                                        fontSize: 14.sp,
                                       ),
                                     ),
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 16),
-                                      child: Text(
-                                        "OR",
-                                        style: GoogleFonts.poppins(
-                                          color: context.colorScheme.surface
-                                              .withOpacity(0.8),
-                                          fontSize: 14.sp,
-                                        ),
+                                  ),
+                                  Expanded(
+                                    child: Divider(
+                                      color: Colors.grey[300],
+                                      thickness: 1,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(height: context.height * 0.03),
+                              // Google Sign In
+                              Consumer(
+                                builder: (context, ref, child) {
+                                  final state = ref.watch(loginProvider);
+                                  return Container(
+                                    width: double.infinity,
+                                    height: 52,
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(12),
+                                      border: Border.all(
+                                        color: Colors.grey[300]!,
+                                        width: 1,
                                       ),
                                     ),
-                                    Expanded(
-                                      child: Divider(
-                                        color: context.colorScheme.surface
-                                            .withOpacity(0.2),
-                                        thickness: 1,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(height: context.height * 0.03),
-                                // Google Sign In
-                                Consumer(
-                                  builder: (context, ref, child) {
-                                    final state = ref.watch(loginProvider);
-                                    return Container(
-                                      width: double.infinity,
-                                      height: 56,
-                                      decoration: BoxDecoration(
-                                        color: context.colorScheme.surface,
-                                        borderRadius: BorderRadius.circular(16),
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: context.colorScheme.shadow
-                                                .withOpacity(0.1),
-                                            blurRadius: 10,
-                                            offset: const Offset(0, 4),
-                                          ),
-                                        ],
-                                      ),
-                                      child: Material(
-                                        color: Colors.transparent,
-                                        child: InkWell(
-                                          borderRadius:
-                                              BorderRadius.circular(16),
-                                          onTap: state.isLoading || isLoading
-                                              ? null
-                                              : () async {
-                                                  setState(() {
-                                                    isLoading = true;
-                                                  });
+                                    child: Material(
+                                      color: Colors.transparent,
+                                      child: InkWell(
+                                        borderRadius: BorderRadius.circular(12),
+                                        onTap: state.isLoading || isLoading
+                                            ? null
+                                            : () async {
+                                                setState(() {
+                                                  isLoading = true;
+                                                });
 
-                                                  try {
-                                                    log("Login: Starting Google Sign-in process");
-                                                    final googleUser =
-                                                        await _googleSignInAuth
-                                                            .signInWithGoogle();
+                                                try {
+                                                  log("Login: Starting Google Sign-in process");
+                                                  final googleUser =
+                                                      await _googleSignInAuth
+                                                          .signInWithGoogle();
 
-                                                    if (googleUser == null) {
-                                                      if (mounted) {
-                                                        setState(() {
-                                                          isLoading = false;
-                                                        });
-                                                        _showMessage(
-                                                          context,
-                                                          'Sign-in cancelled',
-                                                          type:
-                                                              MessageType.info,
-                                                        );
-                                                      }
-                                                      return;
-                                                    }
-
-                                                    log("Login: Google Sign-in successful, proceeding to backend verification");
-                                                    log("Login: User info - email: ${googleUser.email}, name: ${googleUser.displayName}");
-
-                                                    // Start provider login
-                                                    await ref
-                                                        .read(loginProvider
-                                                            .notifier)
-                                                        .loginWithGoogle(
-                                                          email: googleUser.email,
-                                                          name: 
-                                                              googleUser.displayName ?? "Guest",
-                                                        
-                                                        );
-
-                                                    if (mounted) {
-                                                      log("Login: User successfully authenticated, navigating to home");
-                                                      context
-                                                          .pushReplacementNamed(
-                                                              Home.routeName);
-                                                      _showMessage(
-                                                        context,
-                                                        'Login successful',
-                                                        type: MessageType
-                                                            .success,
-                                                      );
-                                                    }
-                                                  } catch (e) {
-                                                    log("Login: Error during Google sign-in: $e");
-                                                    if (mounted) {
-                                                      _showMessage(
-                                                        context,
-                                                        'Failed to sign in: ${e.toString()}',
-                                                        type: MessageType.error,
-                                                      );
-                                                    }
-                                                  } finally {
+                                                  if (googleUser == null) {
                                                     if (mounted) {
                                                       setState(() {
                                                         isLoading = false;
                                                       });
-                                                    }
-                                                  }
-                                                },
-                                          child: Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 16),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                Image.asset(
-                                                  "assets/image/google.png",
-                                                  height: 24,
-                                                ),
-                                                const SizedBox(width: 12),
-                                                Text(
-                                                  "Continue with Google",
-                                                  style: GoogleFonts.poppins(
-                                                    fontSize: 16.sp,
-                                                    fontWeight: FontWeight.w500,
-                                                    color: context
-                                                        .colorScheme.onSurface,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                ),
-                                const Spacer(),
-                              ] else ...[
-                                // OTP Input Section
-                                Text(
-                                  "Enter verification code",
-                                  style: GoogleFonts.poppins(
-                                    fontSize: 18.sp,
-                                    fontWeight: FontWeight.w600,
-                                    color: context.colorScheme.surface,
-                                  ),
-                                ),
-                                SizedBox(height: context.height * 0.02),
-                                Text(
-                                  "We've sent a code to ${_emailController.text}",
-                                  style: GoogleFonts.poppins(
-                                    fontSize: 14.sp,
-                                    color: context.colorScheme.surface
-                                        .withOpacity(0.8),
-                                  ),
-                                ),
-                                SizedBox(height: context.height * 0.03),
-                                OtpInputField(
-                                  controller: _otpController,
-                                  onCompleted: _onOtpCompleted,
-                                ),
-                                SizedBox(height: context.height * 0.03),
-                                Consumer(
-                                  builder: (context, ref, child) {
-                                    final otpState =
-                                        ref.watch(verifyOTPProvider);
-                                    return Container(
-                                      width: double.infinity,
-                                      height: 56,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(16),
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: context.colorScheme.shadow
-                                                .withOpacity(0.2),
-                                            blurRadius: 10,
-                                            offset: const Offset(0, 4),
-                                          ),
-                                        ],
-                                      ),
-                                      child: ElevatedButton(
-                                        onPressed: otpState.isLoading
-                                            ? null
-                                            : () {
-                                                if (_otpController
-                                                        .text.length ==
-                                                    6) {
-                                                  ref
-                                                      .read(verifyOTPProvider
-                                                          .notifier)
-                                                      .verifyOTP(
-                                                        email: _emailController
-                                                            .text,
-                                                        otp:
-                                                            _otpController.text,
+                                                      _showMessage(
+                                                        context,
+                                                        'Sign-in cancelled',
+                                                        type: MessageType.info,
                                                       );
+                                                    }
+                                                    return;
+                                                  }
+
+                                                  await ref
+                                                      .read(loginProvider.notifier)
+                                                      .loginWithGoogle(
+                                                        email: googleUser.email,
+                                                        name: googleUser
+                                                                .displayName ??
+                                                            "Guest",
+                                                      );
+
+                                                  if (mounted) {
+                                                    context.pushReplacementNamed(
+                                                        Home.routeName);
+                                                  }
+                                                } catch (e) {
+                                                  log("Login: Error during Google sign-in: $e");
+                                                  if (mounted) {
+                                                    _showMessage(
+                                                      context,
+                                                      'Failed to sign in: ${e.toString()}',
+                                                      type: MessageType.error,
+                                                    );
+                                                  }
+                                                } finally {
+                                                  if (mounted) {
+                                                    setState(() {
+                                                      isLoading = false;
+                                                    });
+                                                  }
                                                 }
                                               },
-                                        style: ElevatedButton.styleFrom(
-                                          backgroundColor:
-                                              context.colorScheme.surface,
-                                          foregroundColor:
-                                              context.colorScheme.primary,
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(16),
-                                          ),
-                                          elevation: 0,
-                                        ),
-                                        child: otpState.isLoading
-                                            ? const SizedBox(
-                                                height: 20,
-                                                width: 20,
-                                                child:
-                                                    CircularProgressIndicator(
-                                                  strokeWidth: 2,
-                                                  valueColor:
-                                                      AlwaysStoppedAnimation<
-                                                          Color>(Colors.white),
-                                                ),
-                                              )
-                                            : Text(
-                                                "Verify OTP",
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 16),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Image.asset(
+                                                "assets/image/google.png",
+                                                height: 24,
+                                              ),
+                                              const SizedBox(width: 12),
+                                              Text(
+                                                "Continue with Google",
                                                 style: GoogleFonts.poppins(
                                                   fontSize: 16.sp,
-                                                  fontWeight: FontWeight.w600,
+                                                  fontWeight: FontWeight.w500,
+                                                  color: Colors.black87,
                                                 ),
                                               ),
-                                      ),
-                                    );
-                                  },
-                                ),
-                                SizedBox(height: context.height * 0.02),
-                                Center(
-                                  child: TextButton(
-                                    onPressed: () {
-                                      ref
-                                          .read(otpStateProvider.notifier)
-                                          .setOTPSentState(false);
-                                      _emailController.clear();
-                                      _otpController.clear();
-                                    },
-                                    child: Text(
-                                      "Change Sign-in Method",
-                                      style: GoogleFonts.poppins(
-                                        color: context.colorScheme.surface,
-                                        fontSize: 14.sp,
-                                        fontWeight: FontWeight.w500,
+                                            ],
+                                          ),
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                ),
-                                const Spacer(),
-                              ],
+                                  );
+                                },
+                              ),
+                            ] else ...[
+                              // OTP Section
+                              OtpSection(
+                                onChangeSignInMethod: () {
+                                  ref.read(otpStateProvider.notifier).setOTPSentState(false);
+                                  _emailController.clear();
+                                  _otpController.clear();
+                                },
+                                otpController: _otpController,
+                                onOtpCompleted: _onOtpCompleted,
+                                email: _emailController.text,
+                              ),
+                            ],
 
-                              // Terms and Conditions
-                              if (!isOTPSent) ...[
-                                const Spacer(),
-                                Center(
-                                  child: RichText(
-                                    textAlign: TextAlign.center,
-                                    text: TextSpan(
-                                      style: GoogleFonts.poppins(
-                                        fontSize: 12.sp,
-                                        color: context.colorScheme.surface
-                                            .withOpacity(0.7),
-                                      ),
-                                      children: [
-                                        const TextSpan(
-                                          text:
-                                              "By continuing, you agree to our ",
-                                        ),
-                                        TextSpan(
-                                          text: "Terms of Service",
-                                          style: GoogleFonts.poppins(
-                                            fontSize: 12.sp,
-                                            color: context.colorScheme.surface,
-                                            fontWeight: FontWeight.w600,
-                                            decoration:
-                                                TextDecoration.underline,
-                                          ),
-                                          recognizer: TapGestureRecognizer()
-                                            ..onTap = () {
-                                              context.pushNamed(
-                                                  TermsAndConditions.routeName);
-                                            },
-                                        ),
-                                        const TextSpan(
-                                          text: " and ",
-                                        ),
-                                        TextSpan(
-                                          text: "Privacy Policy",
-                                          style: GoogleFonts.poppins(
-                                            fontSize: 12.sp,
-                                            color: context.colorScheme.surface,
-                                            fontWeight: FontWeight.w600,
-                                            decoration:
-                                                TextDecoration.underline,
-                                          ),
-                                          recognizer: TapGestureRecognizer()
-                                            ..onTap = () {
-                                              context.pushNamed(
-                                                  PrivacyPolicyScreen
-                                                      .routeName);
-                                            },
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(height: context.height * 0.02),
-                                // All Rights Reserved
-                                Center(
-                                  child: Text(
-                                    "© 2023 Hamara Ticket. All rights reserved.",
+                            // Terms and Conditions
+                            if (!isOTPSent) ...[
+                              const Spacer(),
+                              Center(
+                                child: RichText(
+                                  textAlign: TextAlign.center,
+                                  text: TextSpan(
                                     style: GoogleFonts.poppins(
                                       fontSize: 12.sp,
-                                      color: context.colorScheme.surface
-                                          .withOpacity(0.6),
+                                      color: Colors.black54,
                                     ),
+                                    children: [
+                                      const TextSpan(
+                                        text: "By continuing, you agree to our ",
+                                      ),
+                                      TextSpan(
+                                        text: "Terms of Service",
+                                        style: GoogleFonts.poppins(
+                                          fontSize: 12.sp,
+                                          color: Colors.black87,
+                                          fontWeight: FontWeight.w500,
+                                          decoration: TextDecoration.underline,
+                                        ),
+                                        recognizer: TapGestureRecognizer()
+                                          ..onTap = () {
+                                            context.pushNamed(
+                                                TermsAndConditions.routeName);
+                                          },
+                                      ),
+                                      const TextSpan(
+                                        text: " and ",
+                                      ),
+                                      TextSpan(
+                                        text: "Privacy Policy",
+                                        style: GoogleFonts.poppins(
+                                          fontSize: 12.sp,
+                                          color: Colors.black87,
+                                          fontWeight: FontWeight.w500,
+                                          decoration: TextDecoration.underline,
+                                        ),
+                                        recognizer: TapGestureRecognizer()
+                                          ..onTap = () {
+                                            context.pushNamed(
+                                                PrivacyPolicyScreen.routeName);
+                                          },
+                                      ),
+                                    ],
                                   ),
                                 ),
-                                SizedBox(height: context.height * 0.03),
-                              ],
+                              ),
+                              SizedBox(height: context.height * 0.02),
+                              // All Rights Reserved
+                              Center(
+                                child: Text(
+                                  "© 2023 Hamara Ticket. All rights reserved.",
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 12.sp,
+                                    color: Colors.black45,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(height: context.height * 0.03),
                             ],
-                          ),
+                          ],
                         ),
                       ),
                     ),
                   ),
-                );
-              },
-            ),
+                ),
+              );
+            },
           ),
         ),
       ),
@@ -690,12 +509,14 @@ class _LoginState extends ConsumerState<Login>
       content: Text(
         message,
         style: GoogleFonts.poppins(
-          color: Colors.white,
+          color: context.colorScheme.onError,
         ),
       ),
       backgroundColor: type == MessageType.error
-          ? context.colorScheme.error.withOpacity(0.8)
-          : context.colorScheme.primary.withOpacity(0.8),
+          ? context.colorScheme.error
+          : type == MessageType.success
+              ? context.colorScheme.primary
+              : context.colorScheme.surface,
       behavior: SnackBarBehavior.floating,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),

@@ -64,9 +64,9 @@ class RecommendedParksSection extends ConsumerWidget {
                   final park = parks[index];
                   return GestureDetector(
                     onTap: () {
-                      context.push(ParkDetailsScreen.routePath, extra: park);
+                      context.push(ParkDetailsScreen.routePath, extra: park.id);
                     },
-                    child: _ParkCard(park: park),
+                    child: RecommendedParkCard(park: park),
                   );
                 },
               ),
@@ -82,17 +82,17 @@ class RecommendedParksSection extends ConsumerWidget {
   }
 }
 
-class _ParkCard extends StatelessWidget {
+class RecommendedParkCard extends StatelessWidget {
   final Park park;
 
-  const _ParkCard({Key? key, required this.park}) : super(key: key);
+  const RecommendedParkCard({Key? key, required this.park}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final isWaterPark = park.type?.toLowerCase() == "water park";
-    final price = park.dynamicPricing?.isNotEmpty == true
-        ? park.dynamicPricing!.first.basePrice
-        : 299;
+    final price = park.tickets.isNotEmpty == true
+        ? park.tickets.first.price
+        : "N/A";
     final parkCategory = park.tags.isNotEmpty ? park.tags.first : (isWaterPark ? 'Water Park' : 'Park');
 
     return Container(

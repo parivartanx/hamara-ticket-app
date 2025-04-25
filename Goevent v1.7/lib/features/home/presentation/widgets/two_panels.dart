@@ -152,12 +152,12 @@ class _TwoPanelsState extends ConsumerState<TwoPanels>
             ),
           ),
 
-          const SliverToBoxAdapter(
-            child: Padding(
-              padding: EdgeInsets.only(top: 16.0),
-              child: NearbyEventsSection(),
-            ),
-          ),
+          // const SliverToBoxAdapter(
+          //   child: Padding(
+          //     padding: EdgeInsets.only(top: 16.0),
+          //     child: NearbyEventsSection(),
+          //   ),
+          // ),
 
           SliverToBoxAdapter(
             child: SizedBox(height: context.height / 150),

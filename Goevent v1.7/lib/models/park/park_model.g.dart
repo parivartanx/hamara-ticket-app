@@ -20,6 +20,9 @@ Park _$ParkFromJson(Map<String, dynamic> json) => Park(
       attractions: (json['attractions'] as List<dynamic>)
           .map((e) => Attraction.fromJson(e as Map<String, dynamic>))
           .toList(),
+      tickets: (json['tickets'] as List<dynamic>)
+          .map((e) => TicketModel.fromJson(e as Map<String, dynamic>))
+          .toList(),
       type: json['type'] as String?,
       adminId: json['adminId'] as String?,
       status: json['status'] as String?,
@@ -55,6 +58,7 @@ Map<String, dynamic> _$ParkToJson(Park instance) => <String, dynamic>{
       'tags': instance.tags,
       'maxCapacity': instance.maxCapacity,
       'attractions': instance.attractions.map((e) => e.toJson()).toList(),
+      'tickets': instance.tickets.map((e) => e.toJson()).toList(),
       'type': instance.type,
       'adminId': instance.adminId,
       'status': instance.status,

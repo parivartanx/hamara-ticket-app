@@ -1,4 +1,5 @@
 import 'package:go_router/go_router.dart';
+import '/features/home/presentation/screens/all_parks_page.dart';
 import '/features/occasion-details/presentation/screens/event_details_screen.dart';
 import '/models/event/event_model.dart';
 import '/features/privacy-policy/privacy_policy.dart';
@@ -15,7 +16,7 @@ import '../features/contact/presentation/screens/contact.dart';
 
 // GoRouter configuration
 final appRouter = GoRouter(
-  initialLocation: Home.routePath,
+  initialLocation: Splashscreen.routePath,
   routes: [
     GoRoute(
         path: Home.routePath,
@@ -62,15 +63,20 @@ final appRouter = GoRouter(
       path: ParkDetailsScreen.routePath,
       name: ParkDetailsScreen.routeName,
       builder: (context, state) => ParkDetailsScreen(
-        park: state.extra as Park,
+        parkId: state.extra as String,
       ),
     ),
     GoRoute(
       path: EventDetailsScreen.routePath,
       name: EventDetailsScreen.routeName,
       builder: (context, state) => EventDetailsScreen(
-        event: state.extra as Event,
+        eventId: state.extra as String,
       ),
+    ),
+    GoRoute(
+      path: AllParksPage.routePath,
+      name: AllParksPage.routeName,
+      builder: (context, state) => const AllParksPage(),
     ),
     
   ],

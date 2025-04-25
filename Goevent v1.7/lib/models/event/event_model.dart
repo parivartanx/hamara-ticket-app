@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import '../ticket/ticket_model.dart';
 
 part 'event_model.g.dart';
 
@@ -18,6 +19,7 @@ class Event {
   final List<String> tags;
   final int maxCapacity;
   final String status;
+  final List<TicketModel> tickets;
 
   // Optional fields (not returned by backend)
   final List<String>? videoUrls;
@@ -43,6 +45,7 @@ class Event {
     required this.tags,
     required this.maxCapacity,
     required this.status,
+    required this.tickets,
     this.videoUrls,
     this.adminId,
     this.startTime,
