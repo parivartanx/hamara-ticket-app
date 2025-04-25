@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../extensions/media_query_ext.dart';
-import '../../data/providers/booking_provider.dart';
-import '../widgets/booking_filter_chip.dart';
 import '../widgets/booking_list.dart';
 import '/features/home/presentation/widgets/advanced_bottom_navigation.dart';
 
@@ -80,7 +78,7 @@ class _BookingState extends ConsumerState<Booking>
       ),
       body: Column(
         children: [
-          const BookingFilterSection(),
+          // const BookingFilterSection(),
           Expanded(
             child: FadeTransition(
               opacity: _fadeInController,
@@ -94,26 +92,26 @@ class _BookingState extends ConsumerState<Booking>
   }
 }
 
-class BookingFilterSection extends ConsumerWidget {
-  const BookingFilterSection({Key? key}) : super(key: key);
+// class BookingFilterSection extends ConsumerWidget {
+//   const BookingFilterSection({Key? key}) : super(key: key);
 
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
-      child: SizedBox(
-        height: 36.h,
-        child: ListView(
-          scrollDirection: Axis.horizontal,
-          children: const [
-            BookingFilterChip(filter: BookingTimeFilter.all),
-            SizedBox(width: 8),
-            BookingFilterChip(filter: BookingTimeFilter.upcoming),
-            SizedBox(width: 8),
-            BookingFilterChip(filter: BookingTimeFilter.past),
-          ],
-        ),
-      ),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context, WidgetRef ref) {
+//     return Padding(
+//       padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
+//       child: SizedBox(
+//         height: 36.h,
+//         child: ListView(
+//           scrollDirection: Axis.horizontal,
+//           children: const [
+//             BookingFilterChip(filter: BookingTimeFilter.all),
+//             SizedBox(width: 8),
+//             BookingFilterChip(filter: BookingTimeFilter.upcoming),
+//             SizedBox(width: 8),
+//             BookingFilterChip(filter: BookingTimeFilter.past),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }
