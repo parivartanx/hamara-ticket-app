@@ -9,7 +9,7 @@ class TicketBookingState {
   final int currentStep;
   final OccasionType occasionType;
   final DateTime? selectedDate;
-  final Map<String, int> selectedTickets;
+  final  selectedTickets;
   final Map<String, String> userDetails;
   final String? promoCode;
   final double convenienceFeePercentage;
@@ -136,10 +136,21 @@ class TicketPricesNotifier extends StateNotifier<Map<String, double>> {
   TicketPricesNotifier() : super({});
 
   void updatePrices(List<TicketModel> tickets) {
-    state = {
-      for (var ticket in tickets)
-        ticket.id: ticket.price.toDouble()
-    };
+    try {
+      if (tickets.isEmpty) return;
+      
+      final newPrices = <String, double>{};
+      for (var ticket in tickets) {
+        if (ticket.id.isNotEmpty) {
+          newPrices[ticket.id] = ticket.price.toDouble();
+        }
+      }
+      
+      state = newPrices;
+    } catch (e) {
+      print('Error in updatePrices: $e');
+      // Maintain current state in case of error
+    }
   }
 
   void clear() {
@@ -154,25 +165,40 @@ final occasionTypeProvider = StateProvider<String>((ref) => '');
 final ticketPricesProvider = StateNotifierProvider.autoDispose<TicketPricesNotifier, Map<String, double>>((ref) {
   final notifier = TicketPricesNotifier();
   
-  // Get the selected date
+  // Get the selected date with null safety
   final selectedDate = ref.watch(selectedDateProvider);
   final formattedDate = selectedDate != null 
       ? DateFormat('yyyy-MM-dd').format(selectedDate)
       : DateFormat('yyyy-MM-dd').format(DateTime.now());
   
-  // Get the occasion type and ID
+  // Get the occasion type and ID with validation
   final occasionType = ref.watch(occasionTypeProvider).toLowerCase();
   final occasionId = ref.watch(occasionIdProvider);
   
-  // Setup the automatic price updates
-  ref.listen<AsyncValue<List<TicketModel>>>(
-    ticketsProvider((
-      date: formattedDate,
-      eventId: occasionType == "event" ? occasionId : null,
-      parkId: (occasionType == "park" || occasionType == "waterpark") ? occasionId : null,
-    )),
-    (_, next) => next.whenData((tickets) => notifier.updatePrices(tickets)),
-  );
+  // Only proceed if we have valid occasion type and ID
+  if (occasionType.isNotEmpty && occasionId.isNotEmpty) {
+    // Setup the automatic price updates with error handling
+    ref.listen<AsyncValue<List<TicketModel>>>(
+      ticketsProvider((
+        date: formattedDate,
+        eventId: occasionType == "event" ? occasionId : null,
+        parkId: (occasionType == "park" || occasionType == "waterpark") ? occasionId : null,
+      )),
+      (previous, next) {
+        try {
+          next.whenData((tickets) {
+            if (tickets.isNotEmpty) {
+              notifier.updatePrices(tickets);
+            }
+          });
+        } catch (e) {
+          // Handle any errors during price updates
+          print('Error updating ticket prices: $e');
+          notifier.clear(); // Reset to safe state
+        }
+      },
+    );
+  }
   
   // Clean up when disposed
   ref.onDispose(() {

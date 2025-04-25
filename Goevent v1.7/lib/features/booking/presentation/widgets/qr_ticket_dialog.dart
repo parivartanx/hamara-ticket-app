@@ -210,9 +210,9 @@ class _QRTicketDialogState extends State<QRTicketDialog> {
         case BookingCategory.event:
           return colorScheme.primary;
         case BookingCategory.park:
-          return Colors.green.shade700;
+          return colorScheme.secondary;
         case BookingCategory.waterPark:
-          return Colors.blue.shade700;
+          return colorScheme.tertiary;
       }
     }
 
@@ -231,7 +231,7 @@ class _QRTicketDialogState extends State<QRTicketDialog> {
                   borderRadius: BorderRadius.circular(16.r),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.2),
+                      color: colorScheme.shadow.withOpacity(0.2),
                       blurRadius: 16,
                       offset: const Offset(0, 8),
                     ),
@@ -240,88 +240,105 @@ class _QRTicketDialogState extends State<QRTicketDialog> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    // Top header section
+                    // Top header section with logo
                     Container(
                       width: double.infinity,
                       decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                          colors: [
-                            getCategoryColor(),
-                            getCategoryColor().withOpacity(0.7),
-                          ],
-                        ),
+                        color: colorScheme.surface,
                         borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(16.r),
                           topRight: Radius.circular(16.r),
                         ),
                       ),
-                      padding: EdgeInsets.symmetric(
-                          vertical: 12.r, horizontal: 16.r),
-                      child: Row(
+                      child: Column(
                         children: [
-                          // Status badge
-                          if (widget.booking.isUsed)
-                            Transform.rotate(
-                              angle: -math.pi / 12,
-                              child: Container(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 10.w, vertical: 3.h),
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(3.r),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black.withOpacity(0.1),
-                                      blurRadius: 4,
-                                      offset: const Offset(0, 2),
-                                    ),
-                                  ],
-                                ),
-                                child: Text(
-                                  'USED',
-                                  style: TextStyle(
-                                    fontSize: 10.sp,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.grey.shade700,
-                                  ),
+                          // Logo and Title Section with USED badge
+                          Container(
+                            padding: EdgeInsets.all(16.r),
+                            decoration: BoxDecoration(
+                              border: Border(
+                                bottom: BorderSide(
+                                  color: colorScheme.outlineVariant.withOpacity(0.2),
+                                  width: 1,
                                 ),
                               ),
                             ),
-
-                          // Event details
-                          Expanded(
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
+                            child: Stack(
                               children: [
-                                // Event name
-                                Text(
-                                  widget.booking.eventName,
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    fontSize: 18.sp,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                                SizedBox(height: 6.h),
-
-                                // Category
-                                Container(
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: 8.w, vertical: 2.h),
-                                  decoration: BoxDecoration(
-                                    color: Colors.white.withOpacity(0.2),
-                                    borderRadius: BorderRadius.circular(12.r),
-                                  ),
-                                  child: Text(
-                                    widget.booking.category.displayName,
-                                    style: TextStyle(
-                                      fontSize: 10.sp,
-                                      fontWeight: FontWeight.w500,
-                                      color: Colors.white,
+                                // Logo and Title
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(8.r),
+                                      child: Image.asset(
+                                        'assets/image/hamara-ticket-logo.png',
+                                        height: 28.h,
+                                        width: 28.h,
+                                      ),
                                     ),
+                                    SizedBox(width: 8.w),
+                                    Text(
+                                      'Hamara Ticket',
+                                      style: TextStyle(
+                                        fontSize: 18.sp,
+                                        fontWeight: FontWeight.w600,
+                                        color: colorScheme.onSurface,
+                                        letterSpacing: 0.3,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                // USED badge in top right
+                                if (widget.booking.isUsed)
+                                  Positioned(
+                                    top: 0,
+                                    right: 0,
+                                    child: Container(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 10.w,
+                                        vertical: 4.h,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: colorScheme.error.withOpacity(0.12),
+                                        borderRadius: BorderRadius.circular(6.r),
+                                      ),
+                                      child: Text(
+                                        'USED',
+                                        style: TextStyle(
+                                          fontSize: 12.sp,
+                                          fontWeight: FontWeight.w500,
+                                          color: colorScheme.error,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                              ],
+                            ),
+                          ),
+                          // Event Details
+                          Container(
+                            padding: EdgeInsets.all(16.r),
+                            decoration: BoxDecoration(
+                              color: getCategoryColor().withOpacity(0.08),
+                            ),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        widget.booking.eventName,
+                                        style: TextStyle(
+                                          fontSize: 16.sp,
+                                          fontWeight: FontWeight.bold,
+                                          color: colorScheme.onSurface,
+                                          height: 1.2,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ],
@@ -335,18 +352,18 @@ class _QRTicketDialogState extends State<QRTicketDialog> {
                     Container(
                       padding: EdgeInsets.all(12.r),
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: colorScheme.surface,
                         borderRadius: BorderRadius.circular(8.r),
                       ),
-                      margin:
-                          EdgeInsets.symmetric(horizontal: 16.r, vertical: 8.r),
+                      margin: EdgeInsets.symmetric(horizontal: 16.r, vertical: 8.r),
                       child: Column(
                         children: [
                           QrImageView(
                             data: qrData,
                             version: QrVersions.auto,
                             size: 220.r,
-                            backgroundColor: Colors.white,
+                            backgroundColor: colorScheme.surface,
+                            foregroundColor: colorScheme.onSurface,
                             errorCorrectionLevel: QrErrorCorrectLevel.H,
                             padding: EdgeInsets.zero,
                           ),
@@ -356,7 +373,7 @@ class _QRTicketDialogState extends State<QRTicketDialog> {
                             style: TextStyle(
                               fontSize: 12.sp,
                               fontWeight: FontWeight.w500,
-                              color: Colors.grey.shade600,
+                              color: colorScheme.onSurfaceVariant,
                             ),
                           ),
                         ],
@@ -375,7 +392,7 @@ class _QRTicketDialogState extends State<QRTicketDialog> {
                                 child: Container(
                                   height: 1,
                                   margin: EdgeInsets.symmetric(horizontal: 2.w),
-                                  color: Colors.grey.withOpacity(0.3),
+                                  color: colorScheme.outlineVariant,
                                 ),
                               ),
                             ),
@@ -391,7 +408,7 @@ class _QRTicketDialogState extends State<QRTicketDialog> {
                               height: 12.h,
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
-                                color: context.colorScheme.surface,
+                                color: colorScheme.surface,
                               ),
                             ),
                           ),
@@ -406,7 +423,7 @@ class _QRTicketDialogState extends State<QRTicketDialog> {
                               height: 12.h,
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
-                                color: context.colorScheme.surface,
+                                color: colorScheme.surface,
                               ),
                             ),
                           ),
@@ -416,8 +433,7 @@ class _QRTicketDialogState extends State<QRTicketDialog> {
 
                     // Ticket details
                     Padding(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 16.r, vertical: 8.r),
+                      padding: EdgeInsets.symmetric(horizontal: 16.r, vertical: 8.r),
                       child: Column(
                         children: [
                           Row(
@@ -427,6 +443,7 @@ class _QRTicketDialogState extends State<QRTicketDialog> {
                                   'Date',
                                   dateFormat.format(widget.booking.eventDate),
                                   Icons.calendar_today_outlined,
+                                  colorScheme,
                                 ),
                               ),
                               SizedBox(width: 12.w),
@@ -435,6 +452,7 @@ class _QRTicketDialogState extends State<QRTicketDialog> {
                                   'Time',
                                   timeFormat.format(widget.booking.eventDate),
                                   Icons.access_time_rounded,
+                                  colorScheme,
                                 ),
                               ),
                             ],
@@ -447,6 +465,7 @@ class _QRTicketDialogState extends State<QRTicketDialog> {
                                   'Ticket Type',
                                   widget.booking.ticketType,
                                   Icons.confirmation_number_outlined,
+                                  colorScheme,
                                 ),
                               ),
                               SizedBox(width: 12.w),
@@ -455,6 +474,7 @@ class _QRTicketDialogState extends State<QRTicketDialog> {
                                   'Quantity',
                                   '${widget.booking.quantity} tickets',
                                   Icons.person_outline,
+                                  colorScheme,
                                 ),
                               ),
                             ],
@@ -464,6 +484,7 @@ class _QRTicketDialogState extends State<QRTicketDialog> {
                             'Booking ID',
                             widget.booking.eventId,
                             Icons.qr_code_outlined,
+                            colorScheme,
                           ),
                         ],
                       ),
@@ -473,17 +494,17 @@ class _QRTicketDialogState extends State<QRTicketDialog> {
               ),
             ),
 
-            // Bottom action buttons (not part of the screenshot)
+            // Bottom action buttons
             Container(
               width: double.infinity,
               margin: EdgeInsets.only(top: 16.h),
               padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
               decoration: BoxDecoration(
-                color: colorScheme.surfaceContainerHighest.withOpacity(0.8),
+                color: colorScheme.surfaceContainer,
                 borderRadius: BorderRadius.circular(16.r),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
+                    color: colorScheme.shadow.withOpacity(0.1),
                     blurRadius: 8,
                     offset: const Offset(0, 4),
                   ),
@@ -498,19 +519,22 @@ class _QRTicketDialogState extends State<QRTicketDialog> {
                     color: getCategoryColor(),
                     isLoading: _isSharing,
                     onPressed: _shareTicket,
+                    colorScheme: colorScheme,
                   ),
                   _buildActionButton(
                     label: 'Save to Gallery',
                     icon: Icons.save_alt_rounded,
-                    color: Colors.amber.shade700,
+                    color: colorScheme.secondary,
                     isLoading: _isSaving,
                     onPressed: _saveTicketToGallery,
+                    colorScheme: colorScheme,
                   ),
                   _buildActionButton(
                     label: 'Close',
                     icon: Icons.close,
-                    color: Colors.grey.shade600,
+                    color: colorScheme.surface,
                     onPressed: () => Navigator.of(context).pop(),
+                    colorScheme: colorScheme,
                   ),
                 ],
               ),
@@ -526,12 +550,15 @@ class _QRTicketDialogState extends State<QRTicketDialog> {
     required IconData icon,
     required Color color,
     required VoidCallback onPressed,
+    required ColorScheme colorScheme,
     bool isLoading = false,
   }) {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
         backgroundColor: color,
-        foregroundColor: Colors.white,
+        foregroundColor: color == colorScheme.surface 
+            ? colorScheme.onSurfaceVariant 
+            : colorScheme.onPrimary,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8.r),
         ),
@@ -545,9 +572,9 @@ class _QRTicketDialogState extends State<QRTicketDialog> {
           ? SizedBox(
               width: 16.sp,
               height: 16.sp,
-              child: const CircularProgressIndicator(
+              child: CircularProgressIndicator(
                 strokeWidth: 2.0,
-                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                valueColor: AlwaysStoppedAnimation<Color>(colorScheme.onPrimary),
               ),
             )
           : Row(
@@ -556,6 +583,9 @@ class _QRTicketDialogState extends State<QRTicketDialog> {
                 Icon(
                   icon,
                   size: 16.sp,
+                  color: color == colorScheme.surface 
+            ? colorScheme.primary 
+            : colorScheme.onPrimary,
                 ),
                 SizedBox(width: 4.w),
                 Text(
@@ -570,13 +600,13 @@ class _QRTicketDialogState extends State<QRTicketDialog> {
     );
   }
 
-  Widget _buildDetailRow(String label, String value, IconData icon) {
+  Widget _buildDetailRow(String label, String value, IconData icon, ColorScheme colorScheme) {
     return Row(
       children: [
         Icon(
           icon,
           size: 16.sp,
-          color: Colors.grey.shade600,
+          color: colorScheme.onSurfaceVariant,
         ),
         SizedBox(width: 8.w),
         Expanded(
@@ -587,7 +617,7 @@ class _QRTicketDialogState extends State<QRTicketDialog> {
                 label,
                 style: TextStyle(
                   fontSize: 10.sp,
-                  color: Colors.grey.shade600,
+                  color: colorScheme.onSurfaceVariant,
                 ),
               ),
               SizedBox(height: 2.h),
@@ -596,6 +626,7 @@ class _QRTicketDialogState extends State<QRTicketDialog> {
                 style: TextStyle(
                   fontSize: 12.sp,
                   fontWeight: FontWeight.w600,
+                  color: colorScheme.onSurface,
                 ),
                 overflow: TextOverflow.ellipsis,
               ),
