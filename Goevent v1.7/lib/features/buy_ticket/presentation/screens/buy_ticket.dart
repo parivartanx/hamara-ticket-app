@@ -134,7 +134,7 @@ class _BuyTicketSState extends ConsumerState<BuyTicketS> with SingleTickerProvid
                             decoration: BoxDecoration(
                               color: isPast || isActive
                                   ? colorScheme.primary
-                                  : colorScheme.surfaceVariant,
+                                  : colorScheme.surfaceContainerHighest,
                               shape: BoxShape.circle,
                             ),
                             child: Center(
@@ -245,7 +245,7 @@ class _BuyTicketSState extends ConsumerState<BuyTicketS> with SingleTickerProvid
                             borderRadius: BorderRadius.circular(8),
                           ),
                         ),
-                        child: Text(
+                        child: const Text(
                           'Back',
                           style: TextStyle(fontWeight: FontWeight.w600),
                         ),
@@ -283,7 +283,7 @@ class _BuyTicketSState extends ConsumerState<BuyTicketS> with SingleTickerProvid
                     
                       child: Text(
                         bookingState.currentStep < totalSteps - 1 ? 'Continue' : 'Pay Now',
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontWeight: FontWeight.w600,
                           fontSize: 15,
                         ),

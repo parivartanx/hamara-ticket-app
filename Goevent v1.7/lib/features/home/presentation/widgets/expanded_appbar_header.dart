@@ -44,7 +44,7 @@ class ExpandedAppBarHeader extends ConsumerWidget {
             fontWeight: FontWeight.w600,
           ),
         ),
-        content: Container(
+        content: SizedBox(
           width: double.maxFinite,
           child: ListView.builder(
             shrinkWrap: true,

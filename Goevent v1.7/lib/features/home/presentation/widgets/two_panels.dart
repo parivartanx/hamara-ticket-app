@@ -5,7 +5,6 @@ import '/extensions/media_query_ext.dart';
 import 'category_games_widget.dart';
 import 'collapsed_appbar_title.dart';
 import 'expanded_appbar_header.dart';
-import 'nearby_events_section.dart';
 import 'recommended_parks_section.dart';
 import 'recommended_events_section.dart';
 

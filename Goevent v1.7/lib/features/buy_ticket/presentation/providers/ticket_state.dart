@@ -1,6 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/enums/occasion_type.dart';
 import '../../../../models/ticket/ticket_model.dart';
+import 'tickets_provider.dart';
+import 'package:intl/intl.dart';
 
 // State classes
 class TicketBookingState {
@@ -39,16 +41,6 @@ class TicketBookingState {
            userDetails.containsKey('phone');
   }
 
-  double get subtotal {
-    return selectedTickets.entries
-        .map((entry) => entry.value * 100.0)
-        .fold(0.0, (total, price) => total + price);
-  }
-  
-  double get convenienceFee => subtotal * (convenienceFeePercentage / 100);
-  
-  double get totalAmount => subtotal + convenienceFee;
-
   TicketBookingState copyWith({
     int? currentStep,
     OccasionType? occasionType,
@@ -72,7 +64,7 @@ class TicketBookingState {
 
 // Provider
 class TicketBookingNotifier extends StateNotifier<TicketBookingState> {
-  TicketBookingNotifier() : super(TicketBookingState(occasionType: OccasionType.park));
+  TicketBookingNotifier() : super(const TicketBookingState(occasionType: OccasionType.park));
 
   void setOccasionType(String type) {
     state = TicketBookingState(occasionType: OccasionType.fromString(type));
@@ -139,39 +131,85 @@ final ticketBookingProvider = StateNotifierProvider<TicketBookingNotifier, Ticke
   return TicketBookingNotifier();
 });
 
+// Provider to store ticket prices
+class TicketPricesNotifier extends StateNotifier<Map<String, double>> {
+  TicketPricesNotifier() : super({});
+
+  void updatePrices(List<TicketModel> tickets) {
+    state = {
+      for (var ticket in tickets)
+        ticket.id: ticket.price.toDouble()
+    };
+  }
+
+  void clear() {
+    state = {};
+  }
+}
+
+// Add providers for occasion details
+final occasionIdProvider = StateProvider<String>((ref) => '');
+final occasionTypeProvider = StateProvider<String>((ref) => '');
+
+final ticketPricesProvider = StateNotifierProvider.autoDispose<TicketPricesNotifier, Map<String, double>>((ref) {
+  final notifier = TicketPricesNotifier();
+  
+  // Get the selected date
+  final selectedDate = ref.watch(selectedDateProvider);
+  final formattedDate = selectedDate != null 
+      ? DateFormat('yyyy-MM-dd').format(selectedDate)
+      : DateFormat('yyyy-MM-dd').format(DateTime.now());
+  
+  // Get the occasion type and ID
+  final occasionType = ref.watch(occasionTypeProvider).toLowerCase();
+  final occasionId = ref.watch(occasionIdProvider);
+  
+  // Setup the automatic price updates
+  ref.listen<AsyncValue<List<TicketModel>>>(
+    ticketsProvider((
+      date: formattedDate,
+      eventId: occasionType == "event" ? occasionId : null,
+      parkId: (occasionType == "park" || occasionType == "waterpark") ? occasionId : null,
+    )),
+    (_, next) => next.whenData((tickets) => notifier.updatePrices(tickets)),
+  );
+  
+  // Clean up when disposed
+  ref.onDispose(() {
+    notifier.clear();
+  });
+  
+  return notifier;
+});
+
 // Convenience providers for individual state values
 final currentStepProvider = Provider<int>((ref) {
   return ref.watch(ticketBookingProvider).currentStep;
-});
-
-final occasionTypeProvider = Provider<String>((ref) {
-  return ref.watch(ticketBookingProvider).occasionType.toString();
 });
 
 final selectedDateProvider = Provider<DateTime?>((ref) {
   return ref.watch(ticketBookingProvider).selectedDate;
 });
 
-// final ticketsProvider = Provider<List<TicketModel>>((ref) {
-//   final bookingState = ref.watch(ticketBookingProvider);
-//   return bookingState.selectedTickets.entries.map((entry) => TicketModel(
-//     id: entry.key,
-//     ticketType: entry.key,
-//     price: 100,
-//     updatedAt: DateTime.now(),
-//   )).toList();
-// });
-
 final subtotalProvider = Provider<double>((ref) {
-  return ref.watch(ticketBookingProvider).subtotal;
+  final bookingState = ref.watch(ticketBookingProvider);
+  final ticketPrices = ref.watch(ticketPricesProvider);
+  
+  return bookingState.selectedTickets.entries
+      .map((entry) => entry.value * (ticketPrices[entry.key] ?? 0.0))
+      .fold(0.0, (total, price) => total + price);
 });
 
 final convenienceFeeProvider = Provider<double>((ref) {
-  return ref.watch(ticketBookingProvider).convenienceFee;
+  final subtotal = ref.watch(subtotalProvider);
+  final bookingState = ref.watch(ticketBookingProvider);
+  return subtotal * (bookingState.convenienceFeePercentage / 100);
 });
 
 final totalAmountProvider = Provider<double>((ref) {
-  return ref.watch(ticketBookingProvider).totalAmount;
+  final subtotal = ref.watch(subtotalProvider);
+  final convenienceFee = ref.watch(convenienceFeeProvider);
+  return subtotal + convenienceFee;
 });
 
 final promoCodeProvider = Provider<String?>((ref) {

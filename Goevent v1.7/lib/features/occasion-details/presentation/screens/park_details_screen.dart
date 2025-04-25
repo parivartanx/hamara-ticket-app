@@ -337,7 +337,7 @@ class OperatingHoursCard extends StatelessWidget {
                     TextSpan(
                       children: [
                         TextSpan(
-                          text: "${firstHour.openTime}",
+                          text: firstHour.openTime,
                           style: TextStyle(
                             fontSize: 13.sp,
                             fontWeight: FontWeight.w600,

@@ -12,18 +12,28 @@ class TicketSelectionStep extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final bookingState = ref.watch(ticketBookingProvider);
-
-    final tickets = ref.watch(ticketsProvider((
-      date: DateFormat('yyyy-MM-dd').format(bookingState.selectedDate ?? DateTime.now()),
+    
+    // Initialize occasion details
+    ref.read(occasionIdProvider.notifier).state = occasionId;
+    ref.read(occasionTypeProvider.notifier).state = occasionType;
+    
+    final date = DateFormat('yyyy-MM-dd').format(bookingState.selectedDate ?? DateTime.now());
+    final params = (
+      date: date,
       eventId: occasionType.toLowerCase() == "event" ? occasionId : null,
-      parkId: occasionType.toLowerCase()  == "park" || occasionType.toLowerCase() == "waterpark" ? occasionId : null,
-    )));
+      parkId: occasionType.toLowerCase() == "park" || occasionType.toLowerCase() == "waterpark" ? occasionId : null,
+    );
+
+    // Watch the tickets provider
+    final tickets = ref.watch(ticketsProvider(params));
+    
+    // Watch the prices provider to ensure it's initialized
+    ref.watch(ticketPricesProvider);
 
     final subtotal = ref.watch(subtotalProvider);
     final convenienceFee = ref.watch(convenienceFeeProvider);
     final totalAmount = ref.watch(totalAmountProvider);
 
-    
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
       child: Column(
@@ -49,7 +59,7 @@ class TicketSelectionStep extends ConsumerWidget {
                               child: Container(
                                 padding: const EdgeInsets.all(24),
                                 decoration: BoxDecoration(
-                                  color: Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.3),
+                                  color: Theme.of(context).colorScheme.surfaceContainerHighest.withOpacity(0.3),
                                   borderRadius: BorderRadius.circular(16),
                                   border: Border.all(
                                     color: Theme.of(context).colorScheme.outline.withOpacity(0.1),
@@ -163,11 +173,7 @@ class TicketSelectionStep extends ConsumerWidget {
                                 const SizedBox(height: 24),
                                 TextButton.icon(
                                   onPressed: () {
-                                    ref.refresh(ticketsProvider((
-                                      date: DateFormat('yyyy-MM-dd').format(bookingState.selectedDate ?? DateTime.now()),
-                                      eventId: occasionType.toLowerCase() == "event" ? occasionId : null,
-                                      parkId: occasionType.toLowerCase() == "park" || occasionType.toLowerCase() == "waterpark" ? occasionId : null,
-                                    )));
+                                    ref.refresh(ticketsProvider(params));
                                   },
                                   icon: const Icon(Icons.refresh_rounded),
                                   label: const Text('Try Again'),
@@ -311,7 +317,7 @@ class QuantitySelector extends ConsumerWidget {
     
     return Container(
       decoration: BoxDecoration(
-        color: colorScheme.surfaceVariant.withOpacity(0.3),
+        color: colorScheme.surfaceContainerHighest.withOpacity(0.3),
         borderRadius: BorderRadius.circular(4),
       ),
       child: Row(
@@ -436,7 +442,7 @@ class PromoCodeSection extends ConsumerWidget {
             }
           },
           style: ElevatedButton.styleFrom(
-            backgroundColor: colorScheme.surfaceVariant,
+            backgroundColor: colorScheme.surfaceContainerHighest,
             foregroundColor: colorScheme.onSurfaceVariant,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(6),
@@ -483,7 +489,7 @@ class OrderSummary extends StatelessWidget {
         const SizedBox(height: 12),
         Container(
           decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.3),
+            color: Theme.of(context).colorScheme.surfaceContainerHighest.withOpacity(0.3),
             borderRadius: BorderRadius.circular(8),
             border: Border.all(
               color: Theme.of(context).colorScheme.outline.withOpacity(0.1),

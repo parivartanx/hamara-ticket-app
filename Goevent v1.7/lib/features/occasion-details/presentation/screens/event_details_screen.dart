@@ -199,7 +199,7 @@ class OrganizerCard extends StatelessWidget {
                   ),
                   SizedBox(height: 4.h),
                   Text(
-                    "${event.tags.join(', ')}",
+                    event.tags.join(', '),
                     style: TextStyle(
                       fontSize: 12.sp,
                       fontWeight: FontWeight.w500,

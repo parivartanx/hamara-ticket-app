@@ -1,11 +1,9 @@
 import 'package:go_router/go_router.dart';
 import '/features/home/presentation/screens/all_parks_page.dart';
 import '/features/occasion-details/presentation/screens/event_details_screen.dart';
-import '/models/event/event_model.dart';
 import '/features/privacy-policy/privacy_policy.dart';
 import '/features/profile/presentation/screens/profile.dart';
 import '/features/terms-and-conditions/screens/terms_and_conditions.dart';
-import '/models/park/park_model.dart';
 import '../features/booking/presentation/screens/booking.dart';
 import '../features/login/presentation/screens/login.dart';
 import '../features/occasion-details/presentation/screens/park_details_screen.dart';

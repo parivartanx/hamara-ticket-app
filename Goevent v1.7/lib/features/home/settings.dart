@@ -359,7 +359,7 @@ class _SettingState extends ConsumerState<Setting> {
                                 ),
                                 const Spacer(),
                                 Text(
-                                  "\₹INR",
+                                  "₹INR",
                                   style: TextStyle(
                                     fontSize: 14.sp,
                                     fontWeight: FontWeight.w500,

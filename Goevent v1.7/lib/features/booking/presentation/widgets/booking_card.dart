@@ -3,7 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import '../../../../extensions/media_query_ext.dart';
 import '../../data/models/booking_model.dart';
-import 'dart:math' as math;
 import 'qr_ticket_dialog.dart';
 
 class BookingCard extends StatefulWidget {

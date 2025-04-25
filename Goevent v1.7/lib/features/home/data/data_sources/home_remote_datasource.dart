@@ -1,7 +1,5 @@
 import 'dart:developer';
-import 'dart:convert';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:dio/dio.dart';
 import '/utils/dio_client.dart';
 import '/utils/endPoints.dart';
 import '/models/homepage/homepage_model.dart';

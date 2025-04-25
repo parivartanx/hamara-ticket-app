@@ -4,8 +4,6 @@ import '/features/booking/presentation/screens/booking.dart';
 import '/features/profile/presentation/screens/profile.dart';
 import '/features/terms-and-conditions/screens/terms_and_conditions.dart';
 import '/features/privacy-policy/privacy_policy.dart';
-import '/features/contact/presentation/screens/contact.dart';
-import 'package:page_transition/page_transition.dart';
 import 'menu_list_item.dart';
 
 

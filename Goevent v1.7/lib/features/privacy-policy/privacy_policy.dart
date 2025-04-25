@@ -481,7 +481,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 32),
-            InfoSection(
+            const InfoSection(
               title: '1. WHAT INFORMATION DO WE COLLECT?',
               shortDescription: 'We collect personal information that you provide to us.',
               children: [
@@ -528,7 +528,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
                     'Push Notifications. We may request to send you push notifications regarding your account or certain features of the application(s).',
                   ],
                 ),
-                const SizedBox(height: 16),
+                SizedBox(height: 16),
                 Text(
                   'All personal information that you provide to us must be true, complete, and accurate, and you must notify us of any changes to such personal information.',
                   style: TextStyle(
@@ -553,7 +553,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 32),
-            InfoSection(
+            const InfoSection(
               title: '2. HOW DO WE PROCESS YOUR INFORMATION?',
               shortDescription: 'We process your information to provide, improve, and administer our Services, communicate with you, for security and fraud prevention, and to comply with law. We may also process your information for other purposes with your consent.',
               children: [
@@ -599,7 +599,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 32),
-            InfoSection(
+            const InfoSection(
               title: '3. WHEN AND WITH WHOM DO WE SHARE YOUR PERSONAL INFORMATION?',
               shortDescription: 'We may share information in specific situations described in this section and/or with the following categories of third parties.',
               children: [
@@ -648,22 +648,22 @@ class PrivacyPolicyScreen extends StatelessWidget {
               title: '4. DO WE USE COOKIES AND OTHER TRACKING TECHNOLOGIES?',
               shortDescription: 'We may use cookies and other tracking technologies to collect and store your information.',
               children: [
-                InfoSubSection(
+                const InfoSubSection(
                   title: 'Tracking Technologies',
                   description: 'We may use cookies and similar tracking technologies (like web beacons and pixels) to gather information when you interact with our Services. Some online tracking technologies help us maintain the security of our Services and your account, prevent crashes, fix bugs, save your preferences, and assist with basic site functions.',
                   items: [],
                 ),
-                InfoSubSection(
+                const InfoSubSection(
                   title: 'Third-Party Tracking',
                   description: 'We also permit third parties and service providers to use online tracking technologies on our Services for analytics and advertising, including to help manage and display advertisements, to tailor advertisements to your interests, or to send abandoned shopping cart reminders (depending on your communication preferences). The third parties and service providers use their technology to provide advertising about products and services tailored to your interests which may appear either on our Services or on other websites.',
                   items: [],
                 ),
-                InfoSubSection(
+                const InfoSubSection(
                   title: 'Cookie Notice',
                   description: 'Specific information about how we use such technologies and how you can refuse certain cookies is set out in our Cookie Notice.',
                   items: [],
                 ),
-                InfoSubSection(
+                const InfoSubSection(
                   title: 'Google Analytics',
                   description: 'We may share your information with Google Analytics to track and analyse the use of the Services. The Google Analytics Advertising Features that we may use include: Remarketing with Google Analytics.',
                   items: [],
@@ -735,7 +735,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 32),
-            InfoSection(
+            const InfoSection(
               title: '5. HOW DO WE HANDLE YOUR SOCIAL LOGINS?',
               shortDescription: 'If you choose to register or log in to our Services using a social media account, we may have access to certain information about you.',
               children: [
@@ -743,7 +743,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
                   'Our Services offer you the ability to register and log in using your third-party social media account details (like your Facebook or X logins). Where you choose to do this, we will receive certain profile information about you from your social media provider. The profile information we receive may vary depending on the social media provider concerned, but will often include your name, email address, friends list, and profile picture, as well as other information you choose to make public on such a social media platform.',
                   style: TextStyle(fontSize: 16),
                 ),
-                const SizedBox(height: 16),
+                SizedBox(height: 16),
                 Text(
                   'We will use the information we receive only for the purposes that are described in this Privacy Notice or that are otherwise made clear to you on the relevant Services. Please note that we do not control, and are not responsible for, other uses of your personal information by your third-party social media provider. We recommend that you review their privacy notice to understand how they collect, use, and share your personal information, and how you can set your privacy preferences on their sites and apps.',
                   style: TextStyle(fontSize: 16),
@@ -751,7 +751,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 32),
-            InfoSection(
+            const InfoSection(
               title: '6. HOW LONG DO WE KEEP YOUR INFORMATION?',
               shortDescription: 'We keep your information for as long as necessary to fulfil the purposes outlined in this Privacy Notice unless otherwise required by law.',
               children: [
@@ -759,7 +759,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
                   'We will only keep your personal information for as long as it is necessary for the purposes set out in this Privacy Notice, unless a longer retention period is required or permitted by law (such as tax, accounting, or other legal requirements). No purpose in this notice will require us keeping your personal information for longer than six (6) months past the termination of the user\'s account.',
                   style: TextStyle(fontSize: 16),
                 ),
-                const SizedBox(height: 16),
+                SizedBox(height: 16),
                 Text(
                   'When we have no ongoing legitimate business need to process your personal information, we will either delete or anonymise such information, or, if this is not possible (for example, because your personal information has been stored in backup archives), then we will securely store your personal information and isolate it from any further processing until deletion is possible.',
                   style: TextStyle(fontSize: 16),
@@ -767,7 +767,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 32),
-            InfoSection(
+            const InfoSection(
               title: '7. HOW DO WE KEEP YOUR INFORMATION SAFE?',
               shortDescription: 'We aim to protect your personal information through a system of organisational and technical security measures.',
               children: [
@@ -775,7 +775,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
                   'We have implemented appropriate and reasonable technical and organisational security measures designed to protect the security of any personal information we process. However, despite our safeguards and efforts to secure your information, no electronic transmission over the Internet or information storage technology can be guaranteed to be 100% secure, so we cannot promise or guarantee that hackers, cybercriminals, or other unauthorised third parties will not be able to defeat our security and improperly collect, access, steal, or modify your information.',
                   style: TextStyle(fontSize: 16),
                 ),
-                const SizedBox(height: 16),
+                SizedBox(height: 16),
                 Text(
                   'Although we will do our best to protect your personal information, transmission of personal information to and from our Services is at your own risk. You should only access the Services within a secure environment.',
                   style: TextStyle(fontSize: 16),
@@ -787,7 +787,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
               title: '8. DO WE COLLECT INFORMATION FROM MINORS?',
               shortDescription: 'We do not knowingly collect data from or market to children under 18 years of age.',
               children: [
-                Text(
+                const Text(
                   'We do not knowingly collect, solicit data from, or market to children under 18 years of age, nor do we knowingly sell such personal information. By using the Services, you represent that you are at least 18 or that you are the parent or guardian of such a minor and consent to such minor dependent\'s use of the Services. If we learn that personal information from users less than 18 years of age has been collected, we will deactivate the account and take reasonable measures to promptly delete such data from our records.',
                   style: TextStyle(fontSize: 16),
                 ),
@@ -817,17 +817,17 @@ class PrivacyPolicyScreen extends StatelessWidget {
               title: '9. WHAT ARE YOUR PRIVACY RIGHTS?',
               shortDescription: 'You may review, change, or terminate your account at any time, depending on your country, province, or state of residence.',
               children: [
-                InfoSubSection(
+                const InfoSubSection(
                   title: 'Withdrawing your consent',
                   description: 'If we are relying on your consent to process your personal information, which may be express and/or implied consent depending on the applicable law, you have the right to withdraw your consent at any time. You can withdraw your consent at any time by contacting us by using the contact details provided in the section \'HOW CAN YOU CONTACT US ABOUT THIS NOTICE?\' below.\n\nHowever, please note that this will not affect the lawfulness of the processing before its withdrawal nor, when applicable law allows, will it affect the processing of your personal information conducted in reliance on lawful processing grounds other than consent.',
                   items: [],
                 ),
-                InfoSubSection(
+                const InfoSubSection(
                   title: 'Opting out of marketing and promotional communications',
                   description: 'You can unsubscribe from our marketing and promotional communications at any time by clicking on the unsubscribe link in the emails that we send, or by contacting us using the details provided in the section \'HOW CAN YOU CONTACT US ABOUT THIS NOTICE?\' below. You will then be removed from the marketing lists. However, we may still communicate with you — for example, to send you service-related messages that are necessary for the administration and use of your account, to respond to service requests, or for other non-marketing purposes.',
                   items: [],
                 ),
-                InfoSubSection(
+                const InfoSubSection(
                   title: 'Account Information',
                   description: 'If you would at any time like to review or change the information in your account or terminate your account, you can:',
                   items: [
@@ -836,11 +836,11 @@ class PrivacyPolicyScreen extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 16),
-                Text(
+                const Text(
                   'Upon your request to terminate your account, we will deactivate or delete your account and information from our active databases. However, we may retain some information in our files to prevent fraud, troubleshoot problems, assist with any investigations, enforce our legal terms and/or comply with applicable legal requirements.',
                   style: TextStyle(fontSize: 16),
                 ),
-                InfoSubSection(
+                const InfoSubSection(
                   title: 'Cookies and similar technologies',
                   description: 'Most Web browsers are set to accept cookies by default. If you prefer, you can usually choose to set your browser to remove cookies and to reject cookies. If you choose to remove cookies or reject cookies, this could affect certain features or services of our Services.',
                   items: [],
@@ -867,7 +867,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 32),
-            InfoSection(
+            const InfoSection(
               title: '10. CONTROLS FOR DO-NOT-TRACK FEATURES',
               shortDescription: 'We currently do not respond to DNT browser signals.',
               children: [
@@ -878,7 +878,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 32),
-            InfoSection(
+            const InfoSection(
               title: '11. DO WE MAKE UPDATES TO THIS NOTICE?',
               shortDescription: 'Yes, we will update this notice as necessary to stay compliant with relevant laws.',
               children: [
@@ -893,7 +893,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
               title: '12. HOW CAN YOU CONTACT US ABOUT THIS NOTICE?',
               shortDescription: 'You can contact us by email or post if you have any questions about this notice.',
               children: [
-                Text(
+                const Text(
                   'If you have questions or comments about this notice, you may email us at parivartanx.info@gmail.com or contact us by post at:',
                   style: TextStyle(fontSize: 16),
                 ),
@@ -907,10 +907,10 @@ class PrivacyPolicyScreen extends StatelessWidget {
                       color: context.colorScheme.outline.withOpacity(0.2),
                     ),
                   ),
-                  child: Column(
+                  child: const Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
+                      Text(
                         'Parivartan X\n\nShadalichak Patna\nDariyapur Brajeshwar market\nPatna, Bihar 804453\nIndia',
                         style: TextStyle(
                           fontSize: 16,
@@ -927,12 +927,12 @@ class PrivacyPolicyScreen extends StatelessWidget {
               title: '13. HOW CAN YOU REVIEW, UPDATE, OR DELETE THE DATA WE COLLECT FROM YOU?',
               shortDescription: 'You have the right to request access to, update, or delete your personal information.',
               children: [
-                Text(
+                const Text(
                   'Based on the applicable laws of your country, you may have the right to request access to the personal information we collect from you, details about how we have processed it, correct inaccuracies, or delete your personal information. You may also have the right to withdraw your consent to our processing of your personal information. These rights may be limited in some circumstances by applicable law.',
                   style: TextStyle(fontSize: 16),
                 ),
                 const SizedBox(height: 16),
-                Text(
+                const Text(
                   'To request to review, update, or delete your personal information, please visit:',
                   style: TextStyle(fontSize: 16),
                 ),

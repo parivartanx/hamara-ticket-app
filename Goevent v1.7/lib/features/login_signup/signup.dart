@@ -284,7 +284,7 @@ class _SignupState extends ConsumerState<Signup> {
           decoration: BoxDecoration(
             border: Border.all(
               width: 1,
-              color: Color(0xffdcdbdb),
+              color: const Color(0xffdcdbdb),
             ),
             borderRadius: const BorderRadius.all(
               Radius.circular(10),

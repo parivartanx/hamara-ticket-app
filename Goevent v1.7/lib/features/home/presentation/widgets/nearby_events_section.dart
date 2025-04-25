@@ -6,7 +6,6 @@ import 'package:intl/intl.dart';
 import '/models/event/event_model.dart';
 import '/models/park/park_model.dart';
 import '/extensions/media_query_ext.dart';
-import '../../../occasion-details/presentation/screens/event_details_screen.dart';
 import 'package:page_transition/page_transition.dart';
 import '/features/home/presentation/providers/nearby_events_provider.dart';
 import 'category_chips.dart';

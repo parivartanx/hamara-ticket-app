@@ -59,7 +59,7 @@ class AllParksPage extends ConsumerWidget {
                   delegate: SliverChildBuilderDelegate(
                     (context, index) {
                       final park = parks[index];
-                      return Container(
+                      return SizedBox(
                         width: 160.w,
                         child: RecommendedParkCard(park: park),
                       );

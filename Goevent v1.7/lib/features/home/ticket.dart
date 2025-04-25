@@ -240,7 +240,7 @@ class _TicketState extends ConsumerState<Ticket> {
                                         Checkbox(
                                           checkColor: Colors.white,
                                           fillColor:
-                                              MaterialStateProperty.resolveWith(
+                                              WidgetStateProperty.resolveWith(
                                                   (states) =>
                                                       notifire.buttonsColor),
                                           value: isChecked,

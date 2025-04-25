@@ -209,7 +209,7 @@ class _SafeState extends ConsumerState<Safe> {
                           //SizedBox
                           Checkbox(
                             checkColor: Colors.white,
-                            fillColor: MaterialStateProperty.resolveWith(
+                            fillColor: WidgetStateProperty.resolveWith(
                                 (states) => notifire.buttonsColor),
                             value: isChecked,
                             onChanged: (bool? value) {

@@ -205,7 +205,7 @@ class _AllState extends ConsumerState<All> {
                 borderRadius: BorderRadius.circular(15),
                 border: Border.all(
                   width: 1,
-                  color: Color(0xffdcdbdb),
+                  color: const Color(0xffdcdbdb),
                 )
               ),
               width: width,

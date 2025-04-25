@@ -33,7 +33,7 @@ class _OnboardingState extends ConsumerState<OnboardingScreen> {
     
     return ScreenUtilInit(
       builder: (context, child) => Scaffold(
-        backgroundColor: colorScheme.background,
+        backgroundColor: colorScheme.surface,
         body: AnnotatedRegion<SystemUiOverlayStyle>(
           value: SystemUiOverlayStyle.light,
           child: SafeArea(

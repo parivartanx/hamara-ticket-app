@@ -1,8 +1,5 @@
 import 'dart:io';
-import 'dart:typed_data';
-import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:qr_flutter/qr_flutter.dart';
@@ -48,7 +45,7 @@ class _QRTicketDialogState extends State<QRTicketDialog> {
         } else {
           if (mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
+              const SnackBar(
                 content: Text('Permission denied to save the ticket'),
                 backgroundColor: Colors.red,
                 behavior: SnackBarBehavior.floating,
@@ -121,7 +118,7 @@ class _QRTicketDialogState extends State<QRTicketDialog> {
     // Show success message with share option
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('Ticket image created successfully'),
+        content: const Text('Ticket image created successfully'),
         backgroundColor: context.colorScheme.primary,
         behavior: SnackBarBehavior.floating,
         action: SnackBarAction(
@@ -178,7 +175,6 @@ class _QRTicketDialogState extends State<QRTicketDialog> {
             'My ${widget.booking.category.displayName} ticket for ${widget.booking.eventName}',
       );
 
-      print("Share result: $result");
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
@@ -395,7 +391,7 @@ class _QRTicketDialogState extends State<QRTicketDialog> {
                               height: 12.h,
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
-                                color: context.colorScheme.background,
+                                color: context.colorScheme.surface,
                               ),
                             ),
                           ),
@@ -410,7 +406,7 @@ class _QRTicketDialogState extends State<QRTicketDialog> {
                               height: 12.h,
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
-                                color: context.colorScheme.background,
+                                color: context.colorScheme.surface,
                               ),
                             ),
                           ),
@@ -483,7 +479,7 @@ class _QRTicketDialogState extends State<QRTicketDialog> {
               margin: EdgeInsets.only(top: 16.h),
               padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
               decoration: BoxDecoration(
-                color: colorScheme.surfaceVariant.withOpacity(0.8),
+                color: colorScheme.surfaceContainerHighest.withOpacity(0.8),
                 borderRadius: BorderRadius.circular(16.r),
                 boxShadow: [
                   BoxShadow(
@@ -549,7 +545,7 @@ class _QRTicketDialogState extends State<QRTicketDialog> {
           ? SizedBox(
               width: 16.sp,
               height: 16.sp,
-              child: CircularProgressIndicator(
+              child: const CircularProgressIndicator(
                 strokeWidth: 2.0,
                 valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
               ),

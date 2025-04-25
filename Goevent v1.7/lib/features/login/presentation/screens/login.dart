@@ -219,7 +219,7 @@ class _LoginState extends ConsumerState<Login>
                               // Email Input
                               Container(
                                 decoration: BoxDecoration(
-                                  color: context.colorScheme.surfaceVariant.withOpacity(0.1),
+                                  color: context.colorScheme.surfaceContainerHighest.withOpacity(0.1),
                                   borderRadius: BorderRadius.circular(12),
                                   border: Border.all(
                                     color: context.colorScheme.outline.withOpacity(0.2),

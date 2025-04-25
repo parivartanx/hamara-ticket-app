@@ -163,7 +163,7 @@ class DateOverlay extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    "${_getMonthName(date.month)}",
+                    _getMonthName(date.month),
                     style: TextStyle(
                       color: const Color(0xffF0635A),
                       fontSize: 10.sp,
