@@ -13,9 +13,11 @@ class TicketSelectionStep extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final bookingState = ref.watch(ticketBookingProvider);
     
-    // Initialize occasion details
-    ref.read(occasionIdProvider.notifier).state = occasionId;
-    ref.read(occasionTypeProvider.notifier).state = occasionType;
+    // Initialize occasion details after build
+    Future.microtask(() {
+      ref.read(occasionIdProvider.notifier).state = occasionId;
+      ref.read(occasionTypeProvider.notifier).state = occasionType;
+    });
     
     final date = DateFormat('yyyy-MM-dd').format(bookingState.selectedDate ?? DateTime.now());
     final params = (

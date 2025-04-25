@@ -49,8 +49,10 @@ class _BuyTicketSState extends ConsumerState<BuyTicketS> with SingleTickerProvid
       ),
     );
     
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(ticketBookingProvider.notifier).setOccasionType(widget.occasionType);
+    Future.microtask(() {
+      if (mounted) {
+        ref.read(ticketBookingProvider.notifier).setOccasionType(widget.occasionType);
+      }
     });
     
     _animationController.forward();
@@ -58,8 +60,9 @@ class _BuyTicketSState extends ConsumerState<BuyTicketS> with SingleTickerProvid
 
   @override
   void dispose() {
+    _animationController.removeListener(() {});
+    _fadeAnimation.removeListener((){});
     _animationController.dispose();
-    ref.read(ticketBookingProvider.notifier).reset();
     super.dispose();
   }
 
@@ -70,10 +73,9 @@ class _BuyTicketSState extends ConsumerState<BuyTicketS> with SingleTickerProvid
     final canContinue = ref.read(ticketBookingProvider.notifier).canProceedToNextStep();
     final totalSteps = _occasionType.requiresDateSelection ? 3 : 2;
     
-    return WillPopScope(
-      onWillPop: () async {
+    return PopScope(
+      onPopInvoked: (didPop) {
         ref.read(ticketBookingProvider.notifier).reset();
-        return true;
       },
       child: Scaffold(
         backgroundColor: colorScheme.surface,

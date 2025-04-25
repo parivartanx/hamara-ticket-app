@@ -14,7 +14,7 @@ import '../features/contact/presentation/screens/contact.dart';
 
 // GoRouter configuration
 final appRouter = GoRouter(
-  initialLocation: Splashscreen.routePath,
+  initialLocation: Login.routePath,
   routes: [
     GoRoute(
         path: Home.routePath,

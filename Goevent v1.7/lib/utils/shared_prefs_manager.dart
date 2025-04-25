@@ -60,7 +60,7 @@ class SharedPrefsManager {
     return await _prefs!.setString(_userKey, jsonString);
   }
 
-  static  User? getUser() {
+  static User? getUser() {
     _checkInitialized();
     final String? jsonString = _prefs!.getString(_userKey);
     if (jsonString == null) return null;
@@ -71,16 +71,16 @@ class SharedPrefsManager {
   static Future<void> clearAuthData() async {
     _checkInitialized();
     await Future.wait([
+      _prefs!.remove(_userKey),
       _prefs!.remove(_accessTokenKey),
       _prefs!.remove(_refreshTokenKey),
-      _prefs!.remove(_userKey),
     ]);
   }
 
   // Check if user is logged in
   static bool isLoggedIn() {
     _checkInitialized();
-    return _prefs!.containsKey(_accessTokenKey) && 
-           _prefs!.getString(_accessTokenKey) != null;
+    return _prefs!.containsKey(_accessTokenKey) &&
+        _prefs!.getString(_accessTokenKey) != null;
   }
 }

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:hamaraticket/features/profile/presentation/providers/profile_provider.dart';
 import '/extensions/media_query_ext.dart';
 import '/models/user_model.dart';
 import '/features/home/presentation/widgets/advanced_bottom_navigation.dart';
@@ -11,16 +12,7 @@ import '/features/login/data/data_sources/local_datasource.dart';
 import '/config/auth/google_signin_auth.dart';
 import 'package:go_router/go_router.dart';
 
-// A provider to store the current user
-final userProvider = StateProvider<User>((ref) {
-  // This is dummy data. In a real app, this would be fetched from a repository
-  return User(
-    id: 'user123',
-    name: 'Vinita Bharti',
-    email: 'vinita.bharti@example.com',
-    phone: '+91 9876543210',
-  );
-});
+
 
 class Profile extends ConsumerStatefulWidget {
   static const String routeName = 'Profile';
@@ -84,8 +76,7 @@ class _ProfileState extends ConsumerState<Profile>
 
   @override
   Widget build(BuildContext context) {
-    final user = ref.watch(userProvider);
-
+    final profileAsync = ref.watch(profileProvider);
     return Scaffold(
       body: AnimatedBuilder(
         animation: _animationController,
@@ -98,83 +89,136 @@ class _ProfileState extends ConsumerState<Profile>
             ),
           );
         },
-        child: Column(
-          children: [
-            // Fixed header section (non-collapsible)
-            Container(
-              height: context.height * 0.25,
-              width: context.width,
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    context.colorScheme.secondaryContainer.withAlpha(230),
-                    context.colorScheme.secondaryContainer.withAlpha(200),
-                    context.colorScheme.surface
-                  ],
+        child: profileAsync.when(
+          loading: () => const Center(child: CircularProgressIndicator()),
+          error: (e, _) => Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(Icons.error_outline, size: 60, color: Colors.red),
+                const SizedBox(height: 16),
+                Text(
+                  'Failed to load profile',
+                  style: GoogleFonts.poppins(
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.w600,
+                    color: context.colorScheme.error,
+                  ),
                 ),
-                
-              ),
-              child: Stack(
-                children: [
-                  
-                  // Profile content
-                  SafeArea(
-                    child: Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          ProfileAvatar(user: user),
-                          const SizedBox(height: 16),
-                          GreetingWidget(
-                            greeting: _getGreeting(),
-                            userName: user.name,
+                const SizedBox(height: 8),
+                Text(
+                  e.toString(),
+                  style: GoogleFonts.poppins(
+                    fontSize: 12.sp,
+                    color: context.colorScheme.outline,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
+          ),
+          data: (user) => Column(
+            children: [
+              Container(
+                height: context.height * 0.25,
+                width: context.width,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      context.colorScheme.secondaryContainer.withAlpha(230),
+                      context.colorScheme.secondaryContainer.withAlpha(200),
+                      context.colorScheme.surface
+                    ],
+                  ),
+                ),
+                child: SafeArea(
+                  child: Center(
+                    child: user == null
+                      ? Center(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Icon(Icons.person_outline, size: 60),
+                              const SizedBox(height: 16),
+                              Text(
+                                'Not logged in',
+                                style: GoogleFonts.poppins(
+                                  fontSize: 18.sp,
+                                  fontWeight: FontWeight.w600,
+                                  color: context.colorScheme.onSurface,
+                                ),
+                              ),
+                              const SizedBox(height: 16),
+                              ElevatedButton(
+                                onPressed: () {
+                                  context.goNamed(Login.routeName);
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: context.colorScheme.primary,
+                                  foregroundColor: context.colorScheme.onPrimary,
+                                  padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                ),
+                                child: const Text('Go to Login'),
+                              ),
+                            ],
                           ),
-                          const SizedBox(height: 6),
-                          Text(
-                            user.email,
-                            style: GoogleFonts.poppins(
-                              fontSize: 13.sp,
-                              fontWeight: FontWeight.w500,
-                              color:
-                                  context.colorScheme.outline,
-                              letterSpacing: 0.3,
+                        )
+                      : Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            ProfileAvatar(user: user),
+                            const SizedBox(height: 16),
+                            GreetingWidget(
+                              greeting: _getGreeting(),
+                              userName: user.name,
                             ),
-                          ),
+                            const SizedBox(height: 6),
+                            Text(
+                              user.email,
+                              style: GoogleFonts.poppins(
+                                fontSize: 13.sp,
+                                fontWeight: FontWeight.w500,
+                                color: context.colorScheme.outline,
+                                letterSpacing: 0.3,
+                              ),
+                            ),
+                          ],
+                        ),
+                  ),
+                ),
+              ),
+              if (user != null)
+                Expanded(
+                  child: SingleChildScrollView(
+                    physics: const BouncingScrollPhysics(),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(height: 24),
+                          const SectionHeader(title: 'Your Information'),
+                          const SizedBox(height: 16),
+                          UserInfoSection(user: user),
+                          const SizedBox(height: 32),
+                          const SectionHeader(title: 'Quick Actions'),
+                          const SizedBox(height: 16),
+                          const ActionButtonsList(),
+                          const SizedBox(height: 32),
+                          const LogoutButton(),
+                          const SizedBox(height: 24),
                         ],
                       ),
                     ),
                   ),
-                ],
-              ),
-            ),
-            // Scrollable content
-            Expanded(
-              child: SingleChildScrollView(
-                physics: const BouncingScrollPhysics(),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const SizedBox(height: 24),
-                      const SectionHeader(title: 'Your Information'),
-                      const SizedBox(height: 16),
-                      UserInfoSection(user: user),
-                      const SizedBox(height: 32),
-                      const SectionHeader(title: 'Quick Actions'),
-                      const SizedBox(height: 16),
-                      const ActionButtonsList(),
-                      const SizedBox(height: 32),
-                      const LogoutButton(),
-                      const SizedBox(height: 24),
-                    ],
-                  ),
                 ),
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
       bottomNavigationBar: const AdvancedBottomNavigation(),

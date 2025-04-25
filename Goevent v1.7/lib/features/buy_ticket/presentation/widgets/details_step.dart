@@ -1,44 +1,57 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../profile/presentation/providers/profile_provider.dart';
+
 class DetailsStep extends ConsumerWidget {
   const DetailsStep({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // This is a placeholder for user login status
-    // In a real app, you would check if the user is logged in
-    const bool isLoggedIn = false; 
+    final profileAsync = ref.watch(profileProvider);
     final colorScheme = Theme.of(context).colorScheme;
 
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Your Details',
-            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+    return profileAsync.when(
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (e, _) => Center(child: Text('Error: $e')),
+      data: (user) {
+        if (user == null) {
+          // If user is not logged in, navigate to login page
+          Future.microtask(() {
+            if (context.mounted) {
+              Navigator.of(context).pushReplacementNamed('/login');
+            }
+          });
+          return const SizedBox.shrink();
+        }
+        return Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Your Details',
+                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'Please confirm your details',
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: colorScheme.onSurfaceVariant,
+                    ),
+              ),
+              const SizedBox(height: 24),
+              _buildUserDetails(context, user),
+            ],
           ),
-          const SizedBox(height: 8),
-          Text(
-            isLoggedIn
-                ? 'Please confirm your details'
-                : 'Please login to continue',
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: colorScheme.onSurfaceVariant,
-                ),
-          ),
-          const SizedBox(height: 24),
-          if (isLoggedIn) _buildUserDetails(context) else _buildLoginForm(context),
-        ],
-      ),
+        );
+      },
     );
   }
 
-  Widget _buildUserDetails(BuildContext context) {
+  Widget _buildUserDetails(BuildContext context, user) {
     final colorScheme = Theme.of(context).colorScheme;
     
     // This would show the logged-in user's details
@@ -50,14 +63,14 @@ class DetailsStep extends ConsumerWidget {
             child: Icon(Icons.person, color: colorScheme.onPrimary),
           ),
           title: Text(
-            'Vinita Bharti',
+            user.name ?? '-',
             style: TextStyle(
               fontWeight: FontWeight.bold,
               color: colorScheme.onSurface,
             ),
           ),
           subtitle: Text(
-            'vinita@example.com',
+            user.email ?? '-',
             style: TextStyle(color: colorScheme.onSurfaceVariant),
           ),
         ),
@@ -65,7 +78,7 @@ class DetailsStep extends ConsumerWidget {
         ListTile(
           leading: Icon(Icons.phone, color: colorScheme.primary),
           title: Text(
-            '+91 98765 43210',
+            user.phone ?? '-',
             style: TextStyle(color: colorScheme.onSurface),
           ),
           trailing: TextButton(
