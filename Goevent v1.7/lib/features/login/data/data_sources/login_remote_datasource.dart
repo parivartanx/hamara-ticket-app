@@ -54,7 +54,6 @@ class LoginRemoteDataSource {
       final accessToken = responseData['accessToken'];
       final refreshToken = responseData['refreshToken'];
 
-      log("RemoteDataSource: Received tokens from backend");
 
       final userData = responseData['user'];
       final userModel = User.fromJson(userData);

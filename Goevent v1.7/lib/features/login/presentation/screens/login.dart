@@ -12,10 +12,7 @@ import '/extensions/media_query_ext.dart';
 import '/features/home/presentation/screens/home.dart';
 import '/features/terms-and-conditions/screens/terms_and_conditions.dart';
 import '/features/privacy-policy/privacy_policy.dart';
-import '../widgets/custom_button.dart';
 import '../widgets/custom_text_field.dart';
-import '../widgets/otp_input_field.dart';
-import '../widgets/social_button.dart';
 import '../widgets/otp_section.dart';
 
 class Login extends ConsumerStatefulWidget {
@@ -71,6 +68,9 @@ class _LoginState extends ConsumerState<Login>
   void dispose() {
     _emailController.dispose();
     _otpController.dispose();
+    _fadeAnimation.removeListener(() {});
+    _slideAnimation.removeListener(() {});
+    _animationController.removeListener(() {});
     _animationController.dispose();
     super.dispose();
   }
@@ -219,10 +219,16 @@ class _LoginState extends ConsumerState<Login>
                               // Email Input
                               Container(
                                 decoration: BoxDecoration(
-                                  color: context.colorScheme.surfaceContainerHighest.withOpacity(0.1),
+                                  color: Color.alphaBlend(
+                                    context.colorScheme.surfaceContainerHighest.withAlpha(25),
+                                    context.colorScheme.surfaceContainerHighest,
+                                  ),
                                   borderRadius: BorderRadius.circular(12),
                                   border: Border.all(
-                                    color: context.colorScheme.outline.withOpacity(0.2),
+                                    color: Color.alphaBlend(
+                                      context.colorScheme.outline.withAlpha(51),
+                                      context.colorScheme.outline,
+                                    ),
                                     width: 1,
                                   ),
                                 ),
@@ -341,6 +347,8 @@ class _LoginState extends ConsumerState<Login>
                                                           .signInWithGoogle();
 
                                                   if (googleUser == null) {
+                                                    log(
+                                                        "Login: Google sign-in was canceled by the user ${googleUser}");
                                                     if (mounted) {
                                                       setState(() {
                                                         isLoading = false;

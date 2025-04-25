@@ -49,8 +49,10 @@ class _BuyTicketSState extends ConsumerState<BuyTicketS> with SingleTickerProvid
       ),
     );
     
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(ticketBookingProvider.notifier).setOccasionType(widget.occasionType);
+    Future.microtask(() {
+      if (mounted) {
+        ref.read(ticketBookingProvider.notifier).setOccasionType(widget.occasionType);
+      }
     });
     
     _animationController.forward();
@@ -58,6 +60,8 @@ class _BuyTicketSState extends ConsumerState<BuyTicketS> with SingleTickerProvid
 
   @override
   void dispose() {
+    _animationController.removeListener(() {});
+    _fadeAnimation.removeListener((){});
     _animationController.dispose();
     super.dispose();
   }
@@ -69,14 +73,29 @@ class _BuyTicketSState extends ConsumerState<BuyTicketS> with SingleTickerProvid
     final canContinue = ref.read(ticketBookingProvider.notifier).canProceedToNextStep();
     final totalSteps = _occasionType.requiresDateSelection ? 3 : 2;
     
-    return Scaffold(
-      backgroundColor: colorScheme.surface,
-      appBar: AppBar(
-        title: Text(
-          widget.occasionName,
-          style: context.textTheme.titleLarge?.copyWith(
-            fontWeight: FontWeight.w600,
-            color: colorScheme.onSurface,
+    return PopScope(
+      onPopInvoked: (didPop) {
+        ref.read(ticketBookingProvider.notifier).reset();
+      },
+      child: Scaffold(
+        backgroundColor: colorScheme.surface,
+        appBar: AppBar(
+          title: Text(
+            widget.occasionName,
+            style: context.textTheme.titleLarge?.copyWith(
+              fontWeight: FontWeight.w600,
+              color: colorScheme.onSurface,
+            ),
+          ),
+          centerTitle: true,
+          elevation: 0,
+          backgroundColor: colorScheme.surface,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back_ios, color: colorScheme.onSurface, size: 20),
+            onPressed: () {
+              ref.read(ticketBookingProvider.notifier).reset();
+              Navigator.pop(context);
+            },
           ),
         ),
         centerTitle: true,

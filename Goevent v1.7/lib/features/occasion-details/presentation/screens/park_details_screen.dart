@@ -61,7 +61,11 @@ class _ParkDetailsScreenState extends ConsumerState<ParkDetailsScreen> {
   void initState() {
     super.initState();
     _pageController = PageController();
-    ref.read(colorProvider.notifier).getdarkmodepreviousstate();
+    Future.microtask(() {
+      if (mounted) {
+        ref.read(colorProvider.notifier).getdarkmodepreviousstate();
+      }
+    });
   }
 
   @override
