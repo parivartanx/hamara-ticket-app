@@ -3,11 +3,50 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../profile/presentation/providers/profile_provider.dart';
 
-class DetailsStep extends ConsumerWidget {
+class DetailsStep extends ConsumerStatefulWidget {
   const DetailsStep({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<DetailsStep> createState() => _DetailsStepState();
+}
+
+class _DetailsStepState extends ConsumerState<DetailsStep> {
+  bool _acceptedRefundPolicy = false;
+
+  void _showRefundPolicyDialog(BuildContext context) async {
+    final colorScheme = Theme.of(context).colorScheme;
+    final accepted = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Refund Policy'),
+        content: const Text(
+          'Tickets are only refundable if the event or park day is cancelled. Do you accept this policy?',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('Decline'),
+          ),
+          ElevatedButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: colorScheme.primary,
+              foregroundColor: colorScheme.onPrimary,
+            ),
+            child: const Text('Accept'),
+          ),
+        ],
+      ),
+    );
+    if (accepted == true) {
+      setState(() {
+        _acceptedRefundPolicy = true;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final profileAsync = ref.watch(profileProvider);
     final colorScheme = Theme.of(context).colorScheme;
 
@@ -16,7 +55,6 @@ class DetailsStep extends ConsumerWidget {
       error: (e, _) => Center(child: Text('Error: $e')),
       data: (user) {
         if (user == null) {
-          // If user is not logged in, navigate to login page
           Future.microtask(() {
             if (context.mounted) {
               Navigator.of(context).pushReplacementNamed('/login');
@@ -44,6 +82,50 @@ class DetailsStep extends ConsumerWidget {
               ),
               const SizedBox(height: 24),
               _buildUserDetails(context, user),
+              const SizedBox(height: 24),
+              Divider(color: colorScheme.outline.withOpacity(0.5)),
+              const SizedBox(height: 16),
+              CheckboxListTile(
+                value: _acceptedRefundPolicy,
+                onChanged: (value) {
+                  if (value == true) {
+                    _showRefundPolicyDialog(context);
+                  } else {
+                    setState(() {
+                      _acceptedRefundPolicy = false;
+                    });
+                  }
+                },
+                title: Text(
+                  'I agree to the terms and conditions',
+                  style: TextStyle(color: colorScheme.onSurface),
+                ),
+                activeColor: colorScheme.primary,
+                contentPadding: EdgeInsets.zero,
+                controlAffinity: ListTileControlAffinity.leading,
+              ),
+              const SizedBox(height: 24),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: _acceptedRefundPolicy ? () {/* Pay Now logic */} : null,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: colorScheme.primary,
+                    foregroundColor: colorScheme.onPrimary,
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                  child: const Text(
+                    'Pay Now',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
             ],
           ),
         );
@@ -88,20 +170,6 @@ class DetailsStep extends ConsumerWidget {
             ),
             child: const Text('Change'),
           ),
-        ),
-        const SizedBox(height: 24),
-        Divider(color: colorScheme.outline.withOpacity(0.5)),
-        const SizedBox(height: 16),
-        CheckboxListTile(
-          value: true,
-          onChanged: (value) {},
-          title: Text(
-            'I agree to the terms and conditions',
-            style: TextStyle(color: colorScheme.onSurface),
-          ),
-          activeColor: colorScheme.primary,
-          contentPadding: EdgeInsets.zero,
-          controlAffinity: ListTileControlAffinity.leading,
         ),
       ],
     );
