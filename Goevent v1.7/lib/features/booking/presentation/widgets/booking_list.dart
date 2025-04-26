@@ -1,11 +1,13 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hamaraticket/extensions/media_query_ext.dart';
-import '../../data/models/booking_model.dart';
-import '../../data/providers/booking_provider.dart';
+import '../../../../models/booking/booking_model.dart';
+import '../../../profile/presentation/providers/profile_provider.dart';
+import '../providers/bookings_provider.dart';
 import 'booking_card.dart';
-import 'booking_empty_state.dart';
 
 /// A dedicated widget for the bookings list with optimized rebuilds
 class BookingList extends ConsumerWidget {
@@ -13,14 +15,24 @@ class BookingList extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final userId = ref.watch(profileProvider).when(
+          data: (profile) => profile?.id,
+          loading: () => null,
+          error: (_, __) => null,
+        );
+    log("userId: $userId");
+    final bookings = ref.watch(bookingsProvider(userId ?? ''));
     // Only watch the filtered bookings provider in this widget
-    final filteredBookings = ref.watch(filteredBookingsProvider);
 
-    if (filteredBookings.isEmpty) {
-      return const BookingEmptyState();
-    }
+    // if (filteredBookings.isEmpty) {
+    //   return const BookingEmptyState();
+    // }
 
-    return _BookingListContent(bookings: filteredBookings);
+    return bookings.when(
+      data: (bookings) => _BookingListContent(bookings: bookings),
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (_, __) => const Center(child: Text('Error loading bookings')),
+    );
   }
 }
 

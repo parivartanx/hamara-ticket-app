@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import '../../../../extensions/media_query_ext.dart';
-import '../../data/models/booking_model.dart';
+import '../../../../models/booking/booking_model.dart';
 import 'qr_ticket_dialog.dart';
 
 class BookingCard extends StatefulWidget {
@@ -73,14 +73,12 @@ class _BookingCardState extends State<BookingCard>
 
     // Determine badge color based on category
     Color getCategoryColor() {
-      switch (widget.booking.category) {
-        case BookingCategory.event:
+      switch (widget.booking.eventId != null) {
+        case true:
           return colorScheme.primary;
-        case BookingCategory.park:
+        case false:
           return Colors.green;
-        case BookingCategory.waterPark:
-          return Colors.blue;
-      }
+        }
     }
 
     return FadeTransition(
@@ -164,7 +162,7 @@ class _BookingCardState extends State<BookingCard>
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Text(
-                                        widget.booking.eventDate.day.toString(),
+                                        widget.booking.date.day.toString(),
                                         style: TextStyle(
                                           fontSize: 16.sp,
                                           fontWeight: FontWeight.bold,
@@ -172,7 +170,7 @@ class _BookingCardState extends State<BookingCard>
                                       ),
                                       Text(
                                         dayFormat
-                                            .format(widget.booking.eventDate)
+                                            .format(widget.booking.date)
                                             .substring(0, 3),
                                         style: TextStyle(
                                           fontSize: 10.sp,
@@ -192,7 +190,7 @@ class _BookingCardState extends State<BookingCard>
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        widget.booking.eventName,
+                                        "${widget.booking.eventId==null ? widget.booking.park?.name : widget.booking.event?.name}",
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
                                         style: TextStyle(
@@ -210,7 +208,7 @@ class _BookingCardState extends State<BookingCard>
                                           SizedBox(width: 4.w),
                                           Text(
                                             timeFormat.format(
-                                                widget.booking.eventDate),
+                                                widget.booking.date),
                                             style: TextStyle(
                                               fontSize: 12.sp,
                                               fontWeight: FontWeight.w400,
@@ -223,7 +221,7 @@ class _BookingCardState extends State<BookingCard>
                                 ),
 
                                 // Status badge
-                                if (widget.booking.isUsed)
+                                if (widget.booking.status?.toLowerCase() == 'used')
                                   Transform.rotate(
                                     angle: 0,
                                     child: Container(
@@ -306,7 +304,7 @@ class _BookingCardState extends State<BookingCard>
                                     ),
                                     SizedBox(height: 4.h),
                                     Text(
-                                      widget.booking.ticketType,
+                                      widget.booking.ticketIdsWithQuantity.keys.first,
                                       style: TextStyle(
                                         fontSize: 14.sp,
                                         fontWeight: FontWeight.w600,
@@ -336,7 +334,7 @@ class _BookingCardState extends State<BookingCard>
                                             BorderRadius.circular(4.r),
                                       ),
                                       child: Text(
-                                        '${widget.booking.quantity} tickets',
+                                        '${widget.booking.ticketIdsWithQuantity.values.first} tickets',
                                         style: TextStyle(
                                           fontSize: 12.sp,
                                           fontWeight: FontWeight.w600,
@@ -374,7 +372,7 @@ class _BookingCardState extends State<BookingCard>
                                       SizedBox(width: 8.w),
                                       Expanded(
                                         child: Text(
-                                          'Booking ID: ${widget.booking.eventId}',
+                                          'Booking ID: ${widget.booking.id}',
                                           style: TextStyle(
                                             fontSize: 13.sp,
                                             color: context.colorScheme.outline,
@@ -396,7 +394,7 @@ class _BookingCardState extends State<BookingCard>
                                       SizedBox(width: 8.w),
                                       Expanded(
                                         child: Text(
-                                          'Date: ${dateFormat.format(widget.booking.eventDate)}',
+                                          'Date: ${dateFormat.format(widget.booking.eventId==null ? widget.booking.date : DateTime.parse(widget.booking.event?.startDate ?? ''))}',
                                           style: TextStyle(
                                             fontSize: 13.sp,
                                             color: context.colorScheme.outline,
@@ -418,7 +416,7 @@ class _BookingCardState extends State<BookingCard>
                                       SizedBox(width: 8.w),
                                       Expanded(
                                         child: Text(
-                                          'Category: ${widget.booking.category.displayName}',
+                                          'Category: ${widget.booking.eventId==null ? widget.booking.park?.type : "Event"}',
                                           style: TextStyle(
                                             fontSize: 13.sp,
                                             color: context.colorScheme.outline,

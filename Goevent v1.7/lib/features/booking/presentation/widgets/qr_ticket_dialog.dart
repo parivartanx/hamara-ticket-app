@@ -10,7 +10,7 @@ import 'package:share_plus/share_plus.dart';
 // import 'package:image_gallery_saver/image_gallery_saver.dart'; // Comment out the problematic package
 import 'package:permission_handler/permission_handler.dart';
 import '../../../../extensions/media_query_ext.dart';
-import '../../data/models/booking_model.dart';
+import '../../../../models/booking/booking_model.dart';
 import 'dart:math' as math;
 
 class QRTicketDialog extends StatefulWidget {
@@ -136,8 +136,8 @@ class _QRTicketDialogState extends State<QRTicketDialog> {
   Future<void> _shareImage(File imgFile) async {
     await Share.shareXFiles(
       [XFile(imgFile.path)],
-      text: 'My ${widget.booking.category.displayName} ticket for ${widget.booking.eventName}',
-      subject: 'My ${widget.booking.eventName} Ticket',
+      text: 'My ${widget.booking.eventId==null ? widget.booking.park?.name : widget.booking.event?.name} ticket for ${widget.booking.eventId==null ? widget.booking.date : widget.booking.event?.startDate}',
+      subject: 'My ${widget.booking.eventId==null ? widget.booking.park?.name : widget.booking.event?.name} Ticket',
     );
   }
 
@@ -172,7 +172,7 @@ class _QRTicketDialogState extends State<QRTicketDialog> {
       final result = await Share.shareXFiles(
         [XFile(file.path)],
         text:
-            'My ${widget.booking.category.displayName} ticket for ${widget.booking.eventName}',
+            'My ${widget.booking.eventId==null ? widget.booking.park?.name : widget.booking.event?.name} ticket for ${widget.booking.eventId==null ? widget.booking.date : widget.booking.event?.startDate}',
       );
 
     } catch (e) {
@@ -202,19 +202,19 @@ class _QRTicketDialogState extends State<QRTicketDialog> {
 
     // Generate QR code data - typically this would be some unique identifier
     final String qrData =
-        'TICKET:${widget.booking.eventId}:${widget.booking.ticketType}:${widget.booking.quantity}';
+        'TICKET:${widget.booking.id}:${widget.booking.ticketIdsWithQuantity.keys.first}:${widget.booking.ticketIdsWithQuantity.values.first}';
 
     // Determine color based on category
-    Color getCategoryColor() {
-      switch (widget.booking.category) {
-        case BookingCategory.event:
-          return colorScheme.primary;
-        case BookingCategory.park:
-          return colorScheme.secondary;
-        case BookingCategory.waterPark:
-          return colorScheme.tertiary;
-      }
-    }
+    // Color getCategoryColor() {
+    //   switch (widget.booking.eventId==null ? widget.booking.park?.type : widget.booking.event?.tags.first) {
+    //     case 'Event':
+    //       return colorScheme.primary;
+    //     case 'Park':
+    //       return colorScheme.secondary;
+    //     case 'Water Park':
+    //       return colorScheme.tertiary;
+    //   }
+    // }
 
     return Dialog(
       backgroundColor: Colors.transparent,
@@ -290,7 +290,7 @@ class _QRTicketDialogState extends State<QRTicketDialog> {
                                   ],
                                 ),
                                 // USED badge in top right
-                                if (widget.booking.isUsed)
+                                if (widget.booking.status?.toLowerCase() == 'used')
                                   Positioned(
                                     top: 0,
                                     right: 0,
@@ -320,7 +320,7 @@ class _QRTicketDialogState extends State<QRTicketDialog> {
                           Container(
                             padding: EdgeInsets.all(16.r),
                             decoration: BoxDecoration(
-                              color: getCategoryColor().withOpacity(0.08),
+                              color: colorScheme.primary.withOpacity(0.08),
                             ),
                             child: Row(
                               children: [
@@ -330,7 +330,7 @@ class _QRTicketDialogState extends State<QRTicketDialog> {
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        widget.booking.eventName,
+                                        (widget.booking.eventId == null ? widget.booking.park?.name : widget.booking.event?.name) ?? '',
                                         style: TextStyle(
                                           fontSize: 16.sp,
                                           fontWeight: FontWeight.bold,
@@ -441,7 +441,7 @@ class _QRTicketDialogState extends State<QRTicketDialog> {
                               Expanded(
                                 child: _buildDetailRow(
                                   'Date',
-                                  dateFormat.format(widget.booking.eventDate),
+                                  dateFormat.format(widget.booking.eventId==null ? widget.booking.date : DateTime.parse(widget.booking.event?.startDate ?? '')),
                                   Icons.calendar_today_outlined,
                                   colorScheme,
                                 ),
@@ -450,7 +450,7 @@ class _QRTicketDialogState extends State<QRTicketDialog> {
                               Expanded(
                                 child: _buildDetailRow(
                                   'Time',
-                                  timeFormat.format(widget.booking.eventDate),
+                                  widget.booking.eventId==null ? timeFormat.format(widget.booking.date) : widget.booking.event?.startDate ?? '',
                                   Icons.access_time_rounded,
                                   colorScheme,
                                 ),
@@ -463,7 +463,7 @@ class _QRTicketDialogState extends State<QRTicketDialog> {
                               Expanded(
                                 child: _buildDetailRow(
                                   'Ticket Type',
-                                  widget.booking.ticketType,
+                                  widget.booking.ticketIdsWithQuantity.keys.first,
                                   Icons.confirmation_number_outlined,
                                   colorScheme,
                                 ),
@@ -472,7 +472,7 @@ class _QRTicketDialogState extends State<QRTicketDialog> {
                               Expanded(
                                 child: _buildDetailRow(
                                   'Quantity',
-                                  '${widget.booking.quantity} tickets',
+                                  '${widget.booking.ticketIdsWithQuantity.values.first} tickets',
                                   Icons.person_outline,
                                   colorScheme,
                                 ),
@@ -482,7 +482,7 @@ class _QRTicketDialogState extends State<QRTicketDialog> {
                           SizedBox(height: 8.h),
                           _buildDetailRow(
                             'Booking ID',
-                            widget.booking.eventId,
+                            widget.booking.id,
                             Icons.qr_code_outlined,
                             colorScheme,
                           ),
@@ -516,7 +516,7 @@ class _QRTicketDialogState extends State<QRTicketDialog> {
                   _buildActionButton(
                     label: 'Share',
                     icon: Icons.share_outlined,
-                    color: getCategoryColor(),
+                    color: colorScheme.primary.withOpacity(0.08),
                     isLoading: _isSharing,
                     onPressed: _shareTicket,
                     colorScheme: colorScheme,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '/extensions/media_query_ext.dart';
+import '/features/profile/presentation/providers/profile_provider.dart';
 import 'category_games_widget.dart';
 import 'collapsed_appbar_title.dart';
 import 'expanded_appbar_header.dart';
@@ -22,15 +23,12 @@ class _TwoPanelsState extends ConsumerState<TwoPanels>
   late final ScrollController _scrollController;
   bool _isScrolled = false;
   late final String _greeting;
-  // User name - in a real app, this would come from user profile or authentication
-  final String _userName = "Vinita";
 
   @override
   void initState() {
     super.initState();
     _scrollController = ScrollController();
     _scrollController.addListener(_scrollListener);
-    // ref.read(colorProvider.notifier).getdarkmodepreviousstate();
     _greeting = _getGreeting();
   }
 
@@ -64,8 +62,18 @@ class _TwoPanelsState extends ConsumerState<TwoPanels>
     }
   }
 
+  String _getUserName() {
+    final userState = ref.watch(profileProvider);
+    return userState.when(
+      data: (user) => user?.name ?? 'Guest',
+      loading: () => 'Guest',
+      error: (_, __) => 'Guest',
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    final userName = _getUserName();
 
     return Scaffold(
       backgroundColor: context.colorScheme.surface,
@@ -90,7 +98,7 @@ class _TwoPanelsState extends ConsumerState<TwoPanels>
                     ),
                   ),
             title: _isScrolled
-                ? CollapsedAppBarTitle(greeting: _greeting, userName: _userName)
+                ? CollapsedAppBarTitle(greeting: _greeting, userName: userName)
                 : null,
             flexibleSpace: FlexibleSpaceBar(
               background: Stack(
@@ -115,7 +123,7 @@ class _TwoPanelsState extends ConsumerState<TwoPanels>
                   Column(
                     children: [
                       ExpandedAppBarHeader(
-                          greeting: _greeting, userName: _userName),
+                          greeting: _greeting, userName: userName),
                       SizedBox(height: 16.h),
                     ],
                   ),
