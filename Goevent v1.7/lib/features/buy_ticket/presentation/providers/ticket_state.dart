@@ -9,7 +9,7 @@ class TicketBookingState {
   final int currentStep;
   final OccasionType occasionType;
   final DateTime? selectedDate;
-  final  selectedTickets;
+  final Map<String,int> selectedTickets;
   final Map<String, String> userDetails;
   final String? promoCode;
   final double convenienceFeePercentage;
