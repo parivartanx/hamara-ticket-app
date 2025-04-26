@@ -5,7 +5,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '/extensions/media_query_ext.dart';
 import '/features/home/presentation/screens/home.dart';
 import '/notification/notification.dart';
-import '/providers/theme_provider.dart';
 import 'package:page_transition/page_transition.dart';
 import 'search_bar_widget.dart';
 

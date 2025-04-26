@@ -348,7 +348,7 @@ class _LoginState extends ConsumerState<Login>
 
                                                   if (googleUser == null) {
                                                     log(
-                                                        "Login: Google sign-in was canceled by the user ${googleUser}");
+                                                        "Login: Google sign-in was canceled by the user $googleUser");
                                                     if (mounted) {
                                                       setState(() {
                                                         isLoading = false;

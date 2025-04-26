@@ -3,8 +3,10 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hamaraticket/extensions/media_query_ext.dart';
 import '../../../../models/booking/booking_model.dart';
+import '../../../login/presentation/screens/login.dart';
 import '../../../profile/presentation/providers/profile_provider.dart';
 import '../providers/bookings_provider.dart';
 import 'booking_card.dart';
@@ -21,6 +23,38 @@ class BookingList extends ConsumerWidget {
           error: (_, __) => null,
         );
     log("userId: $userId");
+    // if user id is null show info to login 
+    if (userId == null) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.account_circle_outlined,
+              size: 70.w,
+              color: context.colorScheme.primary,
+            ),
+            SizedBox(height: 16.h),
+            Text(
+              'Please log in to view your bookings',
+              style: TextStyle(
+                fontSize: 16.sp,
+                fontWeight: FontWeight.w500,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(height: 20.h),
+            ElevatedButton(
+              onPressed: () {
+                context.pushNamed(Login.routeName);
+              },
+              child: const Text('Go to Login'),
+            ),
+          ],
+        ),
+      );
+    }
+
     final bookings = ref.watch(bookingsProvider(userId ?? ''));
     // Only watch the filtered bookings provider in this widget
 
@@ -31,7 +65,7 @@ class BookingList extends ConsumerWidget {
     return bookings.when(
       data: (bookings) => _BookingListContent(bookings: bookings),
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (_, __) => const Center(child: Text('Error loading bookings')),
+      error: (e, __) => Center(child: Text("Error: $e")),
     );
   }
 }

@@ -14,17 +14,20 @@ class BookingRemoteDataSource {
   Future<List<BookingModel>> getBookingsByUserId(String userId) async {
     try {
       final response = await _dioClient.get(
-        url: EndPoints.getBookingsByUserId,
+        url: "${EndPoints.getBookingsByUserId}/$userId/bookings",
       );
       if (response.statusCode == 200) {
-        final data = response.data;
-        log("response of bookings: $data");
-        return response.data.map((e) => BookingModel.fromJson(e)).toList();
+        final List<dynamic> data = response.data["bookings"];
+        // log("response of bookings: $data");
+        final  bookings = data.map((e) => BookingModel.fromJson(e)).toList();
+        // log("bookings after converted : $bookings");
+        return bookings;
       } else {
         throw Exception(response.data);
       }
     } catch (e) {
-      throw Exception(e);
+      // print("Error in booking remote data source: $e");
+      rethrow;
     }
   }
 }

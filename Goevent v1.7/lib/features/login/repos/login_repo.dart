@@ -24,7 +24,7 @@ class LoginRepo {
         name: name,
       
       );
-      log("LoginRepo: Google login successful for user: ${user}");
+      log("LoginRepo: Google login successful for user: $user");
       return user;
     } catch (e) {
       log("LoginRepo: Error during Google login: $e");

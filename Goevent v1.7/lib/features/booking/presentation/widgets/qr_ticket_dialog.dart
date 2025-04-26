@@ -11,7 +11,6 @@ import 'package:share_plus/share_plus.dart';
 import 'package:permission_handler/permission_handler.dart';
 import '../../../../extensions/media_query_ext.dart';
 import '../../../../models/booking/booking_model.dart';
-import 'dart:math' as math;
 
 class QRTicketDialog extends StatefulWidget {
   final BookingModel booking;
@@ -29,6 +28,7 @@ class _QRTicketDialogState extends State<QRTicketDialog> {
   final ScreenshotController _screenshotController = ScreenshotController();
   bool _isSaving = false;
   bool _isSharing = false;
+  final DateFormat dateFormat = DateFormat('dd MMM yyyy');
 
   Future<void> _saveTicketToGallery() async {
     if (_isSaving) return;
@@ -172,7 +172,7 @@ class _QRTicketDialogState extends State<QRTicketDialog> {
       final result = await Share.shareXFiles(
         [XFile(file.path)],
         text:
-            'My ${widget.booking.eventId==null ? widget.booking.park?.name : widget.booking.event?.name} ticket for ${widget.booking.eventId==null ? widget.booking.date : widget.booking.event?.startDate}',
+            'My ${widget.booking.eventId==null ? widget.booking.park?.name : widget.booking.event?.name ?? ""} ticket for ${dateFormat.format(widget.booking.eventId==null ? widget.booking.date : widget.booking.event != null && widget.booking.event!.startDate != null ? DateTime.parse(widget.booking.event!.startDate.toString()) : widget.booking.date)}',
       );
 
     } catch (e) {
@@ -193,16 +193,16 @@ class _QRTicketDialogState extends State<QRTicketDialog> {
       }
     }
   }
-
   @override
   Widget build(BuildContext context) {
+    // Using the class-level dateFormat variable instead of redefining it
     final DateFormat dateFormat = DateFormat('dd MMM yyyy');
     final DateFormat timeFormat = DateFormat('hh:mm a');
     final colorScheme = context.colorScheme;
 
     // Generate QR code data - typically this would be some unique identifier
     final String qrData =
-        'TICKET:${widget.booking.id}:${widget.booking.ticketIdsWithQuantity.keys.first}:${widget.booking.ticketIdsWithQuantity.values.first}';
+        'TICKET:${widget.booking.id}:${widget.booking.ticketIdsWithQuantity[0].ticketId}:${widget.booking.ticketIdsWithQuantity[0].quantity}';
 
     // Determine color based on category
     // Color getCategoryColor() {
@@ -441,7 +441,11 @@ class _QRTicketDialogState extends State<QRTicketDialog> {
                               Expanded(
                                 child: _buildDetailRow(
                                   'Date',
-                                  dateFormat.format(widget.booking.eventId==null ? widget.booking.date : DateTime.parse(widget.booking.event?.startDate ?? '')),
+                                  dateFormat.format(widget.booking.eventId==null ? 
+                                    widget.booking.date : 
+                                    widget.booking.event != null && widget.booking.event!.startDate != null ?
+                                      DateTime.parse(widget.booking.event!.startDate.toString()) :
+                                      widget.booking.date),
                                   Icons.calendar_today_outlined,
                                   colorScheme,
                                 ),
@@ -450,7 +454,11 @@ class _QRTicketDialogState extends State<QRTicketDialog> {
                               Expanded(
                                 child: _buildDetailRow(
                                   'Time',
-                                  widget.booking.eventId==null ? timeFormat.format(widget.booking.date) : widget.booking.event?.startDate ?? '',
+                                  widget.booking.eventId==null ? 
+                                    timeFormat.format(widget.booking.date) : 
+                                    widget.booking.event != null && widget.booking.event!.startDate != null ?
+                                      timeFormat.format(DateTime.parse(widget.booking.event!.startDate.toString())) :
+                                      timeFormat.format(widget.booking.date),
                                   Icons.access_time_rounded,
                                   colorScheme,
                                 ),
@@ -463,7 +471,7 @@ class _QRTicketDialogState extends State<QRTicketDialog> {
                               Expanded(
                                 child: _buildDetailRow(
                                   'Ticket Type',
-                                  widget.booking.ticketIdsWithQuantity.keys.first,
+                                  widget.booking.ticketIdsWithQuantity[0].ticketId,
                                   Icons.confirmation_number_outlined,
                                   colorScheme,
                                 ),
@@ -472,13 +480,42 @@ class _QRTicketDialogState extends State<QRTicketDialog> {
                               Expanded(
                                 child: _buildDetailRow(
                                   'Quantity',
-                                  '${widget.booking.ticketIdsWithQuantity.values.first} tickets',
+                                  '${widget.booking.ticketIdsWithQuantity[0].quantity} tickets',
                                   Icons.person_outline,
                                   colorScheme,
                                 ),
                               ),
                             ],
                           ),
+                          
+                          // Display all ticket types and quantities
+                          ...widget.booking.getTicketTypeWithQuantity().map((ticketTypeQty) => 
+                            Padding(
+                              padding: EdgeInsets.only(top: 8.h),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: _buildDetailRow(
+                                      'Ticket',
+                                      ticketTypeQty.ticketType,
+                                      Icons.confirmation_number_outlined,
+                                      colorScheme,
+                                    ),
+                                  ),
+                                  SizedBox(width: 12.w),
+                                  Expanded(
+                                    child: _buildDetailRow(
+                                      'Qty',
+                                      '${ticketTypeQty.quantity}',
+                                      Icons.numbers_outlined,
+                                      colorScheme,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ).toList(),
+                          
                           SizedBox(height: 8.h),
                           _buildDetailRow(
                             'Booking ID',
