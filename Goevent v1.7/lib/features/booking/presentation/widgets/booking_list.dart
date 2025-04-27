@@ -3,9 +3,9 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
-import 'package:hamaraticket/extensions/media_query_ext.dart';
+import '/extensions/media_query_ext.dart';
 import '../../../../models/booking/booking_model.dart';
+import '../../../../widgets/empty_states.dart';
 import '../../../login/presentation/screens/login.dart';
 import '../../../profile/presentation/providers/profile_provider.dart';
 import '../providers/bookings_provider.dart';
@@ -18,52 +18,26 @@ class BookingList extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final userId = ref.watch(profileProvider).when(
-          data: (profile) => profile?.id,
+          data: (profile) => profile?.userId,
           loading: () => null,
           error: (_, __) => null,
         );
     log("userId: $userId");
     // if user id is null show info to login 
     if (userId == null) {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.account_circle_outlined,
-              size: 70.w,
-              color: context.colorScheme.primary,
-            ),
-            SizedBox(height: 16.h),
-            Text(
-              'Please log in to view your bookings',
-              style: TextStyle(
-                fontSize: 16.sp,
-                fontWeight: FontWeight.w500,
-              ),
-              textAlign: TextAlign.center,
-            ),
-            SizedBox(height: 20.h),
-            ElevatedButton(
-              onPressed: () {
-                context.pushNamed(Login.routeName);
-              },
-              child: const Text('Go to Login'),
-            ),
-          ],
-        ),
-      );
+      return EmptyStates.needsLogin(context, routeName: Login.routeName);
     }
 
-    final bookings = ref.watch(bookingsProvider(userId ?? ''));
+    final bookings = ref.watch(bookingsProvider(userId));
     // Only watch the filtered bookings provider in this widget
 
-    // if (filteredBookings.isEmpty) {
-    //   return const BookingEmptyState();
-    // }
-
     return bookings.when(
-      data: (bookings) => _BookingListContent(bookings: bookings),
+      data: (bookings) {
+        if (bookings.isEmpty) {
+          return EmptyStates.noBookings(context);
+        }
+        return _BookingListContent(bookings: bookings);
+      },
       loading: () => const Center(child: CircularProgressIndicator()),
       error: (e, __) => Center(child: Text("Error: $e")),
     );
