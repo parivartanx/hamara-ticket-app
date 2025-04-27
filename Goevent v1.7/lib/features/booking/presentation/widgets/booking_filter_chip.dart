@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../../../extensions/media_query_ext.dart';
 
 /// A custom filter chip widget for booking time filters
 class BookingFilterChip extends ConsumerWidget {
@@ -12,25 +11,10 @@ class BookingFilterChip extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final colorScheme = context.colorScheme;
-    // final selectedFilter = ref.watch(selectedTimeFilterProvider);
-    // final isSelected = selectedFilter == filter;
-
-    // Choose icon based on filter type
-    // IconData getFilterIcon() {
-    //   switch (filter) {
-    //     case BookingTimeFilter.all:
-    //       return Icons.all_inclusive;
-    //     case BookingTimeFilter.upcoming:
-    //       return Icons.calendar_today;
-    //     case BookingTimeFilter.past:
-    //       return Icons.history;
-    //   }
-    // }
+    
 
     return GestureDetector(
       onTap: () {
-        // ref.read(selectedTimeFilterProvider.notifier).state = filter;
       },
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),

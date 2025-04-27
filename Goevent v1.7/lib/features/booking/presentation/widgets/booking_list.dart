@@ -18,7 +18,7 @@ class BookingList extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final userId = ref.watch(profileProvider).when(
-          data: (profile) => profile?.userId,
+          data: (profile) => profile?.id,
           loading: () => null,
           error: (_, __) => null,
         );

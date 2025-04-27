@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '/extensions/media_query_ext.dart';
 import '/utils/shared_prefs_manager.dart';
 import 'config/app_route.dart';
 import 'core/theme/app_theme.dart';
@@ -30,7 +31,7 @@ class MyApp extends ConsumerWidget {
     // final themeState = ref.watch(themeProvider);
 
     return ScreenUtilInit(
-      designSize: const Size(375, 812),
+      designSize:  Size(context.width, context.height),
       minTextAdapt: true,
       splitScreenMode: true,
       builder: (context, child) {

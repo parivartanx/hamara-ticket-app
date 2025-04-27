@@ -5,6 +5,7 @@ import 'package:share_plus/share_plus.dart';
 import '../../../../extensions/media_query_ext.dart';
 import '../../../../models/booking/booking_model.dart';
 import 'qr_ticket_dialog.dart';
+import 'ticket_type_list_item.dart';
 
 class BookingCard extends StatefulWidget {
   final BookingModel booking;
@@ -289,61 +290,48 @@ class _BookingCardState extends State<BookingCard>
                           Padding(
                             padding: EdgeInsets.symmetric(
                                 horizontal: 16.w, vertical: 8.h),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            child: Column(
                               children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Text(
-                                      'Ticket Type',
-                                      style: TextStyle(
-                                        fontSize: 12.sp,
-                                        color: context.colorScheme.outline,
-                                      ),
-                                    ),
-                                    SizedBox(height: 4.h),
-                                    Text(
-                                      widget.booking.ticketIdsWithQuantity.isNotEmpty ? widget.booking.ticketIdsWithQuantity[0].ticketId :" ",
-                                      style: TextStyle(
-                                        fontSize: 14.sp,
-                                        fontWeight: FontWeight.w600,
-                                        color: colorScheme.onSurface,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: [
-                                    Text(
-                                      'Quantity',
-                                      style: TextStyle(
-                                        fontSize: 12.sp,
-                                        color: context.colorScheme.outline,
-                                      ),
-                                    ),
-                                    SizedBox(height: 4.h),
-                                    Container(
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: 8.w, vertical: 2.h),
-                                      decoration: BoxDecoration(
-                                        color:
-                                            getCategoryColor().withAlpha(20),
-                                        borderRadius:
-                                            BorderRadius.circular(4.r),
-                                      ),
-                                      child: Text(
-                                        '${widget.booking.ticketIdsWithQuantity[0].quantity} tickets',
-                                        style: TextStyle(
-                                          fontSize: 12.sp,
-                                          fontWeight: FontWeight.w600,
-                                          color: getCategoryColor(),
+                                    Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          'Ticket Type',
+                                          style: TextStyle(
+                                            fontSize: 12.sp,
+                                            color: context.colorScheme.outline,
+                                          ),
                                         ),
-                                      ),
+                                        
+                                      ],
+                                    ),
+                                    Column(
+                                      crossAxisAlignment: CrossAxisAlignment.end,
+                                      children: [
+                                        Text(
+                                          'Quantity',
+                                          style: TextStyle(
+                                            fontSize: 12.sp,
+                                            color: context.colorScheme.outline,
+                                          ),
+                                        ),
+                                        
+                                      ],
                                     ),
                                   ],
                                 ),
+                                ...widget.booking.getTicketTypeWithQuantity().map((ticketInfo) => 
+                                    TicketTypeListItem(
+                                      ticketType: ticketInfo.ticketType,
+                                      quantity: ticketInfo.quantity,
+                                      getCategoryColor: () => getCategoryColor(),
+                                    ),
+                                  ).toList(),
+                                  
+                                
                               ],
                             ),
                           ),
@@ -398,49 +386,10 @@ class _BookingCardState extends State<BookingCard>
                                   
                                   // Display all ticket types with quantities using the updated function
                                   ...widget.booking.getTicketTypeWithQuantity().map((ticketInfo) => 
-                                    Padding(
-                                      padding: EdgeInsets.only(top: 4.h, bottom: 4.h),
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Row(
-                                            children: [
-                                              Icon(
-                                                Icons.local_activity_outlined,
-                                                size: 14.sp,
-                                                color: getCategoryColor(),
-                                              ),
-                                              SizedBox(width: 6.w),
-                                              Padding(
-                                                padding: EdgeInsets.only(top: 2.h),
-                                                child: Text(
-                                                  ticketInfo.ticketType,
-                                                  style: TextStyle(
-                                                    fontSize: 13.sp,
-                                                    color: context.colorScheme.onSurface,
-                                                    fontWeight: FontWeight.w500,
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          Container(
-                                            padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 2.h),
-                                            decoration: BoxDecoration(
-                                              color: getCategoryColor().withAlpha(20),
-                                              borderRadius: BorderRadius.circular(4.r),
-                                            ),
-                                            child: Text(
-                                              'Qty: ${ticketInfo.quantity}',
-                                              style: TextStyle(
-                                                fontSize: 12.sp,
-                                                fontWeight: FontWeight.w600,
-                                                color: getCategoryColor(),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
+                                    TicketTypeListItem(
+                                      ticketType: ticketInfo.ticketType,
+                                      quantity: ticketInfo.quantity,
+                                      getCategoryColor: () => getCategoryColor(),
                                     ),
                                   ).toList(),
                                   
@@ -569,7 +518,7 @@ class _BookingCardState extends State<BookingCard>
                                         final eventDate = dateFormat.format(
                                             widget.booking.eventId == null 
                                                 ? widget.booking.date 
-                                                : widget.booking.event != null && widget.booking.event!.startDate != null
+                                                : widget.booking.eventId != null 
                                                   ? DateTime.parse(widget.booking.event!.startDate.toString())
                                                   : widget.booking.date
                                         );

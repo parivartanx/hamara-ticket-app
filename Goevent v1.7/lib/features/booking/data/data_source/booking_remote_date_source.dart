@@ -1,8 +1,7 @@
-import 'dart:developer';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:hamaraticket/utils/dio_client.dart';
-import 'package:hamaraticket/utils/endPoints.dart';
+import '/utils/dio_client.dart';
+import '/utils/endPoints.dart';
 
 import '../../../../models/booking/booking_model.dart';
 

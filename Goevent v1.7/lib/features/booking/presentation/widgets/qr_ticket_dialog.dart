@@ -169,11 +169,11 @@ class _QRTicketDialogState extends State<QRTicketDialog> {
       if (!mounted) return;
 
       // Use direct file sharing
-      final result = await Share.shareXFiles(
-        [XFile(file.path)],
-        text:
-            'My ${widget.booking.eventId==null ? widget.booking.park?.name : widget.booking.event?.name ?? ""} ticket for ${dateFormat.format(widget.booking.eventId==null ? widget.booking.date : widget.booking.event != null && widget.booking.event!.startDate != null ? DateTime.parse(widget.booking.event!.startDate.toString()) : widget.booking.date)}',
-      );
+      // final result = await Share.shareXFiles(
+      //   [XFile(file.path)],
+      //   text:
+      //       'My ${widget.booking.eventId==null ? widget.booking.park?.name : widget.booking.event?.name ?? ""} ticket for ${dateFormat.format(widget.booking.eventId==null ? widget.booking.date : widget.booking.event != null  ? DateTime.parse(widget.booking.event!.startDate.toString()) : widget.booking.date)}',
+      // );
 
     } catch (e) {
       if (!mounted) return;
@@ -258,7 +258,7 @@ class _QRTicketDialogState extends State<QRTicketDialog> {
                             decoration: BoxDecoration(
                               border: Border(
                                 bottom: BorderSide(
-                                  color: colorScheme.outlineVariant.withOpacity(0.2),
+                                  color: colorScheme.outlineVariant.withAlpha(30),
                                   width: 1,
                                 ),
                               ),
@@ -290,7 +290,7 @@ class _QRTicketDialogState extends State<QRTicketDialog> {
                                   ],
                                 ),
                                 // USED badge in top right
-                                if (widget.booking.status?.toLowerCase() == 'used')
+                                if (widget.booking.status.toLowerCase() == 'used')
                                   Positioned(
                                     top: 0,
                                     right: 0,
@@ -300,7 +300,7 @@ class _QRTicketDialogState extends State<QRTicketDialog> {
                                         vertical: 4.h,
                                       ),
                                       decoration: BoxDecoration(
-                                        color: colorScheme.error.withOpacity(0.12),
+                                        color: colorScheme.error.withAlpha(100),
                                         borderRadius: BorderRadius.circular(6.r),
                                       ),
                                       child: Text(
@@ -443,7 +443,7 @@ class _QRTicketDialogState extends State<QRTicketDialog> {
                                   'Date',
                                   dateFormat.format(widget.booking.eventId==null ? 
                                     widget.booking.date : 
-                                    widget.booking.event != null && widget.booking.event!.startDate != null ?
+                                    widget.booking.eventId != null ?
                                       DateTime.parse(widget.booking.event!.startDate.toString()) :
                                       widget.booking.date),
                                   Icons.calendar_today_outlined,
@@ -456,7 +456,7 @@ class _QRTicketDialogState extends State<QRTicketDialog> {
                                   'Time',
                                   widget.booking.eventId==null ? 
                                     timeFormat.format(widget.booking.date) : 
-                                    widget.booking.event != null && widget.booking.event!.startDate != null ?
+                                    widget.booking.eventId != null ?
                                       timeFormat.format(DateTime.parse(widget.booking.event!.startDate.toString())) :
                                       timeFormat.format(widget.booking.date),
                                   Icons.access_time_rounded,
