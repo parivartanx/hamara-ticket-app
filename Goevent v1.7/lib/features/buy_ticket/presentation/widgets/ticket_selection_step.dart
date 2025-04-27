@@ -29,8 +29,12 @@ class TicketSelectionStep extends ConsumerWidget {
     // Watch the tickets provider
     final tickets = ref.watch(ticketsProvider(params));
     
-    // Watch the prices provider to ensure it's initialized
-    ref.watch(ticketPricesProvider);
+    // Ensure ticket prices are properly initialized and updated
+    tickets.whenData((ticketData) {
+      if (ticketData.isNotEmpty) {
+        ref.read(ticketPricesProvider.notifier).updatePrices(ticketData);
+      }
+    });
 
     final subtotal = ref.watch(subtotalProvider);
     final convenienceFee = ref.watch(convenienceFeeProvider);
@@ -329,10 +333,17 @@ class QuantitySelector extends ConsumerWidget {
             icon: Icons.remove,
             onPressed: () {
               final newQuantity = quantity - 1;
-              ref.read(ticketBookingProvider.notifier).updateTickets(
-                ticketId,
-                newQuantity >= 0 ? newQuantity : 0,
-              );
+              if (newQuantity >= 0) {
+                ref.read(ticketBookingProvider.notifier).updateTickets(
+                  ticketId,
+                  newQuantity,
+                );
+                
+                // Force refresh of the pricing providers
+                ref.refresh(subtotalProvider);
+                ref.refresh(convenienceFeeProvider);
+                ref.refresh(totalAmountProvider);
+              }
             },
             isDisabled: quantity == 0,
           ),
@@ -355,6 +366,11 @@ class QuantitySelector extends ConsumerWidget {
                 ticketId,
                 quantity + 1,
               );
+              
+              // Force refresh of the pricing providers
+              ref.refresh(subtotalProvider);
+              ref.refresh(convenienceFeeProvider);
+              ref.refresh(totalAmountProvider);
             },
             isDisabled: false,
           ),

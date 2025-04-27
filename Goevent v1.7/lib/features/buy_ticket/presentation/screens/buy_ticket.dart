@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -69,8 +68,10 @@ class _BuyTicketSState extends ConsumerState<BuyTicketS> with SingleTickerProvid
   Widget build(BuildContext context) {
     final bookingState = ref.watch(ticketBookingProvider);
     final colorScheme = context.colorScheme;
-    final canContinue = ref.read(ticketBookingProvider.notifier).canProceedToNextStep();
     final totalSteps = _occasionType.requiresDateSelection ? 3 : 2;
+    final canContinue = bookingState.currentStep < totalSteps - 1 
+        ? ref.read(ticketBookingProvider.notifier).canProceedToNextStep()
+        : bookingState.termsAccepted;
     
     return Scaffold(
       backgroundColor: colorScheme.surface,
@@ -356,6 +357,18 @@ class _BuyTicketSState extends ConsumerState<BuyTicketS> with SingleTickerProvid
   }
 
   void _handleSubmission() {
+    final bookingState = ref.read(ticketBookingProvider);
+    
+    if (!bookingState.termsAccepted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Text('Please accept the terms and conditions first'),
+          backgroundColor: Theme.of(context).colorScheme.error,
+        ),
+      );
+      return;
+    }
+    
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
@@ -364,5 +377,7 @@ class _BuyTicketSState extends ConsumerState<BuyTicketS> with SingleTickerProvid
         backgroundColor: Theme.of(context).colorScheme.primary,
       ),
     );
+    
+    // TODO: Implement payment processing logic
   }
 }

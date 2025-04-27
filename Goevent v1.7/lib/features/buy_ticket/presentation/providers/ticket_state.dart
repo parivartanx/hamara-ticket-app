@@ -13,6 +13,7 @@ class TicketBookingState {
   final Map<String, String> userDetails;
   final String? promoCode;
   final double convenienceFeePercentage;
+  final bool termsAccepted;
 
   const TicketBookingState({
     this.currentStep = 0,
@@ -22,6 +23,7 @@ class TicketBookingState {
     this.userDetails = const {},
     this.promoCode,
     this.convenienceFeePercentage = 3.5,
+    this.termsAccepted = false,
   });
 
   bool get canProceedFromDateSelection {
@@ -38,7 +40,8 @@ class TicketBookingState {
     return userDetails.isNotEmpty &&
            userDetails.containsKey('name') &&
            userDetails.containsKey('email') &&
-           userDetails.containsKey('phone');
+           userDetails.containsKey('phone') &&
+           termsAccepted;
   }
 
   TicketBookingState copyWith({
@@ -49,6 +52,7 @@ class TicketBookingState {
     Map<String, String>? userDetails,
     String? promoCode,
     double? convenienceFeePercentage,
+    bool? termsAccepted,
   }) {
     return TicketBookingState(
       currentStep: currentStep ?? this.currentStep,
@@ -58,6 +62,7 @@ class TicketBookingState {
       userDetails: userDetails ?? this.userDetails,
       promoCode: promoCode ?? this.promoCode,
       convenienceFeePercentage: convenienceFeePercentage ?? this.convenienceFeePercentage,
+      termsAccepted: termsAccepted ?? this.termsAccepted,
     );
   }
 }
@@ -86,6 +91,10 @@ class TicketBookingNotifier extends StateNotifier<TicketBookingState> {
 
   void updateUserDetails(Map<String, String> details) {
     state = state.copyWith(userDetails: details);
+  }
+
+  void setTermsAccepted(bool accepted) {
+    state = state.copyWith(termsAccepted: accepted);
   }
 
   bool canProceedToNextStep() {
