@@ -1,5 +1,6 @@
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hamaraticket/models/ticket/order_ticket_model.dart';
 import '/models/ticket/ticket_model.dart';
 import '/utils/dio_client.dart';
 import '/utils/endPoints.dart';
@@ -25,6 +26,24 @@ class TicketRemoteDataSource {
       throw Exception(e);
     }
   }
+
+  /// create ticket order 
+  Future<TicketOrderResponse> createTicketOrder(OrderTicket orderTicket) async {
+    try {
+      final response = await _dioClient.post(
+        url: EndPoints.createTicketOrder,
+        body: orderTicket.toJson(),
+      );
+      if (response.statusCode == 200) {
+        return TicketOrderResponse.fromJson(response.data);
+      } else {
+        throw Exception(response.data['message'] ?? "Failed to create ticket order");
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
+  
 }
 
 final ticketRemoteDataSourceProvider = Provider<TicketRemoteDataSource>((ref) {

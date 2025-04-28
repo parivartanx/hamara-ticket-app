@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../profile/presentation/providers/profile_provider.dart';
+// import '../../../profile/presentation/providers/profile_provider.dart';
 import '../providers/ticket_state.dart';
 import 'guest_user_form.dart';
 
 class DetailsStep extends ConsumerStatefulWidget {
-  const DetailsStep({Key? key}) : super(key: key);
+  final TextEditingController _nameController;
+  final TextEditingController _emailController;
+  final TextEditingController _phoneController;
+  const DetailsStep({Key? key,required TextEditingController emailController,required TextEditingController nameController,required TextEditingController phoneController}) : _phoneController = phoneController, _emailController = emailController, _nameController = nameController, super(key: key);
 
   @override
   ConsumerState<DetailsStep> createState() => _DetailsStepState();
@@ -45,15 +48,11 @@ class _DetailsStepState extends ConsumerState<DetailsStep> {
 
   @override
   Widget build(BuildContext context) {
-    final profileAsync = ref.watch(profileProvider);
     final bookingState = ref.watch(ticketBookingProvider);
     final colorScheme = Theme.of(context).colorScheme;
 
-    return profileAsync.when(
-      loading: () => const Center(child: CircularProgressIndicator()),
-      error: (e, _) => Center(child: Text('Error: $e')),
-      data: (user) {
-        if (user == null) {
+  
+      
           // Show login form instead of redirecting
           return Padding(
             padding: const EdgeInsets.all(16.0),
@@ -61,20 +60,23 @@ class _DetailsStepState extends ConsumerState<DetailsStep> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Sign In',
+                  'Booking Details',
                   style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'Please sign in to continue with your booking',
+                  'Please provide booking details for booking',
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         color: colorScheme.onSurfaceVariant,
                       ),
                 ),
                 const SizedBox(height: 24),
                 GuestUserForm(
+                  nameController: widget._nameController,
+                  emailController: widget._emailController,
+                  phoneController: widget._phoneController,
                   onTermsChanged: (value) {
                     if (value == true) {
                       _showRefundPolicyDialog(context);
@@ -87,95 +89,95 @@ class _DetailsStepState extends ConsumerState<DetailsStep> {
               ],
             ),
           );
-        }
-        return Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Your Details',
-                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                'Please confirm your details',
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: colorScheme.onSurfaceVariant,
-                    ),
-              ),
-              const SizedBox(height: 24),
-              _buildUserDetails(context, user),
-              const SizedBox(height: 24),
-              Divider(color: colorScheme.outline.withOpacity(0.5)),
-              const SizedBox(height: 16),
-              CheckboxListTile(
-                value: bookingState.termsAccepted,
-                onChanged: (value) {
-                  if (value == true) {
-                    _showRefundPolicyDialog(context);
-                  } else {
-                    ref.read(ticketBookingProvider.notifier).setTermsAccepted(false);
-                  }
-                },
-                title: Text(
-                  'I agree to the terms and conditions',
-                  style: TextStyle(color: colorScheme.onSurface),
-                ),
-                activeColor: colorScheme.primary,
-                contentPadding: EdgeInsets.zero,
-                controlAffinity: ListTileControlAffinity.leading,
-              ),
-            ],
-          ),
-        );
-      },
-    );
+        // }
+        // return Padding(
+        //   padding: const EdgeInsets.all(16.0),
+        //   child: Column(
+        //     crossAxisAlignment: CrossAxisAlignment.start,
+        //     children: [
+        //       Text(
+        //         'Your Details',
+        //         style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+        //               fontWeight: FontWeight.bold,
+        //             ),
+        //       ),
+        //       const SizedBox(height: 8),
+        //       Text(
+        //         'Please confirm your details',
+        //         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+        //               color: colorScheme.onSurfaceVariant,
+        //             ),
+        //       ),
+        //       const SizedBox(height: 24),
+        //       _buildUserDetails(context, user),
+        //       const SizedBox(height: 24),
+        //       Divider(color: colorScheme.outline.withOpacity(0.5)),
+        //       const SizedBox(height: 16),
+        //       CheckboxListTile(
+        //         value: bookingState.termsAccepted,
+        //         onChanged: (value) {
+        //           if (value == true) {
+        //             _showRefundPolicyDialog(context);
+        //           } else {
+        //             ref.read(ticketBookingProvider.notifier).setTermsAccepted(false);
+        //           }
+        //         },
+        //         title: Text(
+        //           'I agree to the terms and conditions',
+        //           style: TextStyle(color: colorScheme.onSurface),
+        //         ),
+        //         activeColor: colorScheme.primary,
+        //         contentPadding: EdgeInsets.zero,
+        //         controlAffinity: ListTileControlAffinity.leading,
+        //       ),
+        //     ],
+        //   ),
+        // );
+    
+    
   }
 
-  Widget _buildUserDetails(BuildContext context, user) {
-    final colorScheme = Theme.of(context).colorScheme;
+  // Widget _buildUserDetails(BuildContext context, user) {
+  //   final colorScheme = Theme.of(context).colorScheme;
     
-    // This would show the logged-in user's details
-    return Column(
-      children: [
-        ListTile(
-          leading: CircleAvatar(
-            backgroundColor: colorScheme.primary,
-            child: Icon(Icons.person, color: colorScheme.onPrimary),
-          ),
-          title: Text(
-            user.name ?? '-',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              color: colorScheme.onSurface,
-            ),
-          ),
-          subtitle: Text(
-            user.email ?? '-',
-            style: TextStyle(color: colorScheme.onSurfaceVariant),
-          ),
-        ),
-        const SizedBox(height: 16),
-        ListTile(
-          leading: Icon(Icons.phone, color: colorScheme.primary),
-          title: Text(
-            user.phone ?? '-',
-            style: TextStyle(color: colorScheme.onSurface),
-          ),
-          trailing: TextButton(
-            onPressed: () {},
-            style: TextButton.styleFrom(
-              foregroundColor: colorScheme.primary,
-            ),
-            child: const Text('Change'),
-          ),
-        ),
-      ],
-    );
-  }
+  //   // This would show the logged-in user's details
+  //   return Column(
+  //     children: [
+  //       ListTile(
+  //         leading: CircleAvatar(
+  //           backgroundColor: colorScheme.primary,
+  //           child: Icon(Icons.person, color: colorScheme.onPrimary),
+  //         ),
+  //         title: Text(
+  //           user.name ?? '-',
+  //           style: TextStyle(
+  //             fontWeight: FontWeight.bold,
+  //             color: colorScheme.onSurface,
+  //           ),
+  //         ),
+  //         subtitle: Text(
+  //           user.email ?? '-',
+  //           style: TextStyle(color: colorScheme.onSurfaceVariant),
+  //         ),
+  //       ),
+  //       const SizedBox(height: 16),
+  //       ListTile(
+  //         leading: Icon(Icons.phone, color: colorScheme.primary),
+  //         title: Text(
+  //           user.phone ?? '-',
+  //           style: TextStyle(color: colorScheme.onSurface),
+  //         ),
+  //         trailing: TextButton(
+  //           onPressed: () {},
+  //           style: TextButton.styleFrom(
+  //             foregroundColor: colorScheme.primary,
+  //           ),
+  //           child: const Text('Change'),
+  //         ),
+  //       ),
+  //     ],
+  //   );
+  // }
 }
 
 

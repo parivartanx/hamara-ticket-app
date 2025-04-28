@@ -5,23 +5,38 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../features/login/data/data_sources/local_datasource.dart';
 import 'endPoints.dart';
 
-
 class DioClient {
     final Dio _dio = Dio();
     final _localDataSource = LocalDataSource();
 
     DioClient(){
-      
       _dio.options = BaseOptions(
         baseUrl: EndPoints.baseUrl,
         connectTimeout: const Duration(seconds: 10),
         receiveTimeout: const Duration(seconds: 10),
-        headers: {
-          "Authorization":"Bearer ${_localDataSource.getAccessToken()}",
-          "userId":_localDataSource.getUser()?.id,
-           'Content-Type': 'application/json',
-          
-        }
+      );
+      
+      // Add interceptor to dynamically add auth token to every request
+      _dio.interceptors.add(
+        InterceptorsWrapper(
+          onRequest: (options, handler) async {
+            // Get fresh token for every request
+            final accessToken = await _localDataSource.getAccessToken();
+            final user = await _localDataSource.getUser();
+            
+            if (accessToken != null) {
+              options.headers["Authorization"] = "Bearer $accessToken";
+              // log("Adding auth token to request: Bearer $accessToken");
+            }
+            
+            if (user != null) {
+              options.headers["userId"] = user.id;
+            }
+            
+            options.headers["Content-Type"] = "application/json";
+            return handler.next(options);
+          },
+        ),
       );
     }
 
@@ -55,13 +70,16 @@ class DioClient {
 
     Future<Response> get({required String url})async{
       try{
+        log("Making GET request to: $url");
         final response = await _dio.get(url);
         return response;
       }
       on DioException catch(e){
+        log("DioException in GET request: ${e.message}");
         throw handleDioError(e);
       }
       catch(e){
+        log("Unexpected error in GET request: $e");
         rethrow;
       }
     }
@@ -134,9 +152,6 @@ class DioClient {
         return "Error: ${response.statusCode}";
     }
   }
-
-
-
 }
 
 final dioClientProvider = Provider<DioClient>((ref) {

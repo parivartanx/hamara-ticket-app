@@ -41,7 +41,7 @@ class _SideState extends ConsumerState<Side> {
               SizedBox(height: context.height / 20),
 
               // Upgrade Pro Button
-              UpgradeProButton(proColor: themeState.secondaryColor),
+              // UpgradeProButton(proColor: themeState.secondaryColor),
             ],
           ),
         ),

@@ -63,10 +63,10 @@ class GoogleSignInAuth {
       }
 
       log("User signed in with Google: ${googleUser.email}");
-      final GoogleSignInAuthentication googleAuth =
-          await googleUser.authentication;
-      final idToken = googleAuth.idToken;
-      log("idToken: $idToken");
+      // final GoogleSignInAuthentication googleAuth =
+      //     await googleUser.authentication;
+      // final idToken = googleAuth.idToken;
+      // log("idToken: $idToken");
       return googleUser;
     } catch (error) {
       log("Error signing in with Google: $error");

@@ -117,6 +117,9 @@ class _SplashscreenState extends ConsumerState<Splashscreen>
   }
 
   void _navigateToNextScreen() {
+    // call api to check is token is expired or not 
+    // if token is expired then delete token user and logout from firebase 
+    // else navigate to home screen
     Future.delayed(const Duration(milliseconds: 3000), () {
       if (mounted) {
         context.pushReplacementNamed(Login.routeName);

@@ -23,6 +23,7 @@ dependencies:
   json_annotation: ^4.9.0
   google_places_flutter: ^2.0.6
   geolocator: ^10.1.0
+  
 
 
 dev_dependencies:

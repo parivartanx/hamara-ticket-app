@@ -340,9 +340,9 @@ class QuantitySelector extends ConsumerWidget {
                 );
                 
                 // Force refresh of the pricing providers
-                ref.refresh(subtotalProvider);
-                ref.refresh(convenienceFeeProvider);
-                ref.refresh(totalAmountProvider);
+                ref.invalidate(subtotalProvider);
+                ref.invalidate(convenienceFeeProvider);
+                ref.invalidate(totalAmountProvider);
               }
             },
             isDisabled: quantity == 0,
@@ -368,9 +368,9 @@ class QuantitySelector extends ConsumerWidget {
               );
               
               // Force refresh of the pricing providers
-              ref.refresh(subtotalProvider);
-              ref.refresh(convenienceFeeProvider);
-              ref.refresh(totalAmountProvider);
+              ref.invalidate(subtotalProvider);
+              ref.invalidate(convenienceFeeProvider);
+              ref.invalidate(totalAmountProvider);
             },
             isDisabled: false,
           ),

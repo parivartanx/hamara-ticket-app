@@ -10,6 +10,7 @@ import '../../../login/presentation/screens/login.dart';
 import '../../../profile/presentation/providers/profile_provider.dart';
 import '../providers/bookings_provider.dart';
 import 'booking_card.dart';
+import 'booking_list_skeleton.dart';
 
 /// A dedicated widget for the bookings list with optimized rebuilds
 class BookingList extends ConsumerWidget {
@@ -24,6 +25,7 @@ class BookingList extends ConsumerWidget {
         );
     log("userId: $userId");
     // if user id is null show info to login 
+
     if (userId == null) {
       return EmptyStates.needsLogin(context, routeName: Login.routeName);
     }
@@ -38,7 +40,7 @@ class BookingList extends ConsumerWidget {
         }
         return _BookingListContent(bookings: bookings);
       },
-      loading: () => const Center(child: CircularProgressIndicator()),
+      loading: () => const BookingListSkeleton(),
       error: (e, __) => Center(child: Text("Error: $e")),
     );
   }

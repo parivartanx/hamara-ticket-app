@@ -1,9 +1,9 @@
 class EndPoints {
   // static const baseUrl =
   //     'https://pibwvpg9l7.execute-api.ap-south-1.amazonaws.com/api/v1';
-  // static const baseUrl = 'https://devapi.hamaraticket.com/api/v1';
-  // static const baseUrl = 'https://4575-103-182-133-22.ngrok-free.app/api/v1';
-  static const baseUrl = 'http://192.168.1.34:4000/api/v1';
+  static const baseUrl = 'https://devapi.hamaraticket.com/api/v1';
+  // static const baseUrl = 'https://a062-103-182-133-22.ngrok-free.app/api/v1';
+  // static const baseUrl = 'http://192.168.1.44:4000/api/v1';
   
   static const loginWithEmail = '/auth/email-otp';
   static const loginWithGoogle = '/auth/mobile/google-signin';
@@ -30,4 +30,7 @@ class EndPoints {
 
   /// Booking Endpoints ///
   static const getBookingsByUserId = userEndpoint;
+
+  // Create Ticket Order
+  static const createTicketOrder = "$baseUrl/payment/razorpay/ticket";
 }

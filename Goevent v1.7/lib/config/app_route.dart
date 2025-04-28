@@ -1,4 +1,7 @@
 import 'package:go_router/go_router.dart';
+import 'package:hamaraticket/features/home/presentation/screens/bottom_nav_page.dart';
+import '../features/payment_failure_page.dart';
+import '../features/payment_success_page.dart';
 import '/features/home/presentation/screens/all_parks_page.dart';
 import '/features/occasion-details/presentation/screens/event_details_screen.dart';
 import '/features/privacy-policy/privacy_policy.dart';
@@ -14,8 +17,19 @@ import '../features/contact/presentation/screens/contact.dart';
 
 // GoRouter configuration
 final appRouter = GoRouter(
-  initialLocation: Login.routePath,
+  initialLocation: BottomNavPage.routePath,
+  redirect: (context,state){
+    return null;
+  
+    /// check if route is login and user is logged in
+    /// if yes redirect to home
+  
+  },
   routes: [
+
+    GoRoute(path: BottomNavPage.routePath,
+        name: BottomNavPage.routeName,
+        builder: (context, state) => const BottomNavPage()),
     GoRoute(
         path: Home.routePath,
         name: Home.routeName,
@@ -75,6 +89,27 @@ final appRouter = GoRouter(
       path: AllParksPage.routePath,
       name: AllParksPage.routeName,
       builder: (context, state) => const AllParksPage(),
+    ),
+
+    // Payment Success Page
+    GoRoute(
+      path: PaymentSuccessPage.routeAddress,
+      name: PaymentSuccessPage.routeName,
+      builder: (context, state) => PaymentSuccessPage(
+        paymentId: state.extra as String,
+        onShowBookings: () {
+          context.pushNamed(Booking.routeName);
+        },
+      ),
+    ),
+
+    // Payment Failure Page
+    GoRoute(
+      path: PaymentFailurePage.routeAddress,
+      name: PaymentFailurePage.routeName,
+      builder: (context, state) => PaymentFailurePage(
+        reason:state.extra as String,
+      ),
     ),
     
   ],

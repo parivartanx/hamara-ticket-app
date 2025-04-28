@@ -17,8 +17,8 @@ class LocalDataSource {
     await SharedPrefsManager.setRefreshToken(refreshToken);
   }
 
-  String? getAccessToken()  {
-    return SharedPrefsManager.getAccessToken();
+  Future<String?> getAccessToken()  async{
+    return await SharedPrefsManager.getAccessToken();
   }
 
   Future<String?> getRefreshToken() async {
@@ -33,7 +33,7 @@ class LocalDataSource {
     await SharedPrefsManager.setUser(user);
   }
 
-    User? getUser(){
+   Future< User?> getUser()async{
     return SharedPrefsManager.getUser();
   }
 

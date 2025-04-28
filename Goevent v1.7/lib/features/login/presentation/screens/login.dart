@@ -5,15 +5,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hamaraticket/features/home/presentation/screens/bottom_nav_page.dart';
 import '../providers/login_provider.dart';
 import '../providers/login_with_email_provider.dart';
 import '/config/auth/google_signin_auth.dart';
 import '/extensions/media_query_ext.dart';
-import '/features/home/presentation/screens/home.dart';
 import '/features/terms-and-conditions/screens/terms_and_conditions.dart';
 import '/features/privacy-policy/privacy_policy.dart';
-import '../widgets/custom_text_field.dart';
-import '../widgets/otp_section.dart';
 
 class Login extends ConsumerStatefulWidget {
   static const routeName = 'Login';
@@ -75,52 +73,52 @@ class _LoginState extends ConsumerState<Login>
     super.dispose();
   }
 
-  String? _validateEmail(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'Email is required';
-    }
-    final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
-    if (!emailRegex.hasMatch(value)) {
-      return 'Please enter a valid email';
-    }
-    return null;
-  }
+  // String? _validateEmail(String? value) {
+  //   if (value == null || value.isEmpty) {
+  //     return 'Email is required';
+  //   }
+  //   final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+  //   if (!emailRegex.hasMatch(value)) {
+  //     return 'Please enter a valid email';
+  //   }
+  //   return null;
+  // }
 
-  Future<void> _handleSendOtp() async {
-    if (_formKey.currentState?.validate() ?? false) {
-      try {
-        log("Attempting to send OTP to email: ${_emailController.text}");
-        await ref
-            .read(loginWithEmailProvider.notifier)
-            .loginWithEmail(email: _emailController.text);
-      } catch (e) {
-        log("Error sending OTP: $e");
-        _showMessage(
-          context,
-          'Failed to send OTP: ${e.toString()}',
-          type: MessageType.error,
-        );
-      }
-    }
-  }
+  // Future<void> _handleSendOtp() async {
+  //   if (_formKey.currentState?.validate() ?? false) {
+  //     try {
+  //       log("Attempting to send OTP to email: ${_emailController.text}");
+  //       await ref
+  //           .read(loginWithEmailProvider.notifier)
+  //           .loginWithEmail(email: _emailController.text);
+  //     } catch (e) {
+  //       log("Error sending OTP: $e");
+  //       _showMessage(
+  //         context,
+  //         'Failed to send OTP: ${e.toString()}',
+  //         type: MessageType.error,
+  //       );
+  //     }
+  //   }
+  // }
 
-  void _onOtpCompleted(String otp) {
-    if (otp.length == 6) {
-      try {
-        log("Attempting to verify OTP for email: ${_emailController.text}");
-        ref
-            .read(verifyOTPProvider.notifier)
-            .verifyOTP(email: _emailController.text, otp: otp);
-      } catch (e) {
-        log("Error verifying OTP: $e");
-        _showMessage(
-          context,
-          'Failed to verify OTP: ${e.toString()}',
-          type: MessageType.error,
-        );
-      }
-    }
-  }
+  // void _onOtpCompleted(String otp) {
+  //   if (otp.length == 6) {
+  //     try {
+  //       log("Attempting to verify OTP for email: ${_emailController.text}");
+  //       ref
+  //           .read(verifyOTPProvider.notifier)
+  //           .verifyOTP(email: _emailController.text, otp: otp);
+  //     } catch (e) {
+  //       log("Error verifying OTP: $e");
+  //       _showMessage(
+  //         context,
+  //         'Failed to verify OTP: ${e.toString()}',
+  //         type: MessageType.error,
+  //       );
+  //     }
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -158,7 +156,7 @@ class _LoginState extends ConsumerState<Login>
                               alignment: Alignment.topRight,
                               child: TextButton(
                                 onPressed: () {
-                                  context.pushReplacementNamed(Home.routeName);
+                                  context.go(BottomNavPage.routePath);
                                 },
                                 style: TextButton.styleFrom(
                                   padding: const EdgeInsets.symmetric(
@@ -215,105 +213,105 @@ class _LoginState extends ConsumerState<Login>
                               ),
                             ),
                             SizedBox(height: context.height * 0.06),
-                            if (!isOTPSent) ...[
-                              // Email Input
-                              Container(
-                                decoration: BoxDecoration(
-                                  color: Color.alphaBlend(
-                                    context.colorScheme.surfaceContainerHighest.withAlpha(25),
-                                    context.colorScheme.surfaceContainerHighest,
-                                  ),
-                                  borderRadius: BorderRadius.circular(12),
-                                  border: Border.all(
-                                    color: Color.alphaBlend(
-                                      context.colorScheme.outline.withAlpha(51),
-                                      context.colorScheme.outline,
-                                    ),
-                                    width: 1,
-                                  ),
-                                ),
-                                child: CustomTextField(
-                                  controller: _emailController,
-                                  hint: "Email",
-                                  prefixIcon: Icons.email_outlined,
-                                  validator: _validateEmail,
-                                  keyboardType: TextInputType.emailAddress,
-                                  textInputAction: TextInputAction.done,
-                                  onFieldSubmitted: (_) => _handleSendOtp(),
-                                ),
-                              ),
-                              SizedBox(height: context.height * 0.03),
-                              // Send OTP Button
-                              Consumer(
-                                builder: (context, ref, child) {
-                                  final state = ref.watch(loginWithEmailProvider);
-                                  return SizedBox(
-                                    width: double.infinity,
-                                    height: 52,
-                                    child: ElevatedButton(
-                                      onPressed: state.isLoading
-                                          ? null
-                                          : _handleSendOtp,
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor: context.colorScheme.primary,
-                                        foregroundColor: context.colorScheme.onPrimary,
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(12),
-                                        ),
-                                        elevation: 0,
-                                      ),
-                                      child: state.isLoading
-                                          ? SizedBox(
-                                              height: 20,
-                                              width: 20,
-                                              child: CircularProgressIndicator(
-                                                strokeWidth: 2,
-                                                valueColor:
-                                                    AlwaysStoppedAnimation<Color>(
-                                                        context.colorScheme.onPrimary),
-                                              ),
-                                            )
-                                          : Text(
-                                              "Continue with Email",
-                                              style: GoogleFonts.poppins(
-                                                fontSize: 16.sp,
-                                                fontWeight: FontWeight.w500,
-                                              ),
-                                            ),
-                                    ),
-                                  );
-                                },
-                              ),
-                              SizedBox(height: context.height * 0.03),
-                              // Divider
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: Divider(
-                                      color: Colors.grey[300],
-                                      thickness: 1,
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 16),
-                                    child: Text(
-                                      "OR",
-                                      style: GoogleFonts.poppins(
-                                        color: Colors.grey[600],
-                                        fontSize: 14.sp,
-                                      ),
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: Divider(
-                                      color: Colors.grey[300],
-                                      thickness: 1,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(height: context.height * 0.03),
+                            // if (!isOTPSent) ...[
+                            //   // Email Input
+                            //   Container(
+                            //     decoration: BoxDecoration(
+                            //       color: Color.alphaBlend(
+                            //         context.colorScheme.surfaceContainerHighest.withAlpha(25),
+                            //         context.colorScheme.surfaceContainerHighest,
+                            //       ),
+                            //       borderRadius: BorderRadius.circular(12),
+                            //       border: Border.all(
+                            //         color: Color.alphaBlend(
+                            //           context.colorScheme.outline.withAlpha(51),
+                            //           context.colorScheme.outline,
+                            //         ),
+                            //         width: 1,
+                            //       ),
+                            //     ),
+                            //     child: CustomTextField(
+                            //       controller: _emailController,
+                            //       hint: "Email",
+                            //       prefixIcon: Icons.email_outlined,
+                            //       validator: _validateEmail,
+                            //       keyboardType: TextInputType.emailAddress,
+                            //       textInputAction: TextInputAction.done,
+                            //       onFieldSubmitted: (_) => _handleSendOtp(),
+                            //     ),
+                            //   ),
+                            //   SizedBox(height: context.height * 0.03),
+                            //   // Send OTP Button
+                            //   Consumer(
+                            //     builder: (context, ref, child) {
+                            //       final state = ref.watch(loginWithEmailProvider);
+                            //       return SizedBox(
+                            //         width: double.infinity,
+                            //         height: 52,
+                            //         child: ElevatedButton(
+                            //           onPressed: state.isLoading
+                            //               ? null
+                            //               : _handleSendOtp,
+                            //           style: ElevatedButton.styleFrom(
+                            //             backgroundColor: context.colorScheme.primary,
+                            //             foregroundColor: context.colorScheme.onPrimary,
+                            //             shape: RoundedRectangleBorder(
+                            //               borderRadius: BorderRadius.circular(12),
+                            //             ),
+                            //             elevation: 0,
+                            //           ),
+                            //           child: state.isLoading
+                            //               ? SizedBox(
+                            //                   height: 20,
+                            //                   width: 20,
+                            //                   child: CircularProgressIndicator(
+                            //                     strokeWidth: 2,
+                            //                     valueColor:
+                            //                         AlwaysStoppedAnimation<Color>(
+                            //                             context.colorScheme.onPrimary),
+                            //                   ),
+                            //                 )
+                            //               : Text(
+                            //                   "Continue with Email",
+                            //                   style: GoogleFonts.poppins(
+                            //                     fontSize: 16.sp,
+                            //                     fontWeight: FontWeight.w500,
+                            //                   ),
+                            //                 ),
+                            //         ),
+                            //       );
+                            //     },
+                            //   ),
+                            //   SizedBox(height: context.height * 0.03),
+                            //   // Divider
+                            //   Row(
+                            //     children: [
+                            //       Expanded(
+                            //         child: Divider(
+                            //           color: Colors.grey[300],
+                            //           thickness: 1,
+                            //         ),
+                            //       ),
+                            //       Padding(
+                            //         padding: const EdgeInsets.symmetric(
+                            //             horizontal: 16),
+                            //         child: Text(
+                            //           "OR",
+                            //           style: GoogleFonts.poppins(
+                            //             color: Colors.grey[600],
+                            //             fontSize: 14.sp,
+                            //           ),
+                            //         ),
+                            //       ),
+                            //       Expanded(
+                            //         child: Divider(
+                            //           color: Colors.grey[300],
+                            //           thickness: 1,
+                            //         ),
+                            //       ),
+                            //     ],
+                            //   ),
+                            //   SizedBox(height: context.height * 0.03),
                               // Google Sign In
                               Consumer(
                                 builder: (context, ref, child) {
@@ -372,8 +370,7 @@ class _LoginState extends ConsumerState<Login>
                                                       );
 
                                                   if (mounted) {
-                                                    context.pushReplacementNamed(
-                                                        Home.routeName);
+                                                    context.go(BottomNavPage.routePath);
                                                   }
                                                 } catch (e) {
                                                   log("Login: Error during Google sign-in: $e");
@@ -420,19 +417,19 @@ class _LoginState extends ConsumerState<Login>
                                   );
                                 },
                               ),
-                            ] else ...[
-                              // OTP Section
-                              OtpSection(
-                                onChangeSignInMethod: () {
-                                  ref.read(otpStateProvider.notifier).setOTPSentState(false);
-                                  _emailController.clear();
-                                  _otpController.clear();
-                                },
-                                otpController: _otpController,
-                                onOtpCompleted: _onOtpCompleted,
-                                email: _emailController.text,
-                              ),
-                            ],
+                            // ] else ...[
+                            //   // OTP Section
+                            //   OtpSection(
+                            //     onChangeSignInMethod: () {
+                            //       ref.read(otpStateProvider.notifier).setOTPSentState(false);
+                            //       _emailController.clear();
+                            //       _otpController.clear();
+                            //     },
+                            //     otpController: _otpController,
+                            //     onOtpCompleted: _onOtpCompleted,
+                            //     email: _emailController.text,
+                            //   ),
+                            // ],
 
                             // Terms and Conditions
                             if (!isOTPSent) ...[

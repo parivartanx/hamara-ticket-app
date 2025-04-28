@@ -21,8 +21,8 @@ class LoginRemoteDataSource {
  
   }) async {
     try {
-      log("RemoteDataSource: Sending Google sign-in request to backend");
-      log("RemoteDataSource: Using URL: ${EndPoints.baseUrl}${EndPoints.loginWithGoogle}");
+      // log("RemoteDataSource: Sending Google sign-in request to backend");
+      // log("RemoteDataSource: Using URL: ${EndPoints.baseUrl}${EndPoints.loginWithGoogle}");
 
       final response =
           await _dioClient.post(url: EndPoints.loginWithGoogle, body: {
@@ -31,7 +31,7 @@ class LoginRemoteDataSource {
       
       });
 
-      log("RemoteDataSource: Google sign-in response status: ${response.statusCode}");
+      // log("RemoteDataSource: Google sign-in response status: ${response.statusCode}");
 
       if (response.statusCode != 200 && response.statusCode != 201) {
         throw Exception("Backend returned error code: ${response.statusCode}");
@@ -62,8 +62,6 @@ class LoginRemoteDataSource {
       await _localDataSource.saveAccessToken(accessToken);
       await _localDataSource.saveRefreshToken(refreshToken);
       await _localDataSource.saveUser(userModel);
-
-      log("RemoteDataSource: Successfully saved user data and tokens");
 
       return userModel;
     } catch (e) {

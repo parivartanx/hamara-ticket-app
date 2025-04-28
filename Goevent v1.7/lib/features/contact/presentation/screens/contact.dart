@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '/extensions/media_query_ext.dart';
 import '/providers/color_provider.dart';
-import '/features/home/presentation/widgets/advanced_bottom_navigation.dart';
 
 class Contact extends ConsumerStatefulWidget {
   static const String routeName = 'Contact';
@@ -272,7 +271,6 @@ class _ContactState extends ConsumerState<Contact> {
             ],
           ),
         ),
-        bottomNavigationBar: const AdvancedBottomNavigation(),
       );
     
   }

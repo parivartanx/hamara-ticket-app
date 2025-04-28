@@ -5,12 +5,18 @@ import '../../../login/presentation/widgets/custom_text_field.dart';
 class GuestUserForm extends StatefulWidget {
   final Function(bool?) onTermsChanged;
   final bool termsAccepted;
+  final TextEditingController _nameController;
+  final TextEditingController _emailController;
+  final TextEditingController _phoneController;
   
   const GuestUserForm({
     Key? key, 
     required this.onTermsChanged,
     required this.termsAccepted,
-  }) : super(key: key);
+    required TextEditingController emailController,
+    required TextEditingController nameController,
+    required TextEditingController phoneController,
+  }) : _phoneController = phoneController, _emailController = emailController, _nameController = nameController, super(key: key);
 
   @override
   State<GuestUserForm> createState() => _GuestUserFormState();
@@ -18,15 +24,11 @@ class GuestUserForm extends StatefulWidget {
 
 class _GuestUserFormState extends State<GuestUserForm> {
   final _formKey = GlobalKey<FormState>();
-  final _nameController = TextEditingController();
-  final _emailController = TextEditingController();
-  final _phoneController = TextEditingController();
+ 
   
   @override
   void dispose() {
-    _nameController.dispose();
-    _emailController.dispose();
-    _phoneController.dispose();
+  
     super.dispose();
   }
   
@@ -39,7 +41,7 @@ class _GuestUserFormState extends State<GuestUserForm> {
       child: Column(
         children: [
           CustomTextField(
-            controller: _nameController,
+            controller: widget._nameController,
             hint: 'Full Name',
             prefixIcon: Icons.person_outline,
             validator: (value) {
@@ -51,7 +53,7 @@ class _GuestUserFormState extends State<GuestUserForm> {
           ),
           const SizedBox(height: 16),
           CustomTextField(
-            controller: _emailController,
+            controller: widget._emailController,
             hint: 'Email Address',
             prefixIcon: Icons.email_outlined,
             keyboardType: TextInputType.emailAddress,
@@ -67,7 +69,7 @@ class _GuestUserFormState extends State<GuestUserForm> {
           ),
           const SizedBox(height: 16),
           CustomTextField(
-            controller: _phoneController,
+            controller: widget._phoneController,
             hint: 'Phone Number',
             prefixIcon: Icons.phone_outlined,
             keyboardType: TextInputType.phone,

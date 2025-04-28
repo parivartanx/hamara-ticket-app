@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import '../../../booking/presentation/screens/booking.dart' show Booking;
 import '../widgets/action_button.dart';
 import '../widgets/logout_button.dart';
 import '../widgets/profile_avatar.dart';
@@ -10,10 +12,9 @@ import '../widgets/section_header.dart';
 import '../widgets/user_info_section.dart';
 import '/features/profile/presentation/providers/profile_provider.dart';
 import '/extensions/media_query_ext.dart';
-import '/features/home/presentation/widgets/advanced_bottom_navigation.dart';
 import '/features/login/presentation/screens/login.dart';
-import 'package:go_router/go_router.dart';
 import '../widgets/greeting_widget.dart';
+import '/features/booking/presentation/widgets/login_prompt.dart';
 
 
 
@@ -123,7 +124,6 @@ class _ProfileState extends ConsumerState<Profile>
           data: (user) => Column(
             children: [
               Container(
-                height: context.height * 0.25,
                 width: context.width,
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
@@ -139,38 +139,10 @@ class _ProfileState extends ConsumerState<Profile>
                 child: SafeArea(
                   child: Center(
                     child: user == null
-                      ? Center(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              const Icon(Icons.person_outline, size: 60),
-                              const SizedBox(height: 16),
-                              Text(
-                                'Not logged in',
-                                style: GoogleFonts.poppins(
-                                  fontSize: 18.sp,
-                                  fontWeight: FontWeight.w600,
-                                  color: context.colorScheme.onSurface,
-                                ),
-                              ),
-                              const SizedBox(height: 16),
-                              ElevatedButton(
-                                onPressed: () {
-                                  context.goNamed(Login.routeName);
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: context.colorScheme.primary,
-                                  foregroundColor: context.colorScheme.onPrimary,
-                                  padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                ),
-                                child: const Text('Go to Login'),
-                              ),
-                            ],
-                          ),
-                        )
+                      ? const LoginPrompt(routeName: Login.routeName,
+                      message: 'Please log in to view your profile.',
+                      icon: FontAwesomeIcons.user,
+                      )
                       : Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -224,7 +196,6 @@ class _ProfileState extends ConsumerState<Profile>
           ),
         ),
       ),
-      bottomNavigationBar: const AdvancedBottomNavigation(),
     );
   }
 }
@@ -246,7 +217,7 @@ class ActionButtonsList extends StatelessWidget {
           title: 'My Bookings',
           icon: FontAwesomeIcons.ticket,
           onTap: () {
-            // Navigate to bookings
+            context.pushNamed(Booking.routeName);
           },
         ),
         ActionButton(

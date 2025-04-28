@@ -3,7 +3,7 @@ import 'package:razorpay_flutter/razorpay_flutter.dart';
 
 class RazorpayService {
   late Razorpay _razorpay;
-  final VoidCallback onPaymentSuccess;
+  final Function(PaymentSuccessResponse) onPaymentSuccess;
   final Function(String) onPaymentFailure;
 
   RazorpayService({required this.onPaymentSuccess, required this.onPaymentFailure}) {
@@ -15,37 +15,44 @@ class RazorpayService {
 
   void openCheckout({
     required String apiKey,
-    required double amount,
+    required int amount,
     required String name,
     required String description,
     required String email,
     required String contact,
+    String? orderId, // Add orderId parameter
   }) {
     var options = {
       'key': apiKey,
-      'amount': (amount * 100).toInt(), // in paise
-      'name': name,
+      'amount': amount, // in paise
+      'name': "Hamara Ticket",
       'description': description,
       'prefill': {'contact': contact, 'email': email},
       'external': {
         'wallets': ['paytm']
       }
     };
+    
+    // Add orderId to options if available
+    if (orderId != null && orderId.isNotEmpty) {
+      options['order_id'] = orderId;
+    }
+    
     _razorpay.open(options);
   }
 
   void _handlePaymentSuccess(PaymentSuccessResponse response) {
-    debugPrint('Payment Success: \\${response.paymentId}');
-    onPaymentSuccess();
+    debugPrint('Payment Success: ${response.paymentId}');
+    onPaymentSuccess(response);
   }
 
   void _handlePaymentError(PaymentFailureResponse response) {
-    debugPrint('Payment Error: \\${response.code} | \\${response.message}');
+    debugPrint('Payment Error: ${response.code} | ${response.message}');
     onPaymentFailure(response.message ?? 'Payment failed');
   }
 
   void _handleExternalWallet(ExternalWalletResponse response) {
-    debugPrint('External Wallet: \\${response.walletName}');
+    debugPrint('External Wallet: ${response.walletName}');
     // Handle external wallet logic here
   }
 

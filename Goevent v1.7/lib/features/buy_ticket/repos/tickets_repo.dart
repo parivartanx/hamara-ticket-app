@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../models/ticket/order_ticket_model.dart';
 import '/features/buy_ticket/data/data_source/ticket_remote_data_source.dart';
 import '/models/ticket/ticket_model.dart';
 
@@ -23,6 +24,15 @@ class TicketsRepo {
       return tickets;
     } catch (e) {
       throw Exception(e.toString());
+    }
+  }
+
+  Future<TicketOrderResponse> createTicketOrder(OrderTicket orderTicket) async {
+    try {
+      final response = await _ticketRemoteDataSource.createTicketOrder(orderTicket);
+      return response;
+    } catch (e) {
+      rethrow;
     }
   }
 }

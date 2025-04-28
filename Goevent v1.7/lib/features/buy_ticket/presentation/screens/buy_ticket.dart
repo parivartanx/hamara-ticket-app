@@ -1,9 +1,14 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:hamaraticket/features/profile/presentation/providers/profile_provider.dart';
+import 'package:hamaraticket/models/ticket/order_ticket_model.dart';
 import '../../../../core/enums/occasion_type.dart';
 import '../../../../extensions/media_query_ext.dart';
 import '../providers/ticket_state.dart';
+import '../services/ticket_order_service.dart';
 import '../widgets/date_selection_step.dart';
 import '../widgets/details_step.dart';
 import '../widgets/ticket_selection_step.dart';
@@ -28,7 +33,15 @@ class _BuyTicketSState extends ConsumerState<BuyTicketS> with SingleTickerProvid
   late final AnimationController _animationController;
   late final Animation<double> _fadeAnimation;
   late final OccasionType _occasionType;
-  String? userName = "Vinita";
+
+  // controllers for text fields
+  final _nameController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _phoneController = TextEditingController(); 
+
+  String? userName = "Guest";
+ 
+  // late final TicketsRepo _ticketsRepo;
 
   @override
   void initState() {
@@ -50,6 +63,7 @@ class _BuyTicketSState extends ConsumerState<BuyTicketS> with SingleTickerProvid
     Future.microtask(() {
       if (mounted) {
         ref.read(ticketBookingProvider.notifier).setOccasionType(widget.occasionType);
+        // _ticketsRepo = ref.read(ticketsRepoProvider);
       }
     });
     
@@ -58,6 +72,9 @@ class _BuyTicketSState extends ConsumerState<BuyTicketS> with SingleTickerProvid
 
   @override
   void dispose() {
+    _nameController.dispose();
+    _emailController.dispose();
+    _phoneController.dispose();
     _animationController.removeListener(() {});
     _fadeAnimation.removeListener((){});
     _animationController.dispose();
@@ -72,6 +89,34 @@ class _BuyTicketSState extends ConsumerState<BuyTicketS> with SingleTickerProvid
     final canContinue = bookingState.currentStep < totalSteps - 1 
         ? ref.read(ticketBookingProvider.notifier).canProceedToNextStep()
         : bookingState.termsAccepted;
+
+    /// get user from local 
+    final asyncUser = ref.watch(profileProvider);
+    asyncUser.when(
+      data: (user) {
+        if (user != null) {
+          userName = user.name;
+          _nameController.text = user.name;
+          _emailController.text = user.email;
+          _phoneController.text = user.phone ?? "";
+        }
+      },
+      error: (error, stackTrace) {
+        /// show scaffold message
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error fetching user data: $error'),
+            backgroundColor: colorScheme.error,
+          ),
+        );
+      },
+      loading: () {
+        /// show loading indicator
+        log("Loading user data...");
+      },
+    );
+      
+     
     
     return Scaffold(
       backgroundColor: colorScheme.surface,
@@ -264,7 +309,11 @@ class _BuyTicketSState extends ConsumerState<BuyTicketS> with SingleTickerProvid
                               _animationController.forward();
                             });
                           } else {
-                            _handleSubmission();
+                            _handleSubmission(
+                              name: _nameController.text,
+                              email: _emailController.text,
+                              phone: _phoneController.text,
+                            );
                           }
                         }
                       : null,
@@ -329,7 +378,11 @@ class _BuyTicketSState extends ConsumerState<BuyTicketS> with SingleTickerProvid
         case 1:
           return TicketSelectionStep(occasionId: occasionId, occasionType: occasionType);
         case 2:
-          return const DetailsStep();
+          return DetailsStep(
+            nameController: _nameController,
+            emailController: _emailController,
+            phoneController: _phoneController,
+          );
         default:
           return const SizedBox.shrink();
       }
@@ -338,7 +391,11 @@ class _BuyTicketSState extends ConsumerState<BuyTicketS> with SingleTickerProvid
         case 0:
           return TicketSelectionStep(occasionId: widget.occasionId, occasionType: widget.occasionType);
         case 1:
-          return const DetailsStep();
+          return DetailsStep(
+            nameController: _nameController,
+            emailController: _emailController,
+            phoneController: _phoneController,
+          );
         default:
           return const SizedBox.shrink();
       }
@@ -356,7 +413,7 @@ class _BuyTicketSState extends ConsumerState<BuyTicketS> with SingleTickerProvid
     }
   }
 
-  void _handleSubmission() {
+  void _handleSubmission({required String email, required String name, required String phone, String? description = "Ticket Booking"}) {
     final bookingState = ref.read(ticketBookingProvider);
     
     if (!bookingState.termsAccepted) {
@@ -368,16 +425,35 @@ class _BuyTicketSState extends ConsumerState<BuyTicketS> with SingleTickerProvid
       );
       return;
     }
+
+    final selectedTickets = bookingState.selectedTickets.entries
+        .map((e) => BookingTicket(
+              ticketId: e.key,
+              quantity: e.value,
+            ))
+        .toList();
     
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          'Processing your payment of ₹${ref.read(totalAmountProvider).toStringAsFixed(2)}',
-        ),
-        backgroundColor: Theme.of(context).colorScheme.primary,
-      ),
+    // log("Creating order for ${_occasionType.toString()}");
+    final order = OrderTicket(
+      couponCodes: [], 
+      eventId: _occasionType == OccasionType.event ? widget.occasionId : null,
+      parkId: (_occasionType == OccasionType.park || _occasionType == OccasionType.waterpark) ? widget.occasionId : null,
+      email: email, 
+      name: name, 
+      phone: phone, 
+      ticketIds: selectedTickets,
+      date: bookingState.selectedDate,
     );
     
-    // TODO: Implement payment processing logic
+    // Use the new TicketOrderService to handle the ordering process with elegant UI
+    TicketOrderService.processOrder(
+      context: context,
+      ref: ref,
+      order: order,
+      customerName: name,
+      customerEmail: email,
+      customerPhone: phone,
+      description: description ?? "Ticket Booking",
+    );
   }
 }

@@ -37,7 +37,6 @@ class _HomeBodyState extends ConsumerState<HomeBody>
       body: TwoPanels(
         controller: controller,
       ),
-      bottomNavigationBar: const AdvancedBottomNavigation(),
     );
   }
 }

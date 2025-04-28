@@ -135,7 +135,7 @@ class EventBody extends StatelessWidget {
             ),
           ),
         SizedBox(height: context.height / 40),
-        OrganizerCard(event: event),
+        // OrganizerCard(event: event),
       ],
     );
   }
