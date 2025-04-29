@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../../../models/ticket/ticket_model.dart';
 import '../provider/occasion_provider.dart';
 import '/extensions/media_query_ext.dart';
 import '/providers/color_provider.dart';
@@ -138,6 +139,13 @@ class ParkBody extends StatelessWidget {
           tags: park.tags,
         ),
         SizedBox(height: context.height * 0.02),
+        
+        // Tickets and Offers Section
+        if (park.tickets != null && park.tickets!.isNotEmpty)
+          TicketsAndOffersSection(tickets: park.tickets!),
+        
+        SizedBox(height: context.height * 0.02),
+        
         // Pricing Information Section
         if (park.dynamicPricing?.isNotEmpty == true)
           Padding(
@@ -146,7 +154,7 @@ class ParkBody extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "Pricing Information",
+                  "Additional Pricing Information",
                   style: TextStyle(
                     fontSize: 17.sp,
                     fontWeight: FontWeight.w700,
@@ -157,7 +165,7 @@ class ParkBody extends StatelessWidget {
                 SizedBox(height: 12.h),
                 if (regularPricing.isNotEmpty)
                   PricingInfoCard(
-                    title: "Regular Pricing",
+                    title: "Additional Pricing",
                     pricing: regularPricing,
                   ),
                 if (regularPricing.isNotEmpty && peakPricing.isNotEmpty)
@@ -585,6 +593,401 @@ class AttractionsSection extends StatelessWidget {
               );
             },
           ),
+        ],
+      ),
+    );
+  }
+}
+
+class TicketsAndOffersSection extends StatelessWidget {
+  final List<TicketModel> tickets;
+
+  const TicketsAndOffersSection({
+    super.key,
+    required this.tickets,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 20.w),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            "Tickets & Offers",
+            style: TextStyle(
+              fontSize: 17.sp,
+              fontWeight: FontWeight.w700,
+              fontFamily: 'Gilroy Medium',
+              color: context.colorScheme.onSurface,
+            ),
+          ),
+          SizedBox(height: 12.h),
+          ListView.builder(
+            padding: EdgeInsets.zero,
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: tickets.length,
+            itemBuilder: (context, index) {
+              final ticket = tickets[index];
+              
+              return Container(
+                margin: EdgeInsets.only(bottom: 12.h),
+                decoration: BoxDecoration(
+                  color: context.colorScheme.surface,
+                  borderRadius: BorderRadius.circular(12.r),
+                  border: Border.all(
+                    color: context.colorScheme.outline.withOpacity(0.1),
+                  ),
+                ),
+                child: Column(
+                  children: [
+                    // Ticket header
+                    Container(
+                      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+                      decoration: BoxDecoration(
+                        color: context.colorScheme.primary.withOpacity(0.05),
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(12.r),
+                          topRight: Radius.circular(12.r),
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.confirmation_number_outlined,
+                                size: 18.sp,
+                                color: context.colorScheme.primary,
+                              ),
+                              SizedBox(width: 8.w),
+                              Text(
+                                ticket.ticketType,
+                                style: TextStyle(
+                                  fontSize: 15.sp,
+                                  fontWeight: FontWeight.w600,
+                                  fontFamily: 'Gilroy Medium',
+                                  color: context.colorScheme.onSurface,
+                                ),
+                              ),
+                            ],
+                          ),
+                          Container(
+                            padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+                            decoration: BoxDecoration(
+                              color: context.colorScheme.primary.withOpacity(0.1),
+                              borderRadius: BorderRadius.circular(12.r),
+                            ),
+                            child: Text(
+                              "₹${ticket.price}",
+                              style: TextStyle(
+                                fontSize: 14.sp,
+                                fontWeight: FontWeight.w700,
+                                fontFamily: 'Gilroy Medium',
+                                color: context.colorScheme.primary,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    
+                    // Ticket details
+                    Padding(
+                      padding: EdgeInsets.all(16.w),
+                      child: Column(
+                        children: [
+                          // Ticket features
+                          ..._buildTicketFeatures(context, ticket),
+                          
+                          // Ticket offers - check if platformOffer is greater than 0
+                          if ((ticket.platformOffer != null && ticket.platformOffer! > 0) || 
+                              (ticket.isRefundable ?? false) ||
+                              (ticket.platformOffer != null))
+                            _buildTicketOffers(context, ticket),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        ],
+      ),
+    );
+  }
+  
+  List<Widget> _buildTicketFeatures(BuildContext context, TicketModel ticket) {
+    List<Widget> features = [];
+    
+    // Age restriction feature
+    // if (ticket.ageRestriction != null) {
+    //   features.add(
+    //     Padding(
+    //       padding: EdgeInsets.only(bottom: 8.h),
+    //       child: Row(
+    //         children: [
+    //           Icon(Icons.person_outline, 
+    //             size: 16.sp, 
+    //             color: context.colorScheme.outline,
+    //           ),
+    //           SizedBox(width: 8.w),
+    //           Text(
+    //             "Age: ${ticket.ageRestriction}",
+    //             style: TextStyle(
+    //               fontSize: 13.sp,
+    //               color: context.colorScheme.onSurface.withOpacity(0.8),
+    //             ),
+    //           ),
+    //         ],
+    //       ),
+    //     ),
+    //   );
+    // }
+    
+    // Availability feature
+    // if (ticket.availabilityDays?.isNotEmpty ?? false) {
+    //   features.add(
+    //     Padding(
+    //       padding: EdgeInsets.only(bottom: 8.h),
+    //       child: Row(
+    //         children: [
+    //           Icon(Icons.event_available_outlined, 
+    //             size: 16.sp, 
+    //             color: context.colorScheme.outline,
+    //           ),
+    //           SizedBox(width: 8.w),
+    //           Expanded(
+    //             child: Text(
+    //               "Available on: ${ticket.availabilityDays!.join(", ")}",
+    //               style: TextStyle(
+    //                 fontSize: 13.sp,
+    //                 color: context.colorScheme.onSurface.withOpacity(0.8),
+    //               ),
+    //             ),
+    //           ),
+    //         ],
+    //       ),
+    //     ),
+    //   );
+    // }
+    
+    // Duration feature if this is a multi-day pass
+    // if (ticket.validityPeriod != null) {
+    //   features.add(
+    //     Padding(
+    //       padding: EdgeInsets.only(bottom: 8.h),
+    //       child: Row(
+    //         children: [
+    //           Icon(Icons.timelapse_outlined, 
+    //             size: 16.sp, 
+    //             color: context.colorScheme.outline,
+    //           ),
+    //           SizedBox(width: 8.w),
+    //           Text(
+    //             "Valid for: ${ticket.validityPeriod}",
+    //             style: TextStyle(
+    //               fontSize: 13.sp,
+    //               color: context.colorScheme.onSurface.withOpacity(0.8),
+    //             ),
+    //           ),
+    //         ],
+    //       ),
+    //     ),
+    //   );
+    // }
+    
+    // Add refund information if ticket is refundable
+    if (ticket.isRefundable ?? false) {
+      features.add(
+        Padding(
+          padding: EdgeInsets.only(bottom: 8.h),
+          child: Row(
+            children: [
+              Icon(Icons.assignment_return_outlined, 
+                size: 16.sp, 
+                color: context.colorScheme.outline,
+              ),
+              SizedBox(width: 8.w),
+              Expanded(
+                child: Text(
+                  ticket.refundPercentage != null
+                      ? "Refundable (${ticket.refundPercentage}%)"
+                      : "Refundable",
+                  style: TextStyle(
+                    fontSize: 13.sp,
+                    color: context.colorScheme.onSurface.withOpacity(0.8),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+      
+      // Add refund duration if available
+      if (ticket.refundDuration != null) {
+        features.add(
+          Padding(
+            padding: EdgeInsets.only(bottom: 8.h),
+            child: Row(
+              children: [
+                Icon(Icons.timer_outlined, 
+                  size: 16.sp, 
+                  color: context.colorScheme.outline,
+                ),
+                SizedBox(width: 8.w),
+                Expanded(
+                  child: Text(
+                    "Refund valid for ${_formatRefundDuration(ticket.refundDuration!)}",
+                    style: TextStyle(
+                      fontSize: 13.sp,
+                      color: context.colorScheme.onSurface.withOpacity(0.8),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      }
+    }
+    
+    return features;
+  }
+  
+  String _formatRefundDuration(int minutes) {
+    if (minutes < 60) {
+      return "$minutes minutes";
+    } else if (minutes < 1440) { // Less than a day
+      final hours = minutes ~/ 60;
+      return "$hours ${hours == 1 ? 'hour' : 'hours'}";
+    } else { // Days
+      final days = minutes ~/ 1440;
+      return "$days ${days == 1 ? 'day' : 'days'}";
+    }
+  }
+  
+  Widget _buildTicketOffers(BuildContext context, TicketModel ticket) {
+
+    if(ticket.platformOffer == null || ticket.platformOffer == 0) {
+      return const SizedBox.shrink();
+    }
+    return Container(
+      margin: EdgeInsets.only(top: 8.h),
+      padding: EdgeInsets.all(12.w),
+      decoration: BoxDecoration(
+        color: Colors.green.withOpacity(0.08),
+        borderRadius: BorderRadius.circular(8.r),
+        border: Border.all(
+          color: Colors.green.withOpacity(0.2),
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(
+                Icons.local_offer_outlined,
+                size: 16.sp,
+                color: Colors.green,
+              ),
+              SizedBox(width: 6.w),
+              Text(
+                "Special Offers",
+                style: TextStyle(
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.green,
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 8.h),
+          
+          // Platform offer
+          if (ticket.platformOffer != null && ticket.platformOffer! > 0)
+            Padding(
+              padding: EdgeInsets.only(bottom: 6.h),
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.check_circle_outline,
+                    size: 14.sp,
+                    color: Colors.green,
+                  ),
+                  SizedBox(width: 6.w),
+                  Text(
+                    ticket.platformOfferType?.toLowerCase() == "percentage"
+                        ? "${ticket.platformOffer}% off on regular price"
+                        : "₹${ticket.platformOffer} off on regular price",
+                    style: TextStyle(
+                      fontSize: 13.sp,
+                      color: context.colorScheme.onSurface.withOpacity(0.8),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          
+          // Refund highlight as an offer if applicable
+          if ((ticket.isRefundable ?? false) && ticket.refundPercentage != null)
+            Padding(
+              padding: EdgeInsets.only(bottom: 6.h),
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.check_circle_outline,
+                    size: 14.sp,
+                    color: Colors.green,
+                  ),
+                  SizedBox(width: 6.w),
+                  Expanded(
+                    child: Text(
+                      "Get ${ticket.refundPercentage}% refund if cancelled within ${_formatRefundDuration(ticket.refundDuration ?? 0)}",
+                      style: TextStyle(
+                        fontSize: 13.sp,
+                        color: context.colorScheme.onSurface.withOpacity(0.8),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          
+          // Other offers
+          // if (ticket.offers?.isNotEmpty ?? false)
+          //   ...ticket.offers!.map((offer) => Padding(
+          //     padding: EdgeInsets.only(bottom: 6.h),
+          //     child: Row(
+          //       crossAxisAlignment: CrossAxisAlignment.start,
+          //       children: [
+          //         Padding(
+          //           padding: EdgeInsets.only(top: 2.h),
+          //           child: Icon(
+          //             Icons.check_circle_outline,
+          //             size: 14.sp,
+          //             color: Colors.green,
+          //           ),
+          //         ),
+          //         SizedBox(width: 6.w),
+          //         Expanded(
+          //           child: Text(
+          //             offer,
+          //             style: TextStyle(
+          //               fontSize: 13.sp,
+          //               color: context.colorScheme.onSurface.withOpacity(0.8),
+          //             ),
+          //           ),
+          //         ),
+          //       ],
+          //     ),
+          //   )).toList(),
         ],
       ),
     );

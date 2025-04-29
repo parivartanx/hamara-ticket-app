@@ -141,17 +141,38 @@ final ticketBookingProvider = StateNotifierProvider<TicketBookingNotifier, Ticke
 });
 
 // Provider to store ticket prices
-class TicketPricesNotifier extends StateNotifier<Map<String, double>> {
+class TicketPricesNotifier extends StateNotifier<Map<String, Map<String, double>>> {
   TicketPricesNotifier() : super({});
 
   void updatePrices(List<TicketModel> tickets) {
     try {
       if (tickets.isEmpty) return;
       
-      final newPrices = <String, double>{};
+      final newPrices = <String, Map<String, double>>{};
       for (var ticket in tickets) {
         if (ticket.id.isNotEmpty) {
-          newPrices[ticket.id] = ticket.price.toDouble();
+          // Store both original and discounted prices
+          double originalPrice = ticket.price.toDouble();
+          double discountedPrice = originalPrice;
+          
+          // Apply discount if platformOffer exists
+          if (ticket.platformOffer != null && ticket.platformOffer! > 0) {
+            if (ticket.platformOfferType?.toLowerCase() == "percentage") {
+              // Percentage-based offer
+              discountedPrice = originalPrice - (originalPrice * (ticket.platformOffer! / 100));
+            } else {
+              // Fixed amount offer
+              discountedPrice = originalPrice - ticket.platformOffer!;
+            }
+          }
+          
+          // Ensure the discounted price is not negative
+          discountedPrice = discountedPrice < 0 ? 0 : discountedPrice;
+          
+          newPrices[ticket.id] = {
+            'original': originalPrice,
+            'discounted': discountedPrice
+          };
         }
       }
       
@@ -171,7 +192,7 @@ class TicketPricesNotifier extends StateNotifier<Map<String, double>> {
 final occasionIdProvider = StateProvider<String>((ref) => '');
 final occasionTypeProvider = StateProvider<String>((ref) => '');
 
-final ticketPricesProvider = StateNotifierProvider.autoDispose<TicketPricesNotifier, Map<String, double>>((ref) {
+final ticketPricesProvider = StateNotifierProvider.autoDispose<TicketPricesNotifier, Map<String, Map<String, double>>>((ref) {
   final notifier = TicketPricesNotifier();
   
   // Get the selected date with null safety
@@ -231,7 +252,7 @@ final subtotalProvider = Provider<double>((ref) {
   final ticketPrices = ref.watch(ticketPricesProvider);
   
   return bookingState.selectedTickets.entries
-      .map((entry) => entry.value * (ticketPrices[entry.key] ?? 0.0))
+      .map((entry) => entry.value * (ticketPrices[entry.key]?['discounted'] ?? 0.0))
       .fold(0.0, (total, price) => total + price);
 });
 
@@ -249,4 +270,4 @@ final totalAmountProvider = Provider<double>((ref) {
 
 final promoCodeProvider = Provider<String?>((ref) {
   return ref.watch(ticketBookingProvider).promoCode;
-}); 
+});

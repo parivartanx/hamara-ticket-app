@@ -49,7 +49,7 @@ class TicketModel {
     this.isBookingAllowed = true,
     this.refundValidUntil,
     this.createdAt,
-    required this.updatedAt,
+    this.updatedAt,
   });
 
   factory TicketModel.fromJson(Map<String, dynamic> json) => _$TicketModelFromJson(json);

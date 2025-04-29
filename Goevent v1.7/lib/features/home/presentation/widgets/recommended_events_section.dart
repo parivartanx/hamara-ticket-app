@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:shimmer/shimmer.dart';
 import '/features/occasion-details/presentation/screens/event_details_screen.dart';
 import '/extensions/media_query_ext.dart';
 import '/models/event/event_model.dart';
@@ -94,6 +96,7 @@ class _EventCard extends StatelessWidget {
 
     return Container(
       width: 160.w,
+      height: 200.h, // Explicitly set height to match parent ListView
       margin: EdgeInsets.only(right: 15.w, bottom: 5.h),
       decoration: BoxDecoration(
         color: context.colorScheme.surfaceContainerLowest,
@@ -115,19 +118,26 @@ class _EventCard extends StatelessWidget {
               ClipRRect(
                 borderRadius: BorderRadius.vertical(top: Radius.circular(15.r)),
                 child: event.imageUrls.isNotEmpty
-                    ? Image.network(
-                        event.imageUrls.first,
+                    ? CachedNetworkImage(
+                        imageUrl: event.imageUrls.first,
                         height: 85.h,
                         width: double.infinity,
                         fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) {
-                          return Container(
+                        placeholder: (context, url) => Shimmer.fromColors(
+                          baseColor: Colors.grey[300]!,
+                          highlightColor: Colors.grey[100]!,
+                          child: Container(
                             height: 85.h,
-                            color: Colors.grey[200],
-                            child: Icon(Icons.image_not_supported,
-                                color: Colors.grey[400]),
-                          );
-                        },
+                            width: double.infinity,
+                            color: Colors.white,
+                          ),
+                        ),
+                        errorWidget: (context, url, error) => Container(
+                          height: 85.h,
+                          color: Colors.grey[200],
+                          child: Icon(Icons.image_not_supported,
+                              color: Colors.grey[400]),
+                        ),
                       )
                     : Container(
                         height: 85.h,
@@ -194,18 +204,19 @@ class _EventCard extends StatelessWidget {
           // Content Section
           Expanded(
             child: Padding(
-              padding: EdgeInsets.fromLTRB(8.w, 6.w, 8.w, 6.w),
+              padding: EdgeInsets.fromLTRB(8.w, 5.h, 8.w, 5.h),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
                         event.name,
                         style: TextStyle(
-                          fontSize: 14.sp,
+                          fontSize: 13.sp,
                           fontWeight: FontWeight.w700,
                           fontFamily: 'Gilroy',
                         ),
@@ -217,15 +228,15 @@ class _EventCard extends StatelessWidget {
                         children: [
                           Icon(
                             Icons.calendar_today,
-                            size: 12.r,
+                            size: 11.r,
                             color: context.colorScheme.outline,
                           ),
-                          SizedBox(width: 4.w),
+                          SizedBox(width: 3.w),
                           Expanded(
                             child: Text(
                               formattedDate,
                               style: TextStyle(
-                                fontSize: 11.sp,
+                                fontSize: 10.sp,
                                 color: context.colorScheme.outline,
                                 fontFamily: 'Gilroy',
                               ),
@@ -235,20 +246,20 @@ class _EventCard extends StatelessWidget {
                           ),
                         ],
                       ),
-                      SizedBox(height: 2.h),
+                      SizedBox(height: 1.h),
                       Row(
                         children: [
                           Icon(
                             Icons.location_on,
-                            size: 12.r,
+                            size: 11.r,
                             color: context.colorScheme.outline,
                           ),
-                          SizedBox(width: 4.w),
+                          SizedBox(width: 3.w),
                           Expanded(
                             child: Text(
                               event.location,
                               style: TextStyle(
-                                fontSize: 11.sp,
+                                fontSize: 10.sp,
                                 color: context.colorScheme.outline,
                                 fontFamily: 'Gilroy',
                               ),
@@ -258,41 +269,72 @@ class _EventCard extends StatelessWidget {
                           ),
                         ],
                       ),
+                      
+                      // Only show ticket count if available
+                      if (event.tickets.isNotEmpty)
+                        SizedBox(height: 1.h),
+                      if (event.tickets.isNotEmpty)
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.confirmation_number,
+                              size: 11.r,
+                              color: context.colorScheme.outline,
+                            ),
+                            SizedBox(width: 3.w),
+                            Expanded(
+                              child: Text(
+                                '${event.tickets.length} ticket${event.tickets.length > 1 ? 's' : ''}',
+                                style: TextStyle(
+                                  fontSize: 10.sp,
+                                  color: context.colorScheme.outline,
+                                  fontFamily: 'Gilroy',
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ],
+                        ),
                     ],
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        event.tickets.isNotEmpty
-                            ? '₹${event.tickets.first.price}'
-                            : "N/A",
-                        style: TextStyle(
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.w700,
-                          color: context.colorScheme.primary,
-                          fontFamily: 'Gilroy',
+                  
+                  const Spacer(),
+                  
+                  // Ticket Price Range
+                  event.tickets.isNotEmpty
+                      ? _buildTicketPriceInfo(context)
+                      : Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "N/A",
+                              style: TextStyle(
+                                fontSize: 13.sp,
+                                fontWeight: FontWeight.w700,
+                                color: context.colorScheme.primary,
+                                fontFamily: 'Gilroy',
+                              ),
+                            ),
+                            Container(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 8.w, vertical: 4.h),
+                              decoration: BoxDecoration(
+                                color: context.colorScheme.primary.withOpacity(0.1),
+                                borderRadius: BorderRadius.circular(8.r),
+                              ),
+                              child: Text(
+                                'Book Now',
+                                style: TextStyle(
+                                  fontSize: 10.sp,
+                                  fontWeight: FontWeight.w600,
+                                  color: context.colorScheme.primary,
+                                  fontFamily: 'Gilroy',
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                      ),
-                      Container(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: 8.w, vertical: 4.h),
-                        decoration: BoxDecoration(
-                          color: context.colorScheme.primary.withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(8.r),
-                        ),
-                        child: Text(
-                          'Book Now',
-                          style: TextStyle(
-                            fontSize: 11.sp,
-                            fontWeight: FontWeight.w600,
-                            color: context.colorScheme.primary,
-                            fontFamily: 'Gilroy',
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
                 ],
               ),
             ),
@@ -301,4 +343,64 @@ class _EventCard extends StatelessWidget {
       ),
     );
   }
-} 
+  
+  Widget _buildTicketPriceInfo(BuildContext context) {
+    if (event.tickets.isEmpty) {
+      return Text(
+        "No tickets available",
+        style: TextStyle(
+          fontSize: 10.sp,
+          color: context.colorScheme.outline,
+          fontFamily: 'Gilroy',
+        ),
+      );
+    }
+    
+    // Sort tickets by price to get min and max
+    final sortedTickets = List.from(event.tickets)
+      ..sort((a, b) => a.price.compareTo(b.price));
+    
+    final lowestPrice = sortedTickets.first.price;
+    final highestPrice = sortedTickets.last.price;
+    
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              sortedTickets.length > 1
+                  ? '₹$lowestPrice${sortedTickets.length > 1 ? '+' : ''}' 
+                  : '₹$lowestPrice',
+              style: TextStyle(
+                fontSize: 13.sp,
+                fontWeight: FontWeight.w700,
+                color: context.colorScheme.primary,
+                fontFamily: 'Gilroy',
+              ),
+            ),
+          ],
+        ),
+        Container(
+          padding: EdgeInsets.symmetric(
+              horizontal: 8.w, vertical: 3.h),
+          decoration: BoxDecoration(
+            color: context.colorScheme.primary.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(8.r),
+          ),
+          child: Text(
+            'Book Now',
+            style: TextStyle(
+              fontSize: 10.sp,
+              fontWeight: FontWeight.w600,
+              color: context.colorScheme.primary,
+              fontFamily: 'Gilroy',
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}

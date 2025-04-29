@@ -3,10 +3,10 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:shimmer/shimmer.dart';
 import '/extensions/media_query_ext.dart';
 
-class EventHeaderImage extends StatelessWidget {
+class ParkHeaderImage extends StatelessWidget {
   final String imageUrl;
 
-  const EventHeaderImage({
+  const ParkHeaderImage({
     super.key,
     required this.imageUrl,
   });
@@ -28,7 +28,7 @@ class EventHeaderImage extends StatelessWidget {
         ),
         errorWidget: (context, error, stackTrace) {
           return Image.asset(
-            "assets/image/event.png",
+            "assets/image/park.png",
             fit: BoxFit.cover,
           );
         },

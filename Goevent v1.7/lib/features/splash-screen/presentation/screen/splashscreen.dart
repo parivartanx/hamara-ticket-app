@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hamaraticket/features/home/presentation/screens/bottom_nav_page.dart';
 import 'package:hamaraticket/features/login/presentation/screens/login.dart';
 import '../widgets/circular_animation.dart';
 import '/providers/color_provider.dart';
+import '/features/auth/presentation/providers/token_verification_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:math';
 
@@ -38,7 +40,11 @@ class _SplashscreenState extends ConsumerState<Splashscreen>
   void _initializeApp() {
     _loadDarkModePreference();
     _setupAnimations();
-    _navigateToNextScreen();
+
+    Future((){
+      _verifyTokenAndNavigate();
+    });
+    
   }
 
   void _setupAnimations() {
@@ -116,15 +122,29 @@ class _SplashscreenState extends ConsumerState<Splashscreen>
     }
   }
 
-  void _navigateToNextScreen() {
-    // call api to check is token is expired or not 
-    // if token is expired then delete token user and logout from firebase 
-    // else navigate to home screen
-    Future.delayed(const Duration(milliseconds: 3000), () {
-      if (mounted) {
-        context.pushReplacementNamed(Login.routeName);
+  Future<void> _verifyTokenAndNavigate() async {
+    // Delay navigation to show splash screen for minimum duration
+    await Future.delayed(const Duration(milliseconds: 200));
+    
+    // Verify token only if the widget is still mounted
+    if (!mounted) return;
+    
+    // Get token verification notifier
+    final tokenVerifier = ref.read(tokenVerificationProvider.notifier);
+    
+    // Verify token
+    final isValid = await tokenVerifier.verifyToken();
+    
+    // Navigate based on token validity
+    if (mounted) {
+      if (isValid) {
+        // Token is valid, navigate to home
+        context.goNamed(BottomNavPage.routeName);
+      } else {
+        // Token is invalid or not found, navigate to login
+        context.goNamed(Login.routeName);
       }
-    });
+    }
   }
 
   @override
@@ -240,15 +260,22 @@ class _SplashscreenState extends ConsumerState<Splashscreen>
                 // Loading indicator with fade animation
                 FadeTransition(
                   opacity: _fadeAnimation,
-                  child: SizedBox(
-                    width: 40.w,
-                    height: 40.h,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 3,
-                      valueColor: AlwaysStoppedAnimation<Color>(
-                        colorScheme.primary,
-                      ),
-                    ),
+                  child: Consumer(
+                    builder: (context, ref, child) {
+                      final tokenStatus = ref.watch(tokenVerificationProvider);
+                      return SizedBox(
+                        width: 40.w,
+                        height: 40.h,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 3,
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            tokenStatus == TokenStatus.error 
+                              ? Colors.red 
+                              : colorScheme.primary,
+                          ),
+                        ),
+                      );
+                    },
                   ),
                 ),
               ],

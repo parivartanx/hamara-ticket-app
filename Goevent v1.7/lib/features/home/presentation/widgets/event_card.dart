@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:shimmer/shimmer.dart';
 import '/extensions/media_query_ext.dart';
 import '/models/event/event_model.dart';
 
@@ -90,9 +92,20 @@ class EventImage extends StatelessWidget {
             borderRadius: BorderRadius.circular(15),
             child: AspectRatio(
               aspectRatio: 1.5,
-              child: Image.network(
-                img,
+              child: CachedNetworkImage(
+                imageUrl: img,
                 fit: BoxFit.cover,
+                placeholder: (context, url) => Shimmer.fromColors(
+                  baseColor: Colors.grey[300]!,
+                  highlightColor: Colors.grey[100]!,
+                  child: Container(
+                    color: Colors.white,
+                  ),
+                ),
+                errorWidget: (context, url, error) => Container(
+                  color: Colors.grey[200],
+                  child: Icon(Icons.image_not_supported, color: Colors.grey[400]),
+                ),
               ),
             ),
           ),

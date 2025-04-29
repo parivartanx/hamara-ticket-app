@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../screens/nearby_see_all.dart';
 import 'package:intl/intl.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:shimmer/shimmer.dart';
 import '/models/event/event_model.dart';
 import '/models/park/park_model.dart';
 import '/extensions/media_query_ext.dart';
@@ -81,22 +83,20 @@ class SectionHeader extends StatelessWidget {
   }
 }
 
-
 class EventsList extends ConsumerWidget {
   const EventsList({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(nearbyEventsProvider);
-    
+
     return Column(
       children: List.generate(state.filteredItems.length, (index) {
         if (state.selectedType == OccasionType.events) {
           return EventCard(event: state.filteredItems[index] as Event);
-        } else if(state.selectedType == OccasionType.waterPark) {
+        } else if (state.selectedType == OccasionType.waterPark) {
           return ParkCard(park: state.filteredItems[index] as Park);
-        }
-        else {
+        } else {
           return ParkCard(park: state.filteredItems[index] as Park);
         }
       }),
@@ -168,7 +168,10 @@ class EventCard extends ConsumerWidget {
                         ),
                         Row(
                           children: [
-                            Icon(Icons.location_on,size: 13.sp,),
+                            Icon(
+                              Icons.location_on,
+                              size: 13.sp,
+                            ),
                             Text(
                               " ${event.location}",
                               style: TextStyle(
@@ -246,7 +249,10 @@ class ParkCard extends StatelessWidget {
                         ),
                         Row(
                           children: [
-                            Icon(Icons.location_on, size: 13.sp,),
+                            Icon(
+                              Icons.location_on,
+                              size: 13.sp,
+                            ),
                             Text(
                               " ${park.address}",
                               style: TextStyle(
@@ -293,9 +299,20 @@ class OccasionImage extends StatelessWidget {
       ),
       child: ClipRRect(
         borderRadius: const BorderRadius.all(Radius.circular(10)),
-        child: Image.network(
-          img,
+        child: CachedNetworkImage(
+          imageUrl: img,
           fit: BoxFit.cover,
+          placeholder: (context, url) => Shimmer.fromColors(
+            baseColor: Colors.grey[300]!,
+            highlightColor: Colors.grey[100]!,
+            child: Container(
+              color: Colors.white,
+            ),
+          ),
+          errorWidget: (context, url, error) => Container(
+            color: Colors.grey[200],
+            child: Icon(Icons.image_not_supported, color: Colors.grey[400]),
+          ),
         ),
       ),
     );

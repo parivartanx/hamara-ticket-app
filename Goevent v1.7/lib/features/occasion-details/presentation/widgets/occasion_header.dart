@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:shimmer/shimmer.dart';
 import '/extensions/media_query_ext.dart';
 import 'header_actions.dart';
 import 'occasion_status_card.dart';
@@ -32,9 +34,20 @@ class OccasionHeader extends StatelessWidget {
         // Header Image
         AspectRatio(
           aspectRatio: 16 / 9,
-          child: Image.network(
-            imageUrls.first,
+          child: CachedNetworkImage(
+            imageUrl: imageUrls.first,
             fit: BoxFit.cover,
+            placeholder: (context, url) => Shimmer.fromColors(
+              baseColor: Colors.grey[300]!,
+              highlightColor: Colors.grey[100]!,
+              child: Container(
+                color: Colors.white,
+              ),
+            ),
+            errorWidget: (context, url, error) => Container(
+              color: Colors.grey[200],
+              child: Icon(Icons.image_not_supported, color: Colors.grey[400]),
+            ),
           ),
         ),
         // Gradient Overlay
@@ -70,4 +83,4 @@ class OccasionHeader extends StatelessWidget {
       ],
     );
   }
-} 
+}

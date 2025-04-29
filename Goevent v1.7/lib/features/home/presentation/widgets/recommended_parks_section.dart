@@ -1,7 +1,10 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:shimmer/shimmer.dart';
 import '/features/occasion-details/presentation/screens/park_details_screen.dart';
 import '/extensions/media_query_ext.dart';
 import '/models/park/park_model.dart';
@@ -90,10 +93,33 @@ class RecommendedParkCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isWaterPark = park.type?.toLowerCase() == "water park";
-    final price = park.tickets.isNotEmpty == true
-        ? park.tickets.first.price
-        : "N/A";
     final parkCategory = park.tags.isNotEmpty ? park.tags.first : (isWaterPark ? 'Water Park' : 'Park');
+
+    final isTicketsAvailable = park.tickets.isNotEmpty;
+    // Offer-related data
+    final bool hasOffer = isTicketsAvailable && 
+        park.tickets.isNotEmpty && // Added additional safety check
+        park.tickets.first.platformOffer != null && 
+        park.tickets.first.platformOffer! > 0; // Added check for positive offer value
+        
+    final bool isPercentOffer = hasOffer && 
+        park.tickets.first.platformOfferType?.toLowerCase() == 'percentage'; // Added null check and lowercase
+        
+    // Safe access to ticket price
+    final double originalPrice = isTicketsAvailable ? 
+        park.tickets.first.price.toDouble() : 0.0;
+        
+    // Safe access to offer amount
+    final double offerAmount = hasOffer ? 
+        (isPercentOffer ? 
+            originalPrice * (park.tickets.first.platformOffer! / 100) : // Percentage calculation
+            park.tickets.first.platformOffer!) : // Fixed amount
+        0.0;
+        
+    final double savedAmount = offerAmount;
+    final double currentPrice = hasOffer ? originalPrice - savedAmount : originalPrice;
+    
+  
 
     return Container(
       width: 160.w,
@@ -118,19 +144,28 @@ class RecommendedParkCard extends StatelessWidget {
               ClipRRect(
                 borderRadius: BorderRadius.vertical(top: Radius.circular(15.r)),
                 child: park.imageUrls.isNotEmpty
-                    ? Image.network(
-                        park.imageUrls.first,
+                    ? CachedNetworkImage(
+                      imageUrl: park.imageUrls.first,
+                      height: 85.h,
+                      width: double.infinity,
+                      fit: BoxFit.cover,
+                      placeholder: (context, url) => Shimmer.fromColors(
+                        baseColor: Colors.grey[300]!,
+                        highlightColor: Colors.grey[100]!,
+                        child: Container(
+                          height: 85.h,
+                          width: double.infinity,
+                          color: Colors.white,
+                        ),
+                      ),
+                      errorWidget: (context, url, error) {
+                        return Container(
                         height: 85.h,
-                        width: double.infinity,
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) {
-                          return Container(
-                            height: 85.h,
-                            color: Colors.grey[200],
-                            child: Icon(Icons.image_not_supported,
-                                color: Colors.grey[400]),
-                          );
-                        },
+                        color: Colors.grey[200],
+                        child: Icon(Icons.image_not_supported,
+                          color: Colors.grey[400]),
+                        );
+                      },
                       )
                     : Container(
                         height: 85.h,
@@ -164,6 +199,40 @@ class RecommendedParkCard extends StatelessWidget {
                   ),
                 ),
               ),
+              // Offer Badge
+              if (hasOffer)
+                Positioned(
+                  bottom: 8.h,
+                  left: 8.w,
+                  child: Container(
+                    constraints: BoxConstraints(minWidth: 50.w),  // Added constraints
+                    padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 3.h),
+                    decoration: BoxDecoration(
+                      color: Colors.red[600],
+                      borderRadius: BorderRadius.circular(4.r),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          isPercentOffer ? Icons.percent : Icons.currency_rupee,
+                          color: Colors.white,
+                          size: 10.sp,
+                        ),
+                        SizedBox(width: 2.w),
+                        Text(
+                          "OFFER",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 8.sp,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'Gilroy',
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
               // Rating Badge
               Positioned(
                 top: 8.h,
@@ -201,7 +270,7 @@ class RecommendedParkCard extends StatelessWidget {
           // Content Section
           Expanded(
             child: Padding(
-              padding: EdgeInsets.fromLTRB(8.w, 6.w, 8.w, 6.w),
+              padding: EdgeInsets.fromLTRB(8.w, 6.w, 8.w, 8.w), // Increased bottom padding from 6.w to 8.w
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -269,34 +338,74 @@ class RecommendedParkCard extends StatelessWidget {
                       ],
                     ],
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        '₹$price',
-                        style: TextStyle(
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.w700,
-                          color: context.colorScheme.primary,
-                          fontFamily: 'Gilroy',
+                      // Price and savings row
+                      if (hasOffer) ...[
+                        Row(
+                          children: [
+                            Text(
+                              "₹$originalPrice",
+                              style: TextStyle(
+                                fontSize: 12.sp,
+                                color: Colors.grey,
+                                fontFamily: 'Gilroy',
+                                decoration: TextDecoration.lineThrough,
+                              ),
+                            ),
+                            SizedBox(width: 6.w),
+                            Container(
+                              padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.h),
+                              decoration: BoxDecoration(
+                                color: Colors.green[50],
+                                borderRadius: BorderRadius.circular(2.r),
+                              ),
+                              child: Text(
+                                "Save ₹$savedAmount",
+                                style: TextStyle(
+                                  fontSize: 8.sp,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.green[700],
+                                  fontFamily: 'Gilroy',
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                      ),
-                      Container(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: 8.w, vertical: 4.h),
-                        decoration: BoxDecoration(
-                          color: context.colorScheme.primary.withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(8.r),
-                        ),
-                        child: Text(
-                          'Book Now',
-                          style: TextStyle(
-                            fontSize: 11.sp,
-                            fontWeight: FontWeight.w600,
-                            color: context.colorScheme.primary,
-                            fontFamily: 'Gilroy',
+                        SizedBox(height: 1.h), // Reduced from 2.h to 1.h to save space
+                      ],
+                      // Price and book now row
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            '₹$currentPrice',
+                            style: TextStyle(
+                              fontSize: 14.sp,
+                              fontWeight: FontWeight.w700,
+                              color: context.colorScheme.primary,
+                              fontFamily: 'Gilroy',
+                            ),
                           ),
-                        ),
+                          Container(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 8.w, vertical: 3.h), // Reduced vertical padding from 4.h to 3.h
+                            decoration: BoxDecoration(
+                              color: context.colorScheme.primary.withOpacity(0.1),
+                              borderRadius: BorderRadius.circular(8.r),
+                            ),
+                            child: Text(
+                              'Book Now',
+                              style: TextStyle(
+                                fontSize: 11.sp,
+                                fontWeight: FontWeight.w600,
+                                color: context.colorScheme.primary,
+                                fontFamily: 'Gilroy',
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
@@ -308,4 +417,4 @@ class RecommendedParkCard extends StatelessWidget {
       ),
     );
   }
-} 
+}

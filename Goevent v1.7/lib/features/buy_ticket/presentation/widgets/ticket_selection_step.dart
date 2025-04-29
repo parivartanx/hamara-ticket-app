@@ -28,6 +28,7 @@ class TicketSelectionStep extends ConsumerWidget {
 
     // Watch the tickets provider
     final tickets = ref.watch(ticketsProvider(params));
+    final ticketPrices = ref.watch(ticketPricesProvider);
     
     // Ensure ticket prices are properly initialized and updated
     tickets.whenData((ticketData) {
@@ -115,12 +116,33 @@ class TicketSelectionStep extends ConsumerWidget {
                   )
                 ];
               }
-              return tickets.map((ticket) => TicketItem(
-                ticketId: ticket.id,
-                name: ticket.ticketType,
-                price: ticket.price.toDouble(),
-                quantity: bookingState.selectedTickets[ticket.id] ?? 0,
-              ));
+              return tickets.map((ticket) {
+                // Get prices from the ticketPrices provider to ensure consistency
+                final priceMap = ticketPrices[ticket.id];
+                final originalPrice = priceMap?['original'];
+                final discountedPrice = priceMap?['discounted'];
+                
+                // Only display offer badge if there's a difference between original and discounted
+                final hasDiscount = originalPrice != null && 
+                                    discountedPrice != null && 
+                                    originalPrice > discountedPrice;
+                
+                String? offerText;
+                if (hasDiscount && ticket.platformOffer != null) {
+                  offerText = ticket.platformOfferType?.toLowerCase() == "percentage"
+                      ? "${ticket.platformOffer}% OFF"
+                      : "₹${ticket.platformOffer} OFF";
+                }
+                
+                return TicketItem(
+                  ticketId: ticket.id,
+                  name: ticket.ticketType,
+                  price: discountedPrice ?? ticket.price.toDouble(),
+                  originalPrice: hasDiscount ? originalPrice : null,
+                  offerText: offerText,
+                  quantity: bookingState.selectedTickets[ticket.id] ?? 0,
+                );
+              });
             },
             error: (error, stackTrace) => [
               Center(
@@ -250,6 +272,8 @@ class TicketItem extends ConsumerWidget {
   final String ticketId;
   final String name;
   final double price;
+  final double? originalPrice;
+  final String? offerText;
   final int quantity;
 
   const TicketItem({
@@ -257,21 +281,26 @@ class TicketItem extends ConsumerWidget {
     required this.ticketId,
     required this.name,
     required this.price,
+    this.originalPrice,
+    this.offerText,
     required this.quantity,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colorScheme = Theme.of(context).colorScheme;
+    final hasOffer = originalPrice != null && offerText != null;
     
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
-      padding: const EdgeInsets.all(8),
+      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: colorScheme.surface,
-        borderRadius: BorderRadius.circular(6),
+        borderRadius: BorderRadius.circular(8),
         border: Border.all(
-          color: colorScheme.outline.withOpacity(0.1),
+          color: hasOffer 
+              ? colorScheme.secondary.withOpacity(0.3)
+              : colorScheme.outline.withOpacity(0.1),
         ),
       ),
       child: Row(
@@ -280,19 +309,75 @@ class TicketItem extends ConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  name,
-                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                        fontWeight: FontWeight.bold,
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        name,
+                        style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
                       ),
+                    ),
+                    if (hasOffer)
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                        decoration: BoxDecoration(
+                          color: colorScheme.secondary.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(
+                            color: colorScheme.secondary.withOpacity(0.2),
+                          ),
+                        ),
+                        child: Text(
+                          offerText!,
+                          style: TextStyle(
+                            color: colorScheme.secondary,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 11,
+                          ),
+                        ),
+                      ),
+                  ],
                 ),
-                Text(
-                  '₹${price.toStringAsFixed(2)}',
-                  style: TextStyle(
-                    color: colorScheme.primary,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 14,
-                  ),
+                const SizedBox(height: 6),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      '₹${price.toStringAsFixed(0)}',
+                      style: TextStyle(
+                        color: hasOffer ? colorScheme.secondary : colorScheme.primary,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                    if (originalPrice != null) ...[
+                      const SizedBox(width: 8),
+                      Text(
+                        '₹${originalPrice!.toStringAsFixed(0)}',
+                        style: TextStyle(
+                          color: colorScheme.onSurfaceVariant,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 14,
+                          decoration: TextDecoration.lineThrough,
+                          decorationColor: colorScheme.error,
+                          decorationThickness: 2,
+                        ),
+                      ),
+                      if (hasOffer && originalPrice != null) ...[
+                        const SizedBox(width: 8),
+                        Text(
+                          '${((originalPrice! - price) / originalPrice! * 100).toStringAsFixed(0)}% off',
+                          style: TextStyle(
+                            color: colorScheme.secondary,
+                            fontWeight: FontWeight.w500,
+                            fontSize: 12,
+                          ),
+                        ),
+                      ],
+                    ],
+                  ],
                 ),
               ],
             ),

@@ -17,7 +17,7 @@ import '../features/contact/presentation/screens/contact.dart';
 
 // GoRouter configuration
 final appRouter = GoRouter(
-  initialLocation: BottomNavPage.routePath,
+  initialLocation: Splashscreen.routePath,
   redirect: (context,state){
     return null;
   
