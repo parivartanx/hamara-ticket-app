@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -200,9 +201,19 @@ class _QRTicketDialogState extends State<QRTicketDialog> {
     final DateFormat timeFormat = DateFormat('hh:mm a');
     final colorScheme = context.colorScheme;
 
-    // Generate QR code data - typically this would be some unique identifier
-    final String qrData =
-        'TICKET:${widget.booking.id}:${widget.booking.ticketIdsWithQuantity[0].ticketId}:${widget.booking.ticketIdsWithQuantity[0].quantity}';
+    final String qrData = jsonEncode({
+      "ticketId": widget.booking.id,
+      "eventName": widget.booking.eventId == null
+          ? widget.booking.park?.name
+          : widget.booking.event?.name,
+      "date": widget.booking.eventId == null
+          ? dateFormat.format(widget.booking.date)
+          : dateFormat.format(DateTime.parse(widget.booking.event!.startDate.toString())),
+      "time": widget.booking.eventId == null
+          ? timeFormat.format(widget.booking.date)
+          : timeFormat.format(DateTime.parse(widget.booking.event!.startDate.toString())),
+      "guestName": widget.booking.userId,
+    });
 
     // Determine color based on category
     // Color getCategoryColor() {

@@ -1,0 +1,2 @@
+/home/viku/client-projects/hamara-ticket-app/Goevent v1.7/android/app/.cxx/RelWithDebInfo/573j2156/x86/CMakeFiles/edit_cache.dir
+/home/viku/client-projects/hamara-ticket-app/Goevent v1.7/android/app/.cxx/RelWithDebInfo/573j2156/x86/CMakeFiles/rebuild_cache.dir

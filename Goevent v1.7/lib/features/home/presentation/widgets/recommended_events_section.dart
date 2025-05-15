@@ -361,7 +361,7 @@ class _EventCard extends StatelessWidget {
       ..sort((a, b) => a.price.compareTo(b.price));
     
     final lowestPrice = sortedTickets.first.price;
-    final highestPrice = sortedTickets.last.price;
+    // final highestPrice = sortedTickets.last.price;
     
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,

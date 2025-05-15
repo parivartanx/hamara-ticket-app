@@ -141,8 +141,8 @@ class ParkBody extends StatelessWidget {
         SizedBox(height: context.height * 0.02),
         
         // Tickets and Offers Section
-        if (park.tickets != null && park.tickets!.isNotEmpty)
-          TicketsAndOffersSection(tickets: park.tickets!),
+        if (park.tickets.isNotEmpty)
+          TicketsAndOffersSection(tickets: park.tickets),
         
         SizedBox(height: context.height * 0.02),
         

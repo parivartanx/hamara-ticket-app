@@ -23,7 +23,6 @@ class BookingList extends ConsumerWidget {
           loading: () => null,
           error: (_, __) => null,
         );
-    log("userId: $userId");
     // if user id is null show info to login 
 
     if (userId == null) {

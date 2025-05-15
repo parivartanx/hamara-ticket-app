@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
 import 'package:hamaraticket/features/booking/presentation/widgets/booking_list_skeleton.dart';
 import 'package:hamaraticket/features/booking/presentation/widgets/login_prompt.dart';
 import '../../../../extensions/media_query_ext.dart';
 import '../widgets/booking_list.dart';
-import '/features/home/presentation/widgets/advanced_bottom_navigation.dart';
 import '/features/profile/presentation/providers/profile_provider.dart';
 import '/features/login/presentation/screens/login.dart';
 

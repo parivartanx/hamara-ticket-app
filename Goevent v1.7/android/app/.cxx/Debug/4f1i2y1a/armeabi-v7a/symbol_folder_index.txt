@@ -1,0 +1,1 @@
+/home/viku/client-projects/hamara-ticket-app/Goevent v1.7/build/app/intermediates/cxx/Debug/4f1i2y1a/obj/armeabi-v7a
